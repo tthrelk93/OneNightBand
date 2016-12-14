@@ -11,11 +11,13 @@ import Photos
 import Firebase
 import JSQMessagesViewController
 
-final class ChatViewController: JSQMessagesViewController {
+final class ChatViewController: JSQMessagesViewController, SessionIDDest  {
     
     // MARK: Properties
+    var getSessionID: GetSessionIDDelegate?
+    
     private let imageURLNotSetKey = "NOTSET"
-    var thisSession: Session!
+    var thisSessionID: String!
     var sessionRef: FIRDatabaseReference?
     
     private lazy var messageRef: FIRDatabaseReference = self.sessionRef!.child("messages")
@@ -48,9 +50,15 @@ final class ChatViewController: JSQMessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        sessionRef = FIRDatabase.database().reference().child("sessions").child(thisSession.sessionUID!)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        print("sessID: ", thisSessionID)
+        self.sessionRef = FIRDatabase.database().reference().child("sessions").child(thisSessionID)
         self.senderId = FIRAuth.auth()?.currentUser?.uid
+        //addMessage(withId: "foo", name: "Mr.Bolt", text: "I am so fast!")
+        //addMessage(withId: senderId, name: "Me", text: "I bet I can run faster than you!")
+        //addMessage(withId: senderId, name: "Me", text: "I like to run!")
         observeMessages()
+        
         
         // No avatars
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSize.zero
@@ -112,6 +120,7 @@ final class ChatViewController: JSQMessagesViewController {
         return 15
     }
     
+    
     override func collectionView(_ collectionView: JSQMessagesCollectionView?, attributedTextForMessageBubbleTopLabelAt indexPath: IndexPath!) -> NSAttributedString? {
         let message = messages[indexPath.item]
         switch message.senderId {
@@ -135,6 +144,8 @@ final class ChatViewController: JSQMessagesViewController {
         // We can use the observe method to listen for new
         // messages being written to the Firebase DB
         newMessageRefHandle = messageQuery.observe(.childAdded, with: { (snapshot) -> Void in
+            print(snapshot)
+            if(snapshot.childrenCount > 1){
             let messageData = snapshot.value as! Dictionary<String, String>
             
             if let id = messageData["senderId"] as String!, let name = messageData["senderName"] as String!, let text = messageData["text"] as String!, text.characters.count > 0 {
@@ -151,6 +162,7 @@ final class ChatViewController: JSQMessagesViewController {
             } else {
                 print("Error! Could not decode message data")
             }
+            }
         })
         
         // We can also use the observer method to listen for
@@ -159,6 +171,7 @@ final class ChatViewController: JSQMessagesViewController {
         // to the Firebase Storage, so we can update the message data
         updatedMessageRefHandle = messageRef.observe(.childChanged, with: { (snapshot) in
             let key = snapshot.key
+            if(snapshot.childrenCount > 1){
             let messageData = snapshot.value as! Dictionary<String, String>
             
             if let photoURL = messageData["photoURL"] as String! {
@@ -166,6 +179,7 @@ final class ChatViewController: JSQMessagesViewController {
                 if let mediaItem = self.photoMessageMap[key] {
                     self.fetchImageDataAtURL(photoURL, forMediaItem: mediaItem, clearsPhotoMessageMapOnSuccessForKey: key)
                 }
+            }
             }
         })
     }
@@ -198,7 +212,7 @@ final class ChatViewController: JSQMessagesViewController {
     }
     
     private func observeTyping() {
-        let typingIndicatorRef = sessionRef!.child("typingIndicator")
+        let typingIndicatorRef = sessionRef!.child("messages").child("typingIndicator")
         userIsTypingRef = typingIndicatorRef.child(senderId)
         userIsTypingRef.onDisconnectRemoveValue()
         usersTypingQuery = typingIndicatorRef.queryOrderedByValue().queryEqual(toValue: true)

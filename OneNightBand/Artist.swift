@@ -7,3 +7,24 @@
 //
 
 import Foundation
+import UIKit
+
+class Artist: NSObject{
+    var activeSessions: NSDictionary?
+    var name: String?
+    var email: String?
+    var instruments = [String]()
+    var invites = [String:Any]()
+    var password: String?
+    var artistUID: String?
+    var bio: String?
+    var profileImageUrl = [String]()
+    var location = [String:Any]()
+    var media = [String:Any]()
+    
+    
+    
+    
+
+    
+}

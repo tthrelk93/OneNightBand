@@ -8,18 +8,27 @@
 
 import UIKit
 
-class SessionViewerCollectionCellCollectionViewCell: UICollectionViewCell {
+
+/*protocol LoadProperSessionProtocol {
+    func loadThisSession(indexPath: IndexPath)
+}*/
+
+class SessionCell: UICollectionViewCell {
+    //var delegate: LoadProperSessionProtocol!
+   
     
-    @IBOutlet weak var sessionCellButton: UIButton?
-    
-    @IBOutlet weak var sessionCellLabel: UILabel?
+    @IBOutlet weak var sessionCellLabel: UILabel!
+    @IBOutlet weak var sessionCellImageView: UIImageView!
+    var sessionId: String?
     
     override func awakeFromNib() {
-        self.backgroundColor = UIColor.clear
-        self.sessionCellLabel?.textColor = UIColor.white
+        //self.backgroundColor = UIColor.clear
+        //self.sessionCellLabel?.textColor = UIColor.white
         //self.layer.cornerRadius = 4
     }
-    @IBAction func sessionCellButtonTouched(_ sender: AnyObject) {
-    
-}
+   
+    @IBAction func cellTouched(_ sender: AnyObject) {
+        
+        
+    }
 }

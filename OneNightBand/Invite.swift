@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+class Invite: NSObject {
+    var sender: String?
+    var sessionID: String?
+    var instrumentNeeded: String?
+    var sessionDate: String?
+    
+    
+}

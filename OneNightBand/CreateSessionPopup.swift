@@ -7,3 +7,300 @@
 //
 
 import Foundation
+import UIKit
+import FirebaseStorage
+import Firebase
+
+class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, Dismissable{
+    
+    weak var dismissalDelegate: DismissalDelegate?
+    var ref = FIRDatabase.database().reference()
+    
+    lazy var sessionImageViewButton: UIButton = {
+        var tempButton = UIButton()
+        //tempButton.setBackgroundImage(UIImage(named: "icon-profile"), for: .normal)
+        /*tempButton.contentMode = .scaleAspectFill
+        tempButton.translatesAutoresizingMaskIntoConstraints = false
+        tempButton.isEnabled = true*/
+        tempButton.layer.borderWidth = 2
+        tempButton.layer.borderColor = UIColor.darkGray.cgColor
+        tempButton.backgroundColor = UIColor.clear
+        tempButton.setTitle("Select\n Session\n Image", for: .normal)
+        tempButton.titleLabel?.numberOfLines = 3
+        tempButton.titleLabel?.textAlignment = NSTextAlignment.center
+        tempButton.titleLabel?.lineBreakMode = .byWordWrapping
+        tempButton.setTitleColor(UIColor.gray, for: .normal)
+        tempButton.titleLabel?.font = UIFont.systemFont(ofSize: 28.0, weight: UIFontWeightLight)
+        tempButton.layer.cornerRadius = 10
+        tempButton.clipsToBounds = true
+        tempButton.contentMode = .scaleAspectFill
+        tempButton.translatesAutoresizingMaskIntoConstraints = false
+        tempButton.isEnabled = true
+        tempButton.alpha = 0.6
+        tempButton.addTarget(self, action: #selector(handleSelectSessionImageView), for: .touchUpInside)
+        
+        
+        return tempButton
+        
+    }()
+    func setupSessionImageViewButton(){
+        switch UIScreen.main.bounds.width{
+        case 320:
+            sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.widthAnchor.constraint(equalToConstant: 125).isActive = true
+            sessionImageViewButton.heightAnchor.constraint(equalToConstant: 125).isActive = true
+            
+        case 375:
+            sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
+            sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
+            
+        case 414:
+            sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
+            sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
+            
+            
+        default:
+            sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
+            sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
+            
+            
+        }
+        
+    }
+    
+    let picker = UIImagePickerController()
+    func handleSelectSessionImageView() {
+        
+        picker.allowsEditing = true
+        
+        present(picker, animated: true, completion: nil)
+    }
+    
+    
+    lazy var sessionImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.isHidden = true
+        //imageView.image = UIImage(named: "icon-profile")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        
+        //imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
+        imageView.isUserInteractionEnabled = true
+        
+        return imageView
+    }()
+    func setupSessionImageView() {
+        //need x, y, width, height constraints
+        sessionImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        sessionImageView.topAnchor.constraint(equalTo: popupView.topAnchor).isActive = true
+        sessionImageView.widthAnchor.constraint(equalTo: sessionImageViewButton.widthAnchor).isActive = true
+        sessionImageView.heightAnchor.constraint(equalTo: sessionImageViewButton.heightAnchor).isActive = true
+
+        //sessionImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+    }
+
+    
+    
+    @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var finalizeSessionButton: UIButton!
+    @IBOutlet weak var sessionBioTextView: UITextView!
+    @IBOutlet weak var sessionNameTextField: UITextField!
+    @IBOutlet weak var popupView: UIView!
+    @IBOutlet weak var backgroundView: UIView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        popupView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        popupView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
+        datePicker.datePickerMode = UIDatePickerMode.date
+        
+        sessionBioTextView.layer.borderColor = UIColor.darkGray.cgColor
+        sessionBioTextView.layer.borderWidth = 2
+        sessionBioTextView.layer.masksToBounds = false
+        view.addSubview(sessionImageView)
+        view.addSubview(sessionImageViewButton)
+        setupSessionImageView()
+        setupSessionImageViewButton()
+        backgroundView.backgroundColor = UIColor.black
+        //backgroundView.alpha = 0.7
+        sessionBioTextView.delegate = self
+        self.view.backgroundColor = UIColor.clear
+        //self.view.backgroundColor?.withAlphaComponent(0.8)
+        sessionBioTextView.textColor = UIColor.gray
+        sessionBioTextView.text = "tap to add a little info about the type of session you are trying to create."
+        self.showAnimate()
+        picker.delegate = self
+        
+            
+    }
+    
+    
+    /*public func textViewDidBeginEditing(_ textView: UITextView){
+        
+    }
+    
+    
+    optional public func textViewDidEndEditing(_ textView: UITextView){
+        
+    }*/
+    
+    public func textViewDidBeginEditing(_ textView: UITextView) {
+        if sessionBioTextView.textColor == UIColor.gray {
+            sessionBioTextView.text = nil
+            sessionBioTextView.textColor = UIColor.orange
+        }
+    }
+    public func textViewDidEndEditing(_ textView: UITextView) {
+        if sessionBioTextView.text.isEmpty {
+            sessionBioTextView.text = "tap to add a little info about the type of session you are trying to create."
+            sessionBioTextView.textColor = UIColor.gray
+        }
+    }
+    
+    func showAnimate()
+    {
+        self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+        self.view.alpha = 0.0;
+        UIView.animate(withDuration: 0.25, animations: {
+            self.view.alpha = 1.0
+            self.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        });
+    }
+    
+    func removeAnimate()
+    {
+        UIView.animate(withDuration: 0.25, animations: {
+            self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            self.view.alpha = 0.0;
+            }, completion:{(finished : Bool)  in
+                if (finished)
+                {
+                    self.view.removeFromSuperview()
+                }
+        });
+    }
+
+    @IBAction func cancelTouched(_ sender: AnyObject) {
+        dismissalDelegate?.finishedShowing(viewController: self)
+        removeAnimate()
+    }
+    @IBAction func finalizeTouched(_ sender: AnyObject) {
+        if(sessionImageView.image != nil && sessionNameTextField.text != "" && sessionBioTextView.text != "tap to add a little info about the type of session you are trying to create."){
+            let imageName = NSUUID().uuidString
+            let storageRef = FIRStorage.storage().reference().child("session_images").child("\(imageName).jpg")
+            
+            if let sessionImage = self.sessionImageView.image, let uploadData = UIImageJPEGRepresentation(sessionImage, 0.1) {
+                storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
+                    if error != nil {
+                        print(error)
+                        return
+                    }
+                    //let tempURL = URL.init(fileURLWithPath: "temp")
+                    if let sessionImageUrl = metadata?.downloadURL()?.absoluteString {
+                        var tempArray = [String]()
+                        var tempArray2 = [String]()
+                        var values = Dictionary<String, Any>()
+                        tempArray2.append((FIRAuth.auth()?.currentUser?.uid)! as String)
+                        values["sessionName"] =  self.sessionNameTextField.text
+                        values["sessionArtists"] = [(FIRAuth.auth()?.currentUser?.uid)!:"-"]
+                        values["sessionBio"] = self.sessionBioTextView.text
+                        values["sessionPictureURL"] = sessionImageUrl
+                        values["sessionMedia"] = [""]
+                        values["messages"] = [String: Any]()
+                        let dateformatter = DateFormatter()
+                        
+                        dateformatter.dateStyle = DateFormatter.Style.short
+                        
+                        //dateformatter.timeStyle = DateFormatter.Style.short
+                        
+                        let now = dateformatter.string(from: self.datePicker.date)
+                        values["sessionDate"] = now
+                        
+                        
+                        let ref = FIRDatabase.database().reference()
+                        let sessReference = ref.child("sessions").childByAutoId()
+                        
+                        let sessReferenceAnyObject = sessReference.key
+                        values["sessionUID"] = sessReferenceAnyObject
+                        tempArray.append(sessReferenceAnyObject)
+                        //print(sessReference.key)
+                        //sessReference.childByAutoId()
+                        sessReference.updateChildValues(values, withCompletionBlock: {(err, ref) in
+                            if err != nil {
+                                print(err)
+                                return
+                            }
+                        })
+                        let user = FIRAuth.auth()?.currentUser?.uid
+                        //var sessionVals = Dictionary
+                        //let userSessRef = ref.child("users").child(user).child("activeSessions")
+                        self.ref.child("users").child(user!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                for snap in snapshots{
+                                    tempArray.append(snap.value! as! String)
+                                }
+                            }
+                            var tempDict = [String : Any]()
+                            tempDict["activeSessions"] = tempArray
+                            let userRef = ref.child("users").child(user!)
+                            userRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
+                                if err != nil {
+                                    print(err)
+                                    return
+                                }
+                            })
+                            self.dismissalDelegate?.finishedShowing(viewController: self)
+                            self.removeAnimate()
+                            //this is ridiculously stupid way to reload currentSession data. find someway to fix
+                            self.performSegue(withIdentifier: "FinalizeSessionToProfile", sender: self)
+                            self.performSegue(withIdentifier: "CreateSessionPopupToCurrentSession", sender: self)
+                        })
+                    }
+                })
+            }
+
+            
+        }else{
+            let alert = UIAlertController(title: "Error", message: "Missing Information", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+            }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        var selectedImageFromPicker: UIImage?
+        print("test")
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            selectedImageFromPicker = editedImage
+            
+        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            
+            selectedImageFromPicker = originalImage
+        }
+        
+        if let selectedImage = selectedImageFromPicker {
+            
+            sessionImageViewButton.setBackgroundImage(selectedImage, for: .normal)
+            //profileImageViewButton.set
+            sessionImageView.image = selectedImage
+            
+        }
+        
+        dismiss(animated: true, completion: nil)
+        
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        print("canceled picker")
+        dismiss(animated: true, completion: nil)
+    }
+
+    
+}

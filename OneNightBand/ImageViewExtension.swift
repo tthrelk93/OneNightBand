@@ -12,7 +12,7 @@ import UIKit
 let imageCache = NSCache<AnyObject, AnyObject>()
 
 extension UIImageView{
-    func loadImageUsingCacheWithUrlString(urlString: String) {
+    func loadImageUsingCacheWithUrlString(_ urlString: String) {
         
         self.image = nil
         
@@ -23,7 +23,7 @@ extension UIImageView{
         }
         
         //otherwise fire off a new download
-        let url = NSURL(string: urlString)
+        let url = URL(string: urlString)
         URLSession.shared.dataTask(with: url! as URL, completionHandler: { (data, response, error) in
             
             //download hit an error so lets return out

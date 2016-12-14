@@ -9,9 +9,18 @@
 import UIKit
 
 class ArtistCell: UITableViewCell {
+    
+    
+    @IBOutlet weak var artistImageView: UIImageView!
 
+    @IBOutlet weak var artistNameLabel: UILabel!
+    @IBOutlet weak var artistInstrumentLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.backgroundColor = UIColor.white
+        //self.artistImageView.layer.cornerRadius = artistImageView.frame.width/2
+        //self.artistImageView.clipsToBounds = true
         // Initialization code
     }
 
@@ -22,3 +31,7 @@ class ArtistCell: UITableViewCell {
     }
 
 }
+
+
+
+
