@@ -51,11 +51,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var profilePicCollectionView: UICollectionView!
     //@IBOutlet weak var flowLayout: FlowLayout!
     //@IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var addOriginalMusicButton: UIButton!
-    @IBAction func addOriginalMusicSelected(_ sender: AnyObject) {
-        
-
-    }
+   
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.none
     }
@@ -70,8 +66,10 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     //@IBOutlet weak var editBioLabel: UILabel!
     
     var sizingCell: PictureCollectionViewCell?
+    var sizingCell2: VideoCollectionViewCell?
     
     var instrumentArray = [String]()
+    var youtubeArray = [NSURL]()
    
     
     var ref = FIRDatabase.database().reference()
@@ -140,7 +138,6 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         self.bioTextView.delegate = self
         
        
-        loadPicCollection()
         let userID = FIRAuth.auth()?.currentUser?.uid
         ref.child("users").child(userID!).child("instruments").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -200,31 +197,56 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        loadYoutubeCollection()
+        loadPicCollection()
+    }
+    var tempLink: NSURL?
     
+    @IBOutlet weak var youtubeCollectionView: UICollectionView!
+    func loadYoutubeCollection(){
+        let userID = FIRAuth.auth()?.currentUser?.uid
+
+        ref.child("users").child(userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                
+                
+                for snap in snapshots{
+                    self.currentCollect = "youtube"
+                    
+                    self.youtubeArray.append(NSURL(string: snap.value as! String)!)
+                    self.tempLink = NSURL(string: (snap.value as? String)!)
+                    //self.tempTitle = snap.key
+                    //self.YoutubeArray.append(snap.value as! String)
+                    let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                    self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                    
+                    self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                    self.youtubeCollectionView.backgroundColor = UIColor.clear
+                    self.youtubeCollectionView.dataSource = self
+                    self.youtubeCollectionView.delegate = self
+                    
+                    
+                    
+                }
+                
+                
+                
+            }
+        })
+
+    }
+    var currentCollect: String?
     func loadPicCollection(){
         let userID = FIRAuth.auth()?.currentUser?.uid
         ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
-            // Get user value
-            //print(snapshot.value as? NSDictionary)
+
             let value = snapshot.value as? NSDictionary
             self.bioTextView.text = value?["bio"] as! String
             self.navigationItem.title = (value?["name"] as! String)
-            print("hey \(self.picArray.count)")
-           /* if value?["profileImageUrl"] {
-                self.picArray = [value?["profileImageUrl"] as! String]
-                for _ in self.picArray{
-                    let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
-                    self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
-                    
-                    self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
-                    self.profilePicCollectionView.backgroundColor = UIColor.clear
-                    self.profilePicCollectionView.dataSource = self
-                    self.profilePicCollectionView.delegate = self
-                    self.curCount += 1
-                }
-
-            }*/
-            self.ref.child("users").child(userID!).child("profileImageUrl").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+          self.ref.child("users").child(userID!).child("profileImageUrl").observeSingleEvent(of: .value, with: { (snapshot) in
                let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
                 
                 for snap in snapshots{
@@ -234,7 +256,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.picArray.append(snapshot.value as! String)
                 }
                 for _ in self.picArray{
-                
+                    
+                    self.currentCollect = "pic"
                     let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
                     self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
                     self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
@@ -259,89 +282,32 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         }
 
     }
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        var selectedImageFromPicker: UIImage?
-        print("test")
-        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            selectedImageFromPicker = editedImage
-            
-        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            
-            selectedImageFromPicker = originalImage
-        }
-        
-        if let selectedImage = selectedImageFromPicker {
-            let imageName = NSUUID().uuidString
-            let storageRef = FIRStorage.storage().reference().child("profile_images").child("\(imageName).jpg")
-            
-            if let uploadData = UIImageJPEGRepresentation(selectedImage, 0.1) {
-                storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
-                    
-                    if error != nil {
-                        print(error)
-                        return
-                    }
-                    
-                    if let profileImageUrl = metadata?.downloadURL()?.absoluteString {
-                    self.profilePicCollectionView.performBatchUpdates({
-                        
-                        let user = FIRAuth.auth()?.currentUser?.uid
-                        self.picArray.append(profileImageUrl)
-                        self.profilePicCollectionView.insertItems(at: [self.profilePicCollectionView.indexPath(for: self.profilePicCollectionView.visibleCells.first!)!])
-                        self.curCount += 1
-                        
-                        
-                        let recipient = self.ref.child("users").child(user!)
-                        var values = Dictionary<String, Any>()
-                        values["profileImageUrl"] = self.picArray
-                        recipient.updateChildValues(values, withCompletionBlock: {(err, ref) in
-                            if err != nil {
-                                print(err)
-                                return
-                            }
-                        })
-                        
-
-                        
-
-                        })
-                    
-                    }
-                    DispatchQueue.main.async {
-                        self.profilePicCollectionView.reloadData()
-                    }
-
-                })
-            }
-        }
-        
-        
-    
-        self.dismiss(animated: true, completion: nil)
-        
-    }
-        
-        
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("canceled picker")
-        dismiss(animated: true, completion: nil)
-    }
-    
-
     
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        if self.currentCollect == "pic"{
             return self.curCount
+        }else{
+            return self.youtubeArray.count
+        }
             }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PictureCollectionViewCell", for: indexPath as IndexPath) as! PictureCollectionViewCell
+        if currentCollect == "pic"{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PictureCollectionViewCell", for: indexPath as IndexPath) as! PictureCollectionViewCell
         
-        self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
+            self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
+            
         
-        return cell
+            return cell
+        }else{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
+            
+            self.configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
+            
+            
+            return cell
+        }
     }
             
     
@@ -358,6 +324,10 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
          cell.isPaused = true
          }*/
         
+    }
+    func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
+        cell.videoURL = self.tempLink
+        cell.youtubePlayerView.loadVideoURL(videoURL: self.tempLink!)
     }
     func configureCell(_ cell: PictureCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
         print("ip: \(indexPath.row)")
