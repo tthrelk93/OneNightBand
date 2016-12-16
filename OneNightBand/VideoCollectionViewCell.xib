@@ -9,10 +9,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="VideoCollectionViewCell" id="gTV-IL-0wX" customClass="VideoCollectionViewCell" customModule="OneNightBand" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="103" height="96"/>
+            <rect key="frame" x="0.0" y="0.0" width="120" height="113"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="103" height="96"/>
+                <rect key="frame" x="0.0" y="0.0" width="120" height="113"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ci3-JQ-565" customClass="YouTubePlayerView" customModule="YouTubePlayer">
@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vvz-qw-ywJ">
-                                <frame key="frameInset" minX="21.36%" minY="77.08%" width="57.28%" height="14.58%"/>
+                                <frame key="frameInset" minX="21.67%" minY="76.99%" width="56.67%" height="15.04%"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.55292609279141103" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button">
@@ -33,14 +33,26 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <button opaque="NO" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DOz-KR-2a5">
+                        <frame key="frameInset" minX="0.0%" minY="0.0%" width="23.33%" height="17.70%"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" weight="black" pointSize="18"/>
+                        <state key="normal" title="x">
+                            <color key="titleColor" red="1" green="0.014919561836851281" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="removeVideoPressed:" destination="gTV-IL-0wX" eventType="touchUpInside" id="fw6-pA-iLk"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
-            <size key="customSize" width="256" height="244"/>
+            <size key="customSize" width="273" height="261"/>
             <connections>
                 <outlet property="playPauseButton" destination="Vvz-qw-ywJ" id="R2D-uo-rwW"/>
+                <outlet property="removeVideoButton" destination="DOz-KR-2a5" id="ZEN-ec-keF"/>
                 <outlet property="youtubePlayerView" destination="ci3-JQ-565" id="Qbx-cc-m90"/>
             </connections>
-            <point key="canvasLocation" x="-14.5" y="40"/>
+            <point key="canvasLocation" x="-6" y="48.5"/>
         </collectionViewCell>
     </objects>
 </document>

@@ -288,7 +288,6 @@
 				3B0F1C791DB064B000B5F6D8 /* GoogleService-Info.plist */,
 				3B1062911DAD7B5600D818ED /* ALRadialMenu.swift */,
 				3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */,
-				3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */,
 			);
 			path = OneNightBand;
 			sourceTree = "<group>";
@@ -331,6 +330,7 @@
 				3BCC0BAE1DDA66540008BF19 /* ChatViewController.swift */,
 				3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */,
 				3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */,
+				3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */,
 			);
 			name = Session;
 			sourceTree = "<group>";

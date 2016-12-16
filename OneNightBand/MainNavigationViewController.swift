@@ -30,6 +30,8 @@ extension DismissalDelegate where Self: UIViewController
     func finishedShowing(viewController: UIViewController) {
         if viewController.isBeingPresented && viewController.presentingViewController == self
         {
+            self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
+            
             self.dismiss(animated: true, completion: nil)
             return
         }
@@ -38,8 +40,32 @@ extension DismissalDelegate where Self: UIViewController
     }
 }
 
-class MainNavigationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PerformSegueInRootProtocol, DismissalDelegate  /*,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout*/{
+protocol LoadCollectionViewDelegate : class
+{
+    func loadCollectView()
     
+}
+protocol LoadCollectionViewData : class
+{
+    weak var loadDataDelegate : LoadCollectionViewDelegate? { get set }
+}
+
+
+
+class MainNavigationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PerformSegueInRootProtocol, DismissalDelegate, LoadCollectionViewDelegate  /*,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout*/{
+    internal func loadCollectView() {
+        print("loadCollectView")
+        loadYoutubeCollection()
+        loadPicCollection()
+    }
+
+    
+    //func loadCollectView() {
+     //   print("loadCollectView")
+     //   loadYoutubeCollection()
+      //  loadPicCollection()
+  //  }
+    var loadDelegate: LoadCollectionViewDelegate?
     func prepareForSegue(segue: UIStoryboardSegue, sender _: AnyObject?) {
         if let vc = segue.destination as? Dismissable
         {
@@ -107,6 +133,9 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
            }
     var picArray = [String]()
     var curCount = 0
+    
+    
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         curCount = 0
@@ -116,24 +145,9 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         createSessionButton.setTitle("Session\n Manager", for: .normal)
         createSessionButton.titleLabel?.textAlignment = .center
         createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        //let navBar:UINavigationBar = UINavigationBar()
-        //navBar.backgroundColor = UIColor.black
-        //view.addSubview(navBar)
-        
-        
         createSessionButton.layer.cornerRadius = 15
         createSessionButton.clipsToBounds = true
         createSessionButton.layer.masksToBounds = false
-        //view.addSubview(skillsLabel)
-        //setupSkillsLabel()
-        //collectionView.showsVerticalScrollIndicator = true
-        
-        //self.editBioUpdateButton.layer.cornerRadius = 5
-        //self.editBioUpdateButton.isHidden = true
-        //self.editBioLabel.isHidden = false
-        //self.editBioUpdateButton.titleLabel?.text = "Save Changes"
-        //editBioUpdateButton.setTitleColor(UIColor.orange, for: .normal)
-        //editBioUpdateButton.titleLabel?.textColor = UIColor.orange
         
         self.bioTextView.delegate = self
         
@@ -148,70 +162,37 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.tags.append(tag)
                 }
             }
-           /* let cellNib = UINib(nibName: "TagCell", bundle: nil)
-            self.collectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
-            self.collectionView.backgroundColor = UIColor.clear
-            self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
-            
-            //self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
-            self.collectionView.dataSource = self
-            self.collectionView.delegate = self*/
-            
+          
         })
     
 
         
         
-        //print (instrumentArray)
-        //initializing TagCell and creating a cell for each item in array TAGS
-        
-        //add logout button to Nav Bar
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
         if FIRAuth.auth()?.currentUser?.uid == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
-        
-        //set image picker delegate and then set profile pic constraints
-        
-        /*profilePicture.layer.borderWidth = 2
-        profilePicture.layer.masksToBounds = false
-        profilePicture.layer.borderColor = UIColor.white.cgColor
-        profilePicture.layer.cornerRadius = profilePicture.frame.width/2
-        profilePicture.clipsToBounds = true
-        
-        photoSelectorButton.layer.masksToBounds = false
-        photoSelectorButton.layer.cornerRadius = photoSelectorButton.frame.width/2
-        photoSelectorButton.clipsToBounds = true*/
-        
-        //creating and adding blur effect to subview
-        /*let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        //always fill the view
-        blurEffectView.frame = self.view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.backgroundImage.addSubview(blurEffectView)*/
-        //let gesture = UITapGestureRecognizer(target: self, action: #selector(showMenu()))
-        //view.addGestureRecognizer(gesture)
-
-        
     }
+    
+    
     
     override func viewDidAppear(_ animated: Bool) {
         loadYoutubeCollection()
         loadPicCollection()
     }
-    var tempLink: NSURL?
     
+    
+    
+    var tempLink: NSURL?
     @IBOutlet weak var youtubeCollectionView: UICollectionView!
-    func loadYoutubeCollection(){
+    
+    public func loadYoutubeCollection(){
         let userID = FIRAuth.auth()?.currentUser?.uid
 
         ref.child("users").child(userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                
-                
                 for snap in snapshots{
                     self.currentCollect = "youtube"
                     
@@ -226,13 +207,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.youtubeCollectionView.backgroundColor = UIColor.clear
                     self.youtubeCollectionView.dataSource = self
                     self.youtubeCollectionView.delegate = self
-                    
-                    
-                    
                 }
-                
-                
-                
             }
         })
 
@@ -269,14 +244,12 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 }
                 
             })
-            
-            
-            
-            /*if let profileImageUrl = selfpicArray.first {
-             self.profilePicture.loadImageUsingCacheWithUrlString(profileImageUrl)
-             }*/
-            
-            // ...
+           /* DispatchQueue.main.async {
+                self.profilePicCollectionView.reloadData()
+                
+            }*/
+
+
         }) { (error) in
             print(error.localizedDescription)
         }
@@ -313,26 +286,16 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        /*let cell = collectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
-         if cell.isPlaying == false{
-         cell.youtubePlayerView.play()
-         cell.isPlaying = true
-         cell.isPaused = false
-         }else{
-         cell.youtubePlayerView.pause()
-         cell.isPlaying = false
-         cell.isPaused = true
-         }*/
         
     }
     func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
-        cell.videoURL = self.tempLink
-        cell.youtubePlayerView.loadVideoURL(videoURL: self.tempLink!)
+        cell.videoURL = self.youtubeArray[indexPath.row]
+        cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
     }
     func configureCell(_ cell: PictureCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
         print("ip: \(indexPath.row)")
             cell.picImageView.loadImageUsingCacheWithUrlString(self.picArray[indexPath.row])
-        switch UIScreen.main.bounds.width{
+       /* switch UIScreen.main.bounds.width{
         case 320:
             
             cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width:320, height:267)
@@ -349,11 +312,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             
             
             
-        }
-
-        
-            
-            
+        }*/
+ 
         }
             
     
@@ -372,11 +332,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             }
     func currentSessionsButtonSelected(){
         performSegue(withIdentifier: "ProfileToSessionCollection", sender: self)
-        /*let currentSessionsVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CurrentSessionsVC") as! CurrentSessionCollectionView
-        self.addChildViewController(currentSessionsVC)
-        currentSessionsVC.view.frame = self.view.frame
-        self.view.addSubview(currentSessionsVC.view)
-        currentSessionsVC.didMove(toParentViewController: self)*/
+       
     }
     func sessionInvitesButtonSelected(){
         performSegue(withIdentifier: "MainNavToSessionInvites", sender: self)
@@ -405,13 +361,11 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 button.layer.borderWidth = 2
                 button.layer.borderColor = UIColor.init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1).cgColor
                 button.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
-                button.backgroundColor = UIColor.clear//init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1)
+                button.backgroundColor = UIColor.clear
                 button.layer.masksToBounds = false
                 button.layer.cornerRadius = button.frame.height/2
                 button.clipsToBounds = true
-                //button.widthAnchor.constraint(equalToConstant: 150)
-                //button.heightAnchor.constraint(equalToConstant: 150)
-                
+   
                 buttons.append(button)
 
             case 375:
@@ -427,13 +381,10 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 button.layer.borderWidth = 2
                 button.layer.borderColor = UIColor.init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1).cgColor
                 button.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
-                button.backgroundColor = UIColor.clear//init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1)
+                button.backgroundColor = UIColor.clear
                 button.layer.masksToBounds = false
                 button.layer.cornerRadius = button.frame.height/2
                 button.clipsToBounds = true
-                //button.widthAnchor.constraint(equalToConstant: 150)
-                //button.heightAnchor.constraint(equalToConstant: 150)
-                
                 buttons.append(button)
 
             case 414:
@@ -449,12 +400,10 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 button.layer.borderWidth = 2
                 button.layer.borderColor = UIColor.init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1).cgColor
                 button.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
-                button.backgroundColor = UIColor.clear//init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1)
+                button.backgroundColor = UIColor.clear
                 button.layer.masksToBounds = false
                 button.layer.cornerRadius = button.frame.height/2
                 button.clipsToBounds = true
-                //button.widthAnchor.constraint(equalToConstant: 150)
-                //button.heightAnchor.constraint(equalToConstant: 150)
                 
                 buttons.append(button)
 
@@ -471,18 +420,13 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 button.layer.borderWidth = 2
                 button.layer.borderColor = UIColor.init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1).cgColor
                 button.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
-                button.backgroundColor = UIColor.clear//init(red: CGFloat(colorArray[i][0]/255.0), green: CGFloat(colorArray[i][1]/255.0), blue: CGFloat(colorArray[i][2]/255.0), alpha: 1)
+                button.backgroundColor = UIColor.clear
                 button.layer.masksToBounds = false
                 button.layer.cornerRadius = button.frame.height/2
                 button.clipsToBounds = true
-                //button.widthAnchor.constraint(equalToConstant: 150)
-                //button.heightAnchor.constraint(equalToConstant: 150)
                 
                 buttons.append(button)
-
-                
-
-                        }
+            }
         }
         
         return buttons
@@ -498,47 +442,10 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
 
 
 
-
-       
-    
-    
-    /*//CollectionView Functions
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tags.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TagCell", for: indexPath as IndexPath) as! TagCell
-        self.configureCell(cell: cell, forIndexPath: indexPath as NSIndexPath)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        self.configureCell(cell: self.sizingCell!, forIndexPath: indexPath as NSIndexPath)
-        return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath as IndexPath, animated: false)
-        tags[indexPath.row].selected = !tags[indexPath.row].selected
-        self.collectionView.reloadData()
-    }
-    
-    func configureCell(cell: TagCell, forIndexPath indexPath: NSIndexPath) {
-        let tag = tags[indexPath.row]
-        cell.tagName.text = tag.name
-        cell.tagName.textColor = tag.selected ? UIColor.white : UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
-        cell.backgroundColor = tag.selected ? UIColor.orange : UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
-    }*/
-
-    
     
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        //self.editBioUpdateButton.isHidden = false
-        //self.editBioUpdateButton.isEnabled = true
-        //self.editBioLabel.isHidden = true
-        }
+                }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         
@@ -554,29 +461,11 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             print(logoutError)
         }
         
-        //let loginController = CreateAccountViewController()
+       
         performSegue(withIdentifier: "LogoutSegue", sender: self)
-        //present(loginController, animated: true, completion: nil)
     }
 
-
-    /*func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            profilePicture.image = image
-        } else{
-            print("Something went wrong")
-        }
-        
-        self.dismiss(animated: true, completion: nil)
-    }
-            
     
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }*/
-
-        
     @IBAction func editBioUpdateButtonPressed(_ sender: AnyObject) {
         if let user = FIRAuth.auth()?.currentUser?.uid{
             let ref = FIRDatabase.database().reference()

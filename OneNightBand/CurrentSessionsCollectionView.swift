@@ -256,8 +256,6 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
             }
             cellArray.append(cell)
 
-            
-
         }
         if(self.currentButton == "past"){
             if pastSessionArray.count == 0{

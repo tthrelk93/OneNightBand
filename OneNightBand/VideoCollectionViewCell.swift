@@ -10,8 +10,21 @@ import UIKit
 import YouTubePlayer
 
 
-class VideoCollectionViewCell: UICollectionViewCell {
+
+
+class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     
+    weak var removeVideoDelegate: RemoveVideoDelegate?
+   
+    @IBAction func removeVideoPressed(_ sender: AnyObject) {
+        print("remove Pressed: \(self.videoIndex)")
+        removeVideoDelegate?.removeVideo(removalVid: self.videoURL!)
+        
+    }
+    
+    
+    
+    @IBOutlet weak var removeVideoButton: UIButton!
     @IBOutlet weak var youtubePlayerView: YouTubePlayerView!
     //var player:Player?
     @IBOutlet weak var playPauseButton: UIButton!
@@ -26,7 +39,7 @@ class VideoCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    var videoID: String?
+    var videoIndex: Int?
     var videoURL: NSURL?
     //var isPlaying = Bool()
     //var isPaused = Bool()
@@ -34,6 +47,7 @@ class VideoCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         // Initialization code
          self.youtubePlayerView.frame = CGRect(x: 0,y:0,width:103,height:103)
+        //self.removeVideoButton.isHidden = true
          //isPlaying = false
         //isPaused = true
        /* var currentVideoURL: URL?
