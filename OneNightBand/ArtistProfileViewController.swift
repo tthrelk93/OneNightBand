@@ -46,7 +46,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
             //cell.detailTextLabel?.text = user.email
             
             if let profileImageUrl = value?["profileImageUrl"] {
-                self.profilePicture.loadImageUsingCacheWithUrlString(profileImageUrl as! String)
+                self.profilePicture.loadImageUsingCacheWithUrlString((profileImageUrl as! [String]).first!)
             }
             
             // ...

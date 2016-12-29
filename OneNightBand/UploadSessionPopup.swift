@@ -396,6 +396,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     var movieURLFromPicker: NSURL?
     
 }
+
 extension UploadSessionPopup: UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
         //guard let mediaType: String = info[UIImagePickerControllerMediaType] as? String else {

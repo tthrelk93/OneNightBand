@@ -395,7 +395,7 @@ open class ALRadialMenu: UIButton {
     fileprivate func dismissAnimation(_ view: ALRadialMenuButton, index: Int) {
         let _delay = Double(index) * delay
         if(view.home == "mainNav"){
-            self.setTitle("Session Manager", for: .normal)
+            self.setTitle("Menu", for: .normal)
         }else{
             self.setTitle("Search By\n Instrument", for: .normal)
         }

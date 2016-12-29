@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vvz-qw-ywJ">
-                                <frame key="frameInset" minX="21.67%" minY="76.99%" width="56.67%" height="15.04%"/>
+                                <frame key="frameInset" minX="21.67%" minY="76.99%" width="55.83%" height="15.04%"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.55292609279141103" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button">
@@ -44,10 +44,18 @@
                             <action selector="removeVideoPressed:" destination="gTV-IL-0wX" eventType="touchUpInside" id="fw6-pA-iLk"/>
                         </connections>
                     </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Videos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Zt-ed-opt">
+                        <frame key="frameInset" minX="9.17%" minY="40.71%" width="81.67%" height="18.58%"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <size key="customSize" width="273" height="261"/>
             <connections>
+                <outlet property="noVideosLabel" destination="9Zt-ed-opt" id="zjQ-cw-lq5"/>
                 <outlet property="playPauseButton" destination="Vvz-qw-ywJ" id="R2D-uo-rwW"/>
                 <outlet property="removeVideoButton" destination="DOz-KR-2a5" id="ZEN-ec-keF"/>
                 <outlet property="youtubePlayerView" destination="ci3-JQ-565" id="Qbx-cc-m90"/>

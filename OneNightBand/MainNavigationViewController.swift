@@ -127,7 +127,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBAction func addPicButtonPressed(_ sender: AnyObject) {
         
         self.view.backgroundColor = UIColor.black
-        self.view.alpha = 0.8
+        self.view.alpha = 0.6
         
         
            }
@@ -142,7 +142,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
         
         profilePicCollectionView.delegate = self
-        createSessionButton.setTitle("Session\n Manager", for: .normal)
+        //createSessionButton.setTitle("Menu", for: .normal)
         createSessionButton.titleLabel?.textAlignment = .center
         createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         createSessionButton.layer.cornerRadius = 15
@@ -153,6 +153,9 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
        
         let userID = FIRAuth.auth()?.currentUser?.uid
+        ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
+            
+            })
         ref.child("users").child(userID!).child("instruments").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
@@ -180,6 +183,9 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     override func viewDidAppear(_ animated: Bool) {
         loadYoutubeCollection()
         loadPicCollection()
+        self.view.backgroundColor = UIColor.clear
+        self.view.alpha = 1.0
+
     }
     
     
@@ -209,9 +215,23 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.youtubeCollectionView.delegate = self
                 }
             }
+            if self.youtubeArray.count == 0{
+                self.videoCollectEmpty = true
+                let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                
+                self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                self.youtubeCollectionView.backgroundColor = UIColor.clear
+                self.youtubeCollectionView.dataSource = self
+                self.youtubeCollectionView.delegate = self
+
+            }else{
+                self.videoCollectEmpty = false
+            }
         })
 
     }
+    var videoCollectEmpty: Bool?
     var currentCollect: String?
     func loadPicCollection(){
         let userID = FIRAuth.auth()?.currentUser?.uid
@@ -240,8 +260,9 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.profilePicCollectionView.dataSource = self
                     self.profilePicCollectionView.delegate = self
                     self.curCount += 1
-
+                    
                 }
+            
                 
             })
            /* DispatchQueue.main.async {
@@ -262,9 +283,14 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         if self.currentCollect == "pic"{
             return self.curCount
         }else{
-            return self.youtubeArray.count
-        }
+            if self.videoCollectEmpty == true{
+                return 1
+            }else{
+                return self.youtubeArray.count
             }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if currentCollect == "pic"{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PictureCollectionViewCell", for: indexPath as IndexPath) as! PictureCollectionViewCell
@@ -289,11 +315,28 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
     }
     func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
-        cell.videoURL = self.youtubeArray[indexPath.row]
-        cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+        if self.videoCollectEmpty == true{
+            //cell.layer.borderColor = UIColor.white.cgColor
+            //cell.layer.borderWidth = 2
+            cell.videoURL = nil
+            cell.youtubePlayerView.isHidden = true
+            //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.removeVideoButton.isHidden = true
+            cell.noVideosLabel.isHidden = false
+            
+
+        }else{
+            //cell.layer.borderColor = UIColor.clear.cgColor
+            //cell.layer.borderWidth = 0
+            cell.youtubePlayerView.isHidden = false
+            cell.videoURL = self.youtubeArray[indexPath.row]
+            cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.removeVideoButton.isHidden = true
+             cell.noVideosLabel.isHidden = true
+        }
     }
     func configureCell(_ cell: PictureCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        print("ip: \(indexPath.row)")
+        
             cell.picImageView.loadImageUsingCacheWithUrlString(self.picArray[indexPath.row])
        /* switch UIScreen.main.bounds.width{
         case 320:
@@ -319,10 +362,11 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
 
     
+    @IBOutlet weak var sessionsPlayed: UILabel!
     
     func createSessionButtonSelected() {
         self.view.backgroundColor = UIColor.black
-        self.view.alpha = 0.8
+        self.view.alpha = 0.6
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
@@ -436,7 +480,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         _ = createSessionButton
             .setButtons(generateButtons())
             .setDelay(0.05)
-            .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y + 70.0)))
+            .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y + 65.0)))
             .presentInView(view)
             }
 

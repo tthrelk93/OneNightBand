@@ -23,6 +23,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     }
     
     
+    @IBOutlet weak var noVideosLabel: UILabel!
     
     @IBOutlet weak var removeVideoButton: UIButton!
     @IBOutlet weak var youtubePlayerView: YouTubePlayerView!
@@ -46,7 +47,12 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-         self.youtubePlayerView.frame = CGRect(x: 0,y:0,width:103,height:103)
+         self.youtubePlayerView.frame = self.frame//CGRect(x: 0,y:0,width:103,height:103)
+        if self.videoURL == nil{
+            self.noVideosLabel.isHidden = false
+        }else{
+            self.noVideosLabel.isHidden = true
+        }
         //self.removeVideoButton.isHidden = true
          //isPlaying = false
         //isPaused = true
