@@ -27,42 +27,42 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         switch UIScreen.main.bounds.width{
         case 320:
             var tempLabel = UILabel()
-            tempLabel.text = "Create\n Your Account"
+            tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 30.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
-            tempLabel.numberOfLines = 2
+            tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
             return tempLabel
             
         case 375:
             var tempLabel = UILabel()
-            tempLabel.text = "Create\n Your Account"
-            tempLabel.font = UIFont.systemFont(ofSize: 40.0, weight: UIFontWeightThin)
+            tempLabel.text = "OneNightBand"
+            tempLabel.font = UIFont.systemFont(ofSize: 35.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
-            tempLabel.numberOfLines = 2
+            tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
              return tempLabel
             
         case 414:
             var tempLabel = UILabel()
-            tempLabel.text = "Create\n Your Account"
-            tempLabel.font = UIFont.systemFont(ofSize: 50.0, weight: UIFontWeightThin)
+            tempLabel.text = "OneNightBand"
+            tempLabel.font = UIFont.systemFont(ofSize: 40.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
-            tempLabel.numberOfLines = 2
+            tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
              return tempLabel
             
             
         default:
             var tempLabel = UILabel()
-            tempLabel.text = "Create\n Your Account"
-            tempLabel.font = UIFont.systemFont(ofSize: 50.0, weight: UIFontWeightThin)
+            tempLabel.text = "OneNightBand"
+            tempLabel.font = UIFont.systemFont(ofSize: 40.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
-            tempLabel.numberOfLines = 2
+            tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
             return tempLabel
            
@@ -83,8 +83,8 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     }
     let createAccountLabelForLoginSegment: UILabel = {
         var tempLabel = UILabel()
-        tempLabel.text = "Create\n Your Account"
-        tempLabel.font = UIFont.systemFont(ofSize: 50.0, weight: UIFontWeightThin)
+        tempLabel.text = "OneNightBand"
+        tempLabel.font = UIFont.systemFont(ofSize: 35.0, weight: UIFontWeightThin)
         tempLabel.textAlignment = NSTextAlignment.center
         tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
         tempLabel.numberOfLines = 2
@@ -95,7 +95,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
 
     func setupCreateAccountLabelForLoginSegment(){
         createAccountLabelForLoginSegment.centerXAnchor.constraint(equalTo: profileImageViewButton.centerXAnchor).isActive = true
-        createAccountLabelForLoginSegment.bottomAnchor.constraint(equalTo: profileImageViewButton.bottomAnchor, constant: -50).isActive = true
+        createAccountLabelForLoginSegment.bottomAnchor.constraint(equalTo: profileImageViewButton.bottomAnchor, constant: -80).isActive = true
         createAccountLabelForLoginSegment.widthAnchor.constraint(equalToConstant: 300).isActive = true
         createAccountLabelForLoginSegment.heightAnchor.constraint(equalToConstant: 130).isActive = true
     }
@@ -113,7 +113,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         tempButton.titleLabel?.textAlignment = NSTextAlignment.center
         tempButton.titleLabel?.lineBreakMode = .byWordWrapping
         tempButton.setTitleColor(UIColor.white, for: .normal)
-        tempButton.titleLabel?.font = UIFont.systemFont(ofSize: 28.0, weight: UIFontWeightLight)
+        tempButton.titleLabel?.font = UIFont.systemFont(ofSize: 25.0, weight: UIFontWeightLight)
         tempButton.layer.cornerRadius = 10
         tempButton.clipsToBounds = true
         tempButton.contentMode = .scaleAspectFill
@@ -129,8 +129,8 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     func setupProfileImageViewButton(){
         profileImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageViewButton.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -12).isActive = true
-        profileImageViewButton.widthAnchor.constraint(equalToConstant: 140).isActive = true
-        profileImageViewButton.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        profileImageViewButton.widthAnchor.constraint(equalToConstant: 130).isActive = true
+        profileImageViewButton.heightAnchor.constraint(equalToConstant: 130).isActive = true
     }
     
     let picker = UIImagePickerController()
@@ -335,6 +335,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             //setupCreateAccountLabelForLoginSegment()
             createAccountLabelForLoginSegment.isHidden = false
             nameTextField.placeholder = ""
+            nameTextField.text = ""
             profileImageView.isHidden = true
             profileImageViewButton.isHidden = true
             profileImageViewButton.isEnabled = false

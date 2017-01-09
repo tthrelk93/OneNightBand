@@ -244,14 +244,14 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
             print("Whyyyyy")
             if upcomingSessionArray.count == 0{
                 cell.sessionCellLabel.text = "No Upcoming Sessions"
-                cell.sessionCellLabel.textColor = UIColor.black
+                cell.sessionCellLabel.textColor = UIColor.white
             }
 
           if(indexPath.row < upcomingSessionArray.count){
             cell.sessionCellImageView.loadImageUsingCacheWithUrlString(upcomingSessionArray[indexPath.row].sessionPictureURL!)
             print(self.upcomingSessionArray[indexPath.row].sessionUID)
             cell.sessionCellLabel.text = upcomingSessionArray[indexPath.row].sessionName
-            cell.sessionCellLabel.textColor = UIColor.black
+            cell.sessionCellLabel.textColor = UIColor.white
             cell.sessionId = sessionIDArray[indexPath.row]
             }
             cellArray.append(cell)
@@ -260,12 +260,12 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
         if(self.currentButton == "past"){
             if pastSessionArray.count == 0{
                 cell.sessionCellLabel.text = "No Past Sessions"
-                cell.sessionCellLabel.textColor = UIColor.black
+                cell.sessionCellLabel.textColor = UIColor.white
             }
             if(indexPath.row < pastSessionArray.count){
                 cell.sessionCellImageView.loadImageUsingCacheWithUrlString(pastSessionArray[indexPath.row].sessionPictureURL!)
                 cell.sessionCellLabel.text = pastSessionArray[indexPath.row].sessionName
-                cell.sessionCellLabel.textColor = UIColor.black
+                cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = sessionIDArray[indexPath.row]
                 }
             cellArray.append(cell)
@@ -273,14 +273,14 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
         if(self.currentButton == "feed"){
             if sessionFeedArray.count == 0{
                 cell.sessionCellLabel.text = "No Sessions on Feed"
-                cell.sessionCellLabel.textColor = UIColor.black
+                cell.sessionCellLabel.textColor = UIColor.white
             }
 
             if(indexPath.row < sessionFeedArray.count){
                 print(indexPath.row)
                 cell.sessionCellImageView.loadImageUsingCacheWithUrlString(sessionFeedArray[indexPath.row].sessionPictureURL!)
                 cell.sessionCellLabel.text = sessionFeedArray[indexPath.row].sessionName
-                cell.sessionCellLabel.textColor = UIColor.black
+                cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = sessionIDArray[indexPath.row]
             }
             cellArray.append(cell)
@@ -288,12 +288,12 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
         if(self.currentButton == "active"){
             if activeSessionsArray.count == 0{
                 cell.sessionCellLabel.text = "No Active Sessions"
-                cell.sessionCellLabel.textColor = UIColor.black
+                cell.sessionCellLabel.textColor = UIColor.white
             }
             if(indexPath.row < activeSessionsArray.count){
             cell.sessionCellImageView.loadImageUsingCacheWithUrlString(activeSessionsArray[indexPath.row].sessionPictureURL!)
             cell.sessionCellLabel.text = activeSessionsArray[indexPath.row].sessionName
-            cell.sessionCellLabel.textColor = UIColor.black
+            cell.sessionCellLabel.textColor = UIColor.white
             cell.sessionId = sessionIDArray[indexPath.row]
             }
             cellArray.append(cell)

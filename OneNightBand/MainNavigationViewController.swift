@@ -139,8 +139,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     override func viewDidLoad(){
         super.viewDidLoad()
         curCount = 0
-        
-        
+ 
         profilePicCollectionView.delegate = self
         //createSessionButton.setTitle("Menu", for: .normal)
         createSessionButton.titleLabel?.textAlignment = .center
@@ -154,6 +153,10 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
        
         let userID = FIRAuth.auth()?.currentUser?.uid
         ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                self.sessionsPlayed.text = String(snapshots.count)
+                
+            }
             
             })
         ref.child("users").child(userID!).child("instruments").observeSingleEvent(of: .value, with: { (snapshot) in

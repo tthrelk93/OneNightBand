@@ -255,8 +255,8 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
     
     func configureCell(_ cell: ArtistCardCell, forIndexPath indexPath: NSIndexPath) {
         
-        switch UIScreen.main.bounds.width{
-        case 320:
+        //switch UIScreen.main.bounds.width{
+       /* case 320:
             
             cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width:320, height:396)
             
@@ -268,11 +268,11 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
             cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:396)
 
         default:
-            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:396)
+            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:396)*/
             
             
             
-        }
+        //}
         
 
         //self.artistCollectionView.gestureRecognizers?.first?.cancelsTouchesInView = false
