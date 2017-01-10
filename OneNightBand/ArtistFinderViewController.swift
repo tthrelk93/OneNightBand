@@ -13,10 +13,7 @@ import CoreLocation
 
 
 class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, SessionIDDest, PerformSegueInArtistFinderController, UIPickerViewDelegate,UIPickerViewDataSource{
-    
-    
-    
-    
+ 
     @IBOutlet weak var InstrumentPicker: UIPickerView!
     
     @IBOutlet weak var artistCollectionView: UICollectionView!
@@ -30,25 +27,22 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
     var thisSession: String!
     var thisSessionObject: Session!
     var instrumentPicked: String!
+    var distancePicked: String!
     var profileArtistUID: String?
+    var distanceMenuText = ["25", "50", "75", "100", "125","150", "175", "200", "200+"]
     var menuText = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp"]
        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? ArtistProfileViewController
         {
             vc.artistUID = profileArtistUID
         }
-
     }
-
     @IBOutlet weak var searchButton: UIButton!
     func performSegueToProfile(artistUID: String) {
         self.profileArtistUID = artistUID
         performSegue(withIdentifier: "FinderToProfile", sender: self)
-        
     }
-    
     @IBOutlet weak var distancePicker: UIPickerView!
-    
     
     var coordinateUser1: CLLocation?
     var coordinateUser2: CLLocation?
@@ -57,10 +51,16 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
     var tempLong: CLLocationDegrees?
     var tempLat: CLLocationDegrees?
     var distanceInMeters: Double?
-
     
     @IBAction func searchForArtistsPressed(_ sender: AnyObject) {
-        
+        var tempCoordinate: CLLocation?
+        var tempLong: CLLocationDegrees?
+        var tempLat: CLLocationDegrees?
+        var tempCoordinate2: CLLocation?
+        var tempLong2: CLLocationDegrees?
+        var tempLat2: CLLocationDegrees?
+        var tempDistInMeters: Double?
+
         artistArray = [Artist]()
         FIRDatabase.database().reference().child("users").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -77,13 +77,11 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                             let artist = Artist()
                             artist.setValuesForKeys(dictionary)
                             if(artistsAlreadyInSession.contains(artist.artistUID!) == false){
-                                
                                 if(self.artistArray.contains(artist) == false){
                                     if(artist.instruments.contains(self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]) == true){
                                         self.instrumentPicked = self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]
                                         self.artistArray.append(artist)
                                         index += 1
-                                        
                                     }
                                 }
                                 if(self.artistArray.contains(artist) == true){
@@ -94,51 +92,56 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                     }
                                 }
                             }
-                        
-                        
+                            for artist in self.artistArray{
+                                tempLong = artist.location["long"] as? CLLocationDegrees
+                                tempLat = artist.location["lat"] as? CLLocationDegrees
+                                tempCoordinate = CLLocation(latitude: tempLat!, longitude: tempLong!)
+                                    let userID = FIRAuth.auth()?.currentUser?.uid
+                                    self.ref.child("users").child(userID!).child("location").observeSingleEvent(of: .value, with: { (snapshot) in
+                                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                            for snap in snapshots{
+                                                if snap.key == "long"{
+                                                    tempLong2 = snap.value as? CLLocationDegrees
+                                                }else{
+                                                    tempLat2 = snap.value as? CLLocationDegrees
+                                                }
+                                            }
+                                            tempCoordinate2 = CLLocation(latitude: tempLat2!, longitude: tempLong2!)
+
+                                            tempDistInMeters = tempCoordinate?.distance(from: tempCoordinate2!)
+                                            let distanceInMiles = Double(round(10*(tempDistInMeters! * 0.000621371))/10)
+                                            
+                                            if distanceInMiles <= Double(self.distancePicked)!{
+                                                self.artistArray.remove(at: self.artistArray.index(of: artist)!)
+                                            }
+                                        }
+                                })
                             if self.artistArray.isEmpty{
                                 return
                             }
-                        self.InstrumentPicker.delegate = self
-                        self.InstrumentPicker.dataSource = self
-                        self.distancePicker.delegate = self
-                        self.distancePicker.dataSource = self
-                        
-                                                        
-                                
-
-                        
-                        let cellNib = UINib(nibName: "ArtistCardCell", bundle: nil)
-                        self.artistCollectionView.register(cellNib, forCellWithReuseIdentifier: "ArtistCardCell")
-                        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! ArtistCardCell?
-                        
-                        
-                        
-
-                        self.artistCollectionView.dataSource = self
-                        self.artistCollectionView.delegate = self
-
-                        self.artistCollectionView.reloadData()
-                       
-                        self.artistCollectionView.gestureRecognizers?.first?.cancelsTouchesInView = false
-                        self.artistCollectionView.gestureRecognizers?.first?.delaysTouchesBegan = false
+                                self.InstrumentPicker.delegate = self
+                                self.InstrumentPicker.dataSource = self
+                                self.distancePicker.delegate = self
+                                self.distancePicker.dataSource = self
+                                let cellNib = UINib(nibName: "ArtistCardCell", bundle: nil)
+                                self.artistCollectionView.register(cellNib, forCellWithReuseIdentifier: "ArtistCardCell")
+                                self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! ArtistCardCell?
+                                self.artistCollectionView.dataSource = self
+                                self.artistCollectionView.delegate = self
+                                self.artistCollectionView.reloadData()
+                                self.artistCollectionView.gestureRecognizers?.first?.cancelsTouchesInView = false
+                                self.artistCollectionView.gestureRecognizers?.first?.delaysTouchesBegan = false
+                            }
                         }
-
-                    })
-                        
+                        })
                     }
                 }
-            }            
+            }
         }, withCancel: nil)
-        
-        
+
         self.reloadInputViews()
-        
     }
-
-    
-
-    override func viewDidLoad() {
+   override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -146,22 +149,16 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
         layout.minimumInteritemSpacing = 20
         layout.scrollDirection = .horizontal
-        
         layout.minimumLineSpacing = 0
         artistCollectionView.collectionViewLayout = layout
         InstrumentPicker.selectRow(menuText.count/2, inComponent: 0, animated: true)
-     
-        
-        
-        
-        
     }
     func checkIfUserIsLoggedIn() {
         if FIRAuth.auth()?.currentUser?.uid == nil {
             perform(#selector(handleBack), with: nil, afterDelay: 0)
         } else {
             
-            let uid = FIRAuth.auth()?.currentUser?.uid
+            //_ = FIRAuth.auth()?.currentUser?.uid
             FIRDatabase.database().reference().child("users").observeSingleEvent(of: .value, with: { (snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                     for snap in snapshots{
@@ -180,54 +177,9 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                 self.distancePicker.dataSource = self
                 self.InstrumentPicker.selectRow(self.menuText.count/2, inComponent: 0, animated: false)
                 
-                /*let cellNib = UINib(nibName: "ArtistCardCell", bundle: nil)
-                self.artistCollectionView.register(cellNib, forCellWithReuseIdentifier: "ArtistCardCell")
-                self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! ArtistCardCell?
-                self.artistCollectionView.backgroundColor = UIColor.clear
-                self.artistCollectionView.dataSource = self
-                self.artistCollectionView.delegate = self*/
-                //self.sessionCollectionView!.reloadData()
-                
-
-                //self.artistPageViewController = self.storyboard?.instantiateViewController(withIdentifier: "UITutorialPageViewController") as! UIPageViewController
-                //self.artistPageViewController.dataSource = self
-                //self.artistPageViewController.delegate = self
-                
-                
-               /*
-                
-                //initializing first aboutONBViewController
-                let initialContentViewController = self.pageTutorialAtIndex(0) as ArtistViewData
-                var viewControllers = [ArtistViewData]()
-                viewControllers = [initialContentViewController]
-                
-                self.artistPageViewController.setViewControllers(viewControllers, direction: UIPageViewControllerNavigationDirection.forward, animated: true, completion: nil)
-                
-                //making pageView only take up top half of screen
-                self.artistPageViewController.view.frame.size.height = self.view.frame.size.height/2
-                //adding subview
-                self.addChildViewController(self.artistPageViewController)
-                self.view.addSubview(self.artistPageViewController.view)
-                self.artistPageViewController.didMove(toParentViewController: self)*/
-                
-        }, withCancel: nil)
+            }, withCancel: nil)
+        }
     }
-}
-    
-    
-    
-    
-    
-        
-    /*override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        var insets = self.artistCollectionView.contentInset
-        let value = (self.view.frame.size.width - (self.artistCollectionView.collectionViewLayout as! UICollectionViewFlowLayout).itemSize.width) * 0.5
-        insets.left = value
-        insets.right = value
-        self.artistCollectionView.contentInset = insets
-        self.artistCollectionView.decelerationRate = UIScrollViewDecelerationRateFast;
-    }*/
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         return artistArray.count
@@ -246,36 +198,8 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
 
         
     }
-    
-    
-    
-    /*public func numberOfSections(in collectionView: UICollectionView) -> Int{
-        
-    }*/
-    
+
     func configureCell(_ cell: ArtistCardCell, forIndexPath indexPath: NSIndexPath) {
-        
-        //switch UIScreen.main.bounds.width{
-       /* case 320:
-            
-            cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width:320, height:396)
-            
-        case 375:
-            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:375,height:396)
-            
-            
-        case 414:
-            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:396)
-
-        default:
-            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:396)*/
-            
-            
-            
-        //}
-        
-
-        //self.artistCollectionView.gestureRecognizers?.first?.cancelsTouchesInView = false
         cell.artistCardCellBioTextView.text = artistArray[indexPath.row].bio
         cell.artistCardCellNameLabel.text = artistArray[indexPath.row].name
         
@@ -287,11 +211,8 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         
         self.ref.child("users").child(artistArray[indexPath.row].artistUID!).child("location").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                print(snapshots)
                 
                 for snap in snapshots{
-        
-                    
                         if snap.key == "long"{
                             self.tempLong = snap.value as? CLLocationDegrees
                             
@@ -300,15 +221,12 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                         }
                     }
                 
-                print(self.tempLat)
                 self.coordinateUser2 = CLLocation(latitude: self.tempLat!, longitude: self.tempLong!)
                 let userID = FIRAuth.auth()?.currentUser?.uid
                 self.ref.child("users").child(userID!).child("location").observeSingleEvent(of: .value, with: { (snapshot) in
                     if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                         
                         for snap in snapshots{
-                            
-                            
                                 if snap.key == "long"{
                                     self.tempLong = snap.value as? CLLocationDegrees
                                     
@@ -316,24 +234,13 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                     self.tempLat = snap.value as? CLLocationDegrees
                                 }
                             }
-                    
-                    
-                        
                         self.coordinateUser1 = CLLocation(latitude: self.tempLat!, longitude: self.tempLong!)
                         
-                        
-                        
-                        
-                        
-                        //self.coordinateUser1 = CLLocation(latitude: 5.0, longitude: 5.0)
-                        //self.coordinateUser2 = CLLocation(latitude: 5.0, longitude: 3.0)
-                        
                         self.distanceInMeters = self.coordinateUser1?.distance(from: self.coordinateUser2!) // result is in meters
-                        print(self.distanceInMeters)
-                        var distanceInMiles = Double(round(10*(self.distanceInMeters! * 0.000621371))/10)
+                        
+                        let distanceInMiles = Double(round(10*(self.distanceInMeters! * 0.000621371))/10)
                         cell.distanceLabel.text = String(distanceInMiles) + " miles"
-                        
-                        
+
                         /*if((distanceInMeters! as Double) <= 1609){
                          // under 1 mile
                          }
@@ -342,48 +249,41 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                          // out of 1 mile
                          }*/
                     }
-                    
-                    
                 })
             }
-            
-            
         })
-
-        
-        
-        
     }
 
-
-
-
-    
-    
-    
-   
     public func numberOfComponents(in pickerView: UIPickerView) -> Int{
         return 1
     }
-    
-    
     // returns the # of rows in each component..
     
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
-        return menuText.count
+        if pickerView == self.distancePicker{
+            return distanceMenuText.count
+        }else{
+            return menuText.count
+        }
     }
     public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let titleData = menuText[row]
-        
-        var myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
-        return myTitle
+        if pickerView == self.distancePicker{
+            let titleData = distanceMenuText[row]
+            
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+            return myTitle
+        }else{
+            let titleData = menuText[row]
+            
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+            return myTitle
+
+        }
+    
     }
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
         
     }
-
-    
-    
     func handleBack() {
         do {
             try FIRAuth.auth()?.signOut()

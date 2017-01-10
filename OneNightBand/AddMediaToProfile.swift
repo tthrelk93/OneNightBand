@@ -648,12 +648,6 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                 cell.removeVideoButton.isHidden = true
                 cell.noVideosLabel.isHidden = true
             }
-
-            
-            
-            
-            
-            
         }
         }
     
