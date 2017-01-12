@@ -155,12 +155,12 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         let mediaKids = snap.children.allObjects as! [FIRDataSnapshot]
                         var tempArray = [String]()
                         for mediaKid in mediaKids{
-                            tempArray.append(mediaKid.key as! String)
+                            tempArray.append(mediaKid.key )
                         }
                         if tempArray.contains("youtube"){
                             self.tempLink = self.currentYoutubeLink
                             self.currentCollectID = "youtube"
-                            self.youtubeLinkArray.append(self.currentYoutubeLink)
+                            self.youtubeLinkArray.insert(self.currentYoutubeLink, at: 0)
                             self.curCount += 1
                             self.youtubeCollectionView.insertItems(at: [self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells.first!)!])
                             break
@@ -454,9 +454,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
         imagePicker.delegate = self
         picker.delegate = self
         curCount = 0
-        Soundcloud.clientIdentifier = "com.tthrelk.ios"
-        Soundcloud.clientSecret  = "YOUR_CLIENT_SECRET"
-        Soundcloud.redirectURI = "YOUR_REDIRECT_URI"
+        
         ref.child("users").child(userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{

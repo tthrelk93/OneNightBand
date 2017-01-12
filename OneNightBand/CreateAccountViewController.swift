@@ -28,7 +28,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         case 320:
             var tempLabel = UILabel()
             tempLabel.text = "OneNightBand"
-            tempLabel.font = UIFont.systemFont(ofSize: 30.0, weight: UIFontWeightThin)
+            tempLabel.font = UIFont.systemFont(ofSize: 45.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
             tempLabel.numberOfLines = 1
@@ -38,7 +38,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         case 375:
             var tempLabel = UILabel()
             tempLabel.text = "OneNightBand"
-            tempLabel.font = UIFont.systemFont(ofSize: 35.0, weight: UIFontWeightThin)
+            tempLabel.font = UIFont.systemFont(ofSize: 50.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
             tempLabel.numberOfLines = 1
@@ -48,7 +48,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         case 414:
             var tempLabel = UILabel()
             tempLabel.text = "OneNightBand"
-            tempLabel.font = UIFont.systemFont(ofSize: 40.0, weight: UIFontWeightThin)
+            tempLabel.font = UIFont.systemFont(ofSize: 58.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
             tempLabel.numberOfLines = 1
@@ -59,7 +59,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         default:
             var tempLabel = UILabel()
             tempLabel.text = "OneNightBand"
-            tempLabel.font = UIFont.systemFont(ofSize: 40.0, weight: UIFontWeightThin)
+            tempLabel.font = UIFont.systemFont(ofSize: 58.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
             tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
             tempLabel.numberOfLines = 1
@@ -76,7 +76,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     }()
         func setupCreateAccountLabel(){
         createAccountLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        createAccountLabel.bottomAnchor.constraint(equalTo: profileImageViewButton.topAnchor, constant: -12).isActive = true
+        createAccountLabel.bottomAnchor.constraint(equalTo: profileImageViewButton.topAnchor, constant: -20).isActive = true
         //createAccountLabel.leadingAnchor.constraint(equalTo: view.rightAnchor, constant: 25)
         //createAccountLabel.widthAnchor.constraint(equalToConstant: 300).isActive = true
         //createAccountLabel.heightAnchor.constraint(equalToConstant: 130).isActive = true
@@ -84,7 +84,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     let createAccountLabelForLoginSegment: UILabel = {
         var tempLabel = UILabel()
         tempLabel.text = "OneNightBand"
-        tempLabel.font = UIFont.systemFont(ofSize: 35.0, weight: UIFontWeightThin)
+        tempLabel.font = UIFont.systemFont(ofSize: 40.0, weight: UIFontWeightThin)
         tempLabel.textAlignment = NSTextAlignment.center
         tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
         tempLabel.numberOfLines = 2
