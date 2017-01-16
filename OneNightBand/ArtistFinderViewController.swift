@@ -92,6 +92,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                     }
                                 }
                             }
+                            var tempIndex = 0
                             for artist in self.artistArray{
                                 tempLong = artist.location["long"] as? CLLocationDegrees
                                 tempLat = artist.location["lat"] as? CLLocationDegrees
@@ -111,8 +112,13 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                             tempDistInMeters = tempCoordinate?.distance(from: tempCoordinate2!)
                                             let distanceInMiles = Double(round(10*(tempDistInMeters! * 0.000621371))/10)
                                             
-                                            if distanceInMiles <= Double(self.distancePicked)!{
-                                                self.artistArray.remove(at: self.artistArray.index(of: artist)!)
+                                            if distanceInMiles <= Double(self.distanceMenuText[self.distancePicker.selectedRow(inComponent: 0)])!{
+                                                tempIndex += 1
+                                                
+                                            }else{
+                                                print("greater: \(self.artistArray[tempIndex])")
+                                                self.artistArray.remove(at: tempIndex)
+                                                tempIndex -= 1
                                             }
                                         }
                                 })

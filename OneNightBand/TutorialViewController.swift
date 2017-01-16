@@ -11,6 +11,8 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import DropDown
+
 
 class TutorialViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITextViewDelegate{
     
@@ -21,6 +23,8 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
     var pageViewController: UIPageViewController!
     var currentIndex = 0
     var selectedCount = 0
+    let dropDown = DropDown()
+    
     
     @IBOutlet weak var backButton: UIButton!
     
@@ -126,6 +130,23 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         //editBioTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -10).isActive = true
         //editBioTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 10).isActive = true
        
+        //let dropDown = DropDown()
+        
+        dropDown.selectionBackgroundColor = UIColor.orange.withAlphaComponent(0.4)
+        dropDown.anchorView = self.view//collectionView.cellForItem(at: indexPath)
+        dropDown.dataSource = ["1","2","3","4","5"]
+        dropDown.selectionAction = {[unowned self] (index: Int, item: String) in
+            self.tagsAndSkill[self.TAGS[0]] = String(describing: index)
+            self.dropDown.selectRow(at: index)
+            //self.dropDown.selectRow(at: 2)
+            self.dropDown.hide()
+        }
+        dropDown.direction = .top
+        dropDown.selectRow(at: 2)
+        dropDown.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        dropDown.textColor = UIColor.white.withAlphaComponent(0.8)
+        
+
         
         //initializing TagCell and creating a cell for each item in array TAGS
         let cellNib = UINib(nibName: "TagCell", bundle: nil)
@@ -210,11 +231,17 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
     }
     
+    var tagsAndSkill = [String: String]()
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //let dropDown = Drop
+        
         if(tags[indexPath.row].selected == true){
             selectedCount -= 1
         }else{
             selectedCount += 1
+            dropDown.show()
+
+            //self.dropDown.anchorView
         }
         
         collectionView.deselectItem(at: indexPath as IndexPath, animated: false)

@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 import IQKeyboardManagerSwift
-
+import DropDown
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: true)
         FIRApp.configure()
         IQKeyboardManager.sharedManager().enable = true
-        
+        DropDown.startListeningToKeyboard()
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.darkGray
         UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.orange
         UIPageControl.appearance().backgroundColor = UIColor.black

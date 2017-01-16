@@ -333,7 +333,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             //cell.layer.borderWidth = 0
             cell.youtubePlayerView.isHidden = false
             cell.videoURL = self.youtubeArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
             cell.removeVideoButton.isHidden = true
              cell.noVideosLabel.isHidden = true
         }
@@ -368,8 +368,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var sessionsPlayed: UILabel!
     
     func createSessionButtonSelected() {
-        self.view.backgroundColor = UIColor.black
-        self.view.alpha = 0.6
+        //self.view.backgroundColor = UIColor.black
+        //self.view.alpha = 0.6
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
