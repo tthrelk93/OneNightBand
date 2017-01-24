@@ -162,7 +162,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                             self.currentCollectID = "youtube"
                             self.youtubeLinkArray.insert(self.currentYoutubeLink, at: 0)
                             self.curCount += 1
-                            self.youtubeCollectionView.insertItems(at: [self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells.first!)!])
+                            self.youtubeCollectionView.insertItems(at: [self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells.last!)!])
                             break
                         }else{
                             self.youtubeLinkArray.append(NSURL(string: self.youtubeLinkField.text!)!)

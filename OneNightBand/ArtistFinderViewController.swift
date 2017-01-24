@@ -116,9 +116,9 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                                 tempIndex += 1
                                                 
                                             }else{
-                                                print("greater: \(self.artistArray[tempIndex])")
+                                                /*("greater: \(self.artistArray[tempIndex])")
                                                 self.artistArray.remove(at: tempIndex)
-                                                tempIndex -= 1
+                                                tempIndex -= 1*/
                                             }
                                         }
                                 })
