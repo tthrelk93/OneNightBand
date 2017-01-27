@@ -32,7 +32,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
         self.bioTextView.delegate = self
         
         
-        let userID = FIRAuth.auth()?.currentUser?.uid
+        _ = FIRAuth.auth()?.currentUser?.uid
         ref.child("users").child(artistUID!).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
             //print(snapshot.value as? NSDictionary)
@@ -149,8 +149,8 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
     func configureCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
 
         cell.videoURL = self.tempLink
-        cell.youtubePlayerView.loadVideoURL(self.tempLink! as URL)
-            
+        cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+        
             
         
     }

@@ -374,7 +374,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             (user: FIRUser?, error) in
             
             if error != nil{
-                print(error)
+                print(error as Any)
                 return
             }
             else{
@@ -397,7 +397,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, error) in
             if error != nil {
-                print(error)
+                print(error as Any)
                 return
             }
             guard let uid = user?.uid else{
@@ -413,7 +413,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                     storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
                     
                         if error != nil {
-                            print(error)
+                            print(error as Any)
                             return
                         }
                     
@@ -456,7 +456,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
             
             if err != nil {
-                print(err)
+                print(err as Any)
                 return
             }
             

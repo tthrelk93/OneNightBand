@@ -206,7 +206,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         let cButton = currentButton
     
        
-        var tempLabel = (cButton?.session?.sessionName)!
+        let tempLabel = (cButton?.session?.sessionName)!
         sessionNameLabel.text = "Session Name: \(tempLabel)"
         
         sessionViewCountLabel.text = "Views: 346"//String(describing: currentButtonSess.sessionViews)  need to add views to Session in database

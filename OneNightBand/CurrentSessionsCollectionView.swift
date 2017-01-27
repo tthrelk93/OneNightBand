@@ -181,7 +181,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(currentButton)
+        print(currentButton as Any)
         if(self.currentButton == "upcoming"){
             
             return upcomingSessionArray.count
@@ -249,7 +249,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
 
           if(indexPath.row < upcomingSessionArray.count){
             cell.sessionCellImageView.loadImageUsingCacheWithUrlString(upcomingSessionArray[indexPath.row].sessionPictureURL!)
-            print(self.upcomingSessionArray[indexPath.row].sessionUID)
+            print(self.upcomingSessionArray[indexPath.row].sessionUID as Any)
             cell.sessionCellLabel.text = upcomingSessionArray[indexPath.row].sessionName
             cell.sessionCellLabel.textColor = UIColor.white
             cell.sessionId = sessionIDArray[indexPath.row]

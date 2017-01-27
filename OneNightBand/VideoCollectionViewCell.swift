@@ -17,7 +17,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     weak var removeVideoDelegate: RemoveVideoDelegate?
    
     @IBAction func removeVideoPressed(_ sender: AnyObject) {
-        print("remove Pressed: \(self.videoIndex)")
+        print("remove Pressed: \(self.videoURL)")
         removeVideoDelegate?.removeVideo(removalVid: self.videoURL!)
         
     }
@@ -42,6 +42,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     }
     var videoIndex: Int?
     var videoURL: NSURL?
+    var indexPath: IndexPath?
     //var isPlaying = Bool()
     //var isPaused = Bool()
     override func awakeFromNib() {

@@ -348,7 +348,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
             dict["bio"] = editBioTextView.text as Any?
             userRef.updateChildValues(dict, withCompletionBlock: {(err, ref) in
                 if err != nil {
-                    print(err)
+                    print(err as Any)
                     return
                 }
             })

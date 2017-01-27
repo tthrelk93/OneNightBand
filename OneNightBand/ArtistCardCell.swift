@@ -42,7 +42,7 @@ class ArtistCardCell: UICollectionViewCell {
     @IBOutlet weak var artistCardCellButton: UIButton!
     
     @IBAction func artistCardButtonPressed(_ sender: AnyObject) {
-        print(artistUID)
+        print(artistUID as Any)
         self.delegate.performSegueToProfile(artistUID: artistUID!)
     }
     @IBAction func invitePressed(_ sender: AnyObject) {
@@ -76,7 +76,7 @@ class ArtistCardCell: UICollectionViewCell {
             
             recipient.childByAutoId().updateChildValues(values, withCompletionBlock: {(err, ref) in
                 if err != nil {
-                    print(err)
+                    print(err as Any)
                     return
                 }
             })

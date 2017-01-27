@@ -158,12 +158,15 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                             tempArray.append(mediaKid.key )
                         }
                         if tempArray.contains("youtube"){
+                            
                             self.tempLink = self.currentYoutubeLink
                             self.currentCollectID = "youtube"
-                            self.youtubeLinkArray.insert(self.currentYoutubeLink, at: 0)
+                            self.youtubeLinkArray.append(self.currentYoutubeLink)
+                            //self.youtubeCollectionView.insertItems(at: [self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells.last!)!])
                             self.curCount += 1
-                            self.youtubeCollectionView.insertItems(at: [self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells.last!)!])
+                            
                             break
+                            
                         }else{
                             self.youtubeLinkArray.append(NSURL(string: self.youtubeLinkField.text!)!)
                             self.tempLink = NSURL(string: self.youtubeLinkField.text!)
@@ -181,7 +184,8 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         }
                     }
                 }
-            }//else if it doesnt contain media 
+            
+            }//else if it doesnt contain media
             else{
                 self.youtubeLinkArray.append(NSURL(string: self.youtubeLinkField.text!)!)
                 self.tempLink = NSURL(string: self.youtubeLinkField.text!)
@@ -262,10 +266,10 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             
             
         })*/
-        DispatchQueue.main.async {
-          self.youtubeCollectionView.reloadData()
+       // DispatchQueue.main.async {
+         // self.youtubeCollectionView.reloadData()
             
-        }
+       // }
 
         
         self.youtubeLinkField.text = ""
@@ -283,14 +287,22 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     //uploads appropriate media to database
     @IBAction func saveTouched(_ sender: AnyObject) {
         loadDataDelegate?.loadCollectView()
-        if (recentlyAddedVidArray.count == 0 && currentYoutubeLink == nil && newImage.image == nil){
+        if (recentlyAddedVidArray.count == 0 && currentYoutubeLink == nil && newImage.image == nil && needToRemove == false){
            print("field empty")
             
         }else{
             var values = Dictionary<String, Any>()
             var values2 = Dictionary<String, Any>()
             let recipient = self.ref.child("users").child(userID!).child("media")
-    
+            
+            var values4 = Dictionary<String, Any>()
+            self.youtubeDataArray.removeAll()
+            for val in self.youtubeLinkArray{
+                self.youtubeDataArray.append(String(describing: val))
+            }
+            values4["youtube"] = self.youtubeDataArray
+            ref.child("users").child(userID!).child("media").updateChildValues(values4)
+            print(self.youtubeDataArray)
             if recentlyAddedVidArray.count != 0{
 
                 let videoName = NSUUID().uuidString
@@ -318,7 +330,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                     if self.vidFromPhoneArray.count != 0{
                         recipient.updateChildValues(values, withCompletionBlock: {(err, ref) in
                             if err != nil {
-                                print(err)
+                                print(err as Any)
                                 return
                             }
                         })
@@ -335,7 +347,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         self.youtubeDataArray.append(snap.value as! String)
                     }
 
-                   
+                   print(self.youtubeDataArray)
                     self.youtubeDataArray.append(String(describing: self.currentYoutubeLink!))
                     values2["youtube"] = self.youtubeDataArray
 
@@ -378,6 +390,9 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                     })
                         })
                     })
+                    
+                    
+
                 }
             }
         }
@@ -394,10 +409,11 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     
     
     //**I'm removing the first element everytime rather than at the correct index path. Also might be adding to begginning but appending to array thus creating data inconsistency
+    var needToRemove = Bool()
     internal func removeVideo(removalVid: NSURL) {
         self.currentCollectID = "youtube"
         
-        
+        needToRemove = true
         var tempIndex = 0
         for vid in youtubeLinkArray{
             if removalVid == vid{
@@ -407,17 +423,16 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             }
         }
         self.youtubeLinkArray.remove(at: tempIndex)
+        
+        print(self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells[tempIndex])!)
         self.curCount -= 1
+        //self.youtubeCollectionView.deleteItems(at: [self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells[tempIndex])!])
         
-        self.youtubeCollectionView.deleteItems(at: [self.youtubeCollectionView.indexPath(for: self.youtubeCollectionView.visibleCells[tempIndex])!])
-        var values4 = Dictionary<String, Any>()
-        self.youtubeDataArray.removeAll()
-        for val in self.youtubeLinkArray{
-            self.youtubeDataArray.append(String(describing: val))
-        }
-        values4["youtube"] = self.youtubeDataArray
-        ref.child("users").child(userID!).child("media").updateChildValues(values4)
-        
+       /* self.youtubeCollectionView.animateWithDuration:0 animations:^{
+            [collectionView performBatchUpdates:^{
+            [collectionView reloadItemsAtIndexPaths:indexPaths];
+            } completion:nil];
+            }*/
         
         //DispatchQueue.main.async {
            // self.youtubeCollectionView.reloadData()
@@ -450,7 +465,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     
     override func viewDidLoad(){
         super.viewDidLoad()
-        
+        needToRemove = false
         imagePicker.delegate = self
         picker.delegate = self
         curCount = 0
@@ -600,7 +615,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
         
         self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
-        
+        cell.indexPath = indexPath
         return cell
     }
     
@@ -630,24 +645,24 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                 //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
                 cell.removeVideoButton.isHidden = true
                 cell.noVideosLabel.isHidden = false
-                
-                
             }else{
-                if self.vidFromPhoneArray.count == 0 {
-                    return
-                }
                 cell.layer.borderColor = UIColor.clear.cgColor
                 cell.layer.borderWidth = 0
                 cell.removeVideoButton.isHidden = false
                 cell.removeVideoDelegate = self
                 cell.youtubePlayerView.isHidden = false
-                cell.videoURL = NSURL(string: self.vidFromPhoneArray[indexPath.row])
-                cell.youtubePlayerView.loadVideoURL(NSURL(string:self.recentlyAddedVidArray[indexPath.row])! as URL)
-                cell.removeVideoButton.isHidden = true
+                cell.videoURL = self.tempLink //NSURL(string: self.youtubeArray[indexPath.row])
+                cell.youtubePlayerView.loadVideoURL(videoURL: self.tempLink!)//NSURL(string: self.recentlyAddedVidArray[indexPath.row])!)
+        
                 cell.noVideosLabel.isHidden = true
             }
         }
+        else{
+            if self.vidFromPhoneArray.count == 0 {
+                return
+            }
         }
+    }
     
     @IBOutlet weak var newImage: UIImageView!
     

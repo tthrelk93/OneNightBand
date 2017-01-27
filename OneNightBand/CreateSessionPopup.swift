@@ -199,7 +199,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
             if let sessionImage = self.sessionImageView.image, let uploadData = UIImageJPEGRepresentation(sessionImage, 0.1) {
                 storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
                     if error != nil {
-                        print(error)
+                        print(error as Any)
                         return
                     }
                     //let tempURL = URL.init(fileURLWithPath: "temp")
@@ -234,7 +234,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         //sessReference.childByAutoId()
                         sessReference.updateChildValues(values, withCompletionBlock: {(err, ref) in
                             if err != nil {
-                                print(err)
+                                print(err as Any)
                                 return
                             }
                         })
@@ -252,7 +252,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                             let userRef = ref.child("users").child(user!)
                             userRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
                                 if err != nil {
-                                    print(err)
+                                    print(err as Any)
                                     return
                                 }
                             })

@@ -45,7 +45,7 @@ class InviteViewData: UIViewController {
                                     
                                     FIRDatabase.database().reference().child("users").child(currentUser!).updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
                                         if err != nil {
-                                            print(err)
+                                            print(err as Any)
                                             return
                                         }
                                     })

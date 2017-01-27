@@ -333,7 +333,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             //cell.layer.borderWidth = 0
             cell.youtubePlayerView.isHidden = false
             cell.videoURL = self.youtubeArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
+            cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
             cell.removeVideoButton.isHidden = true
              cell.noVideosLabel.isHidden = true
         }

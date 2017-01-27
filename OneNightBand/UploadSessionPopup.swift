@@ -368,7 +368,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                             
                         recipient.childByAutoId().updateChildValues(values, withCompletionBlock: {(err, ref) in
                             if err != nil {
-                                print(err)
+                                print(err as Any)
                                 return
                             }
                         })
