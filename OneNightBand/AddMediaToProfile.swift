@@ -295,16 +295,33 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             var values2 = Dictionary<String, Any>()
             let recipient = self.ref.child("users").child(userID!).child("media")
             
-            var values4 = Dictionary<String, Any>()
-            self.youtubeDataArray.removeAll()
-            for val in self.youtubeLinkArray{
-                self.youtubeDataArray.append(String(describing: val))
+            //var values4 = Dictionary<String, Any>()
+            
+            print("link array: \(self.youtubeLinkArray)")
+            //for val in self.recentlyAddedVidArray{
+              //  self.youtubeDataArray.append(String(describing: val))
+            //}
+            //values4["youtube"] = self.youtubeDataArray
+            //ref.child("users").child(userID!).child("media").updateChildValues(values4)
+            //print(self.youtubeDataArray)
+            for link in youtubeLinkArray{
+                self.youtubeDataArray.append(String(describing: link))
             }
-            values4["youtube"] = self.youtubeDataArray
-            ref.child("users").child(userID!).child("media").updateChildValues(values4)
-            print(self.youtubeDataArray)
-            if recentlyAddedVidArray.count != 0{
+            
+            //self.youtubeDataArray.append(String(describing: self.currentYoutubeLink!))
+            values2["youtube"] = self.youtubeDataArray
+            
+            recipient.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                if err != nil {
+                    print(err!)
+                    return
+                }
+            })
+            
 
+            if recentlyAddedVidArray.count != 0{
+                
+                
                 let videoName = NSUUID().uuidString
                 let storageRef = FIRStorage.storage().reference(withPath: "session_videos").child("\(videoName).mov")
                 let uploadMetadata = FIRStorageMetadata()
@@ -322,7 +339,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         self.vidFromPhoneArray.append(snap.value as! String)
                     }
                     if self.vidFromPhoneArray.count != 0{
-                        for vid in self.recentlyAddedVidArray{
+                        for vid in self.recentlyAddedPhoneVid{
                             self.vidFromPhoneArray.append(vid)
                         }
                     }
@@ -336,29 +353,6 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         })
                     }
                 })
-            }
-
-            if currentYoutubeLink != nil{
-            
-
-                self.ref.child("users").child(self.userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
-                    let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
-                    for snap in snapshots{
-                        self.youtubeDataArray.append(snap.value as! String)
-                    }
-
-                   print(self.youtubeDataArray)
-                    self.youtubeDataArray.append(String(describing: self.currentYoutubeLink!))
-                    values2["youtube"] = self.youtubeDataArray
-
-                    recipient.updateChildValues(values2, withCompletionBlock: {(err, ref) in
-                        if err != nil {
-                            print(err!)
-                            return
-                        }
-                    })
-                
-            })
             }
             
             //**the only problem is reloading picture collection view on profile after adding new image
@@ -462,9 +456,12 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     
     let imagePicker = UIImagePickerController()
     var videoCollectEmpty: Bool?
+    var recentlyAddedPhoneVid = [String]()
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        recentlyAddedVidArray.removeAll()
+        youtubeDataArray.removeAll()
         needToRemove = false
         imagePicker.delegate = self
         picker.delegate = self
@@ -692,7 +689,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             if let movieURL = info[UIImagePickerControllerMediaURL] as? NSURL{
                 movieURLFromPicker = movieURL
                 dismiss(animated: true, completion: nil)
-                self.recentlyAddedVidArray.append(String(describing: movieURL))
+                self.recentlyAddedPhoneVid.append(String(describing: movieURL))
                 self.vidFromPhoneArray.append(String(describing: movieURL))
                 //uploadMovieToFirebaseStorage(url: movieURL)
                 ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
