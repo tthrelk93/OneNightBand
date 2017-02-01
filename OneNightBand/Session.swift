@@ -17,6 +17,7 @@ class Session: NSObject{
     var sessionDate: String?
     var messages = [String: Any]()
     var sessionMedia = [String]()
+    var sessFeedKeys = [String]()
    
     
     

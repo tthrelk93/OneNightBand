@@ -60,6 +60,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         var tempLong2: CLLocationDegrees?
         var tempLat2: CLLocationDegrees?
         var tempDistInMeters: Double?
+        
 
         artistArray = [Artist]()
         FIRDatabase.database().reference().child("users").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -90,7 +91,9 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                         index -= 1
                                         
                                     }
+                                    
                                 }
+                                
                             }
                             var tempIndex = 0
                             for artist in self.artistArray{
@@ -108,20 +111,21 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                                 }
                                             }
                                             tempCoordinate2 = CLLocation(latitude: tempLat2!, longitude: tempLong2!)
-
                                             tempDistInMeters = tempCoordinate?.distance(from: tempCoordinate2!)
                                             let distanceInMiles = Double(round(10*(tempDistInMeters! * 0.000621371))/10)
-                                            
                                             if distanceInMiles <= Double(self.distanceMenuText[self.distancePicker.selectedRow(inComponent: 0)])!{
+                                                print(distanceInMiles)
                                                 tempIndex += 1
-                                                
                                             }else{
-                                                /*("greater: \(self.artistArray[tempIndex])")
-                                                self.artistArray.remove(at: tempIndex)
-                                                tempIndex -= 1*/
+                                               // print(self.artistArray.index(of: artist))
+                                                self.artistArray.remove(at:tempIndex)
+                                                }
+                                            
                                             }
-                                        }
+                                        
                                 })
+                                
+                                
                             if self.artistArray.isEmpty{
                                 return
                             }
@@ -159,12 +163,13 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         artistCollectionView.collectionViewLayout = layout
         InstrumentPicker.selectRow(menuText.count/2, inComponent: 0, animated: true)
     }
+    var currentUser: String?
     func checkIfUserIsLoggedIn() {
         if FIRAuth.auth()?.currentUser?.uid == nil {
             perform(#selector(handleBack), with: nil, afterDelay: 0)
         } else {
             
-            //_ = FIRAuth.auth()?.currentUser?.uid
+            currentUser = FIRAuth.auth()?.currentUser?.uid
             FIRDatabase.database().reference().child("users").observeSingleEvent(of: .value, with: { (snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                     for snap in snapshots{

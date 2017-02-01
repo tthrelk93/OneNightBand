@@ -98,6 +98,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                                     let tempSess = Session()
                                     tempSess.setValuesForKeys(dictionary!)
                                     self.pastSessionArray.append(tempSess)
+                                    
                                 }
                             }
                         }
@@ -143,23 +144,32 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                         }
                         }
                     }
-                })
+                
             self.ref.child("sessionFeed").observeSingleEvent(of: .value, with: {(snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                    for id in self.sessionIDArray{
-                        for snap in snapshots{
-                            let dictionary = snap.value as? [String: AnyObject]
-                            if dictionary?["sessionUID"] as! String == id{
-                                let tempSess = Session()
-                                tempSess.setValuesForKeys(dictionary!)
-                                self.currentButton = "feed"
-                                self.sessionFeedArray.append(tempSess)
-                            }
+                    print(self.sessionIDArray)
+                    self.sessionIDArray.removeAll()
+                    for snap in snapshots{
+                        let tempSess = Session()
+                        let dictionary = snap.value as! [String: Any]
+                        tempSess.setValuesForKeys(dictionary)
+                        if self.sessionIDArray.contains(tempSess.sessionUID!) == false{
+                            self.sessionFeedArray.append(tempSess)
+                            self.sessionIDArray.append(tempSess.sessionUID!)
+                            print("no contain")
+                        }else{
+                            print("yes contain")
                         }
+
+                    
                     }
+                    
+                
                 
 
-                print(self.sessionFeedArray)
+                
+                DispatchQueue.main.async{
+                    print(self.sessionFeedArray)
                 for session in self.sessionFeedArray{
                     self.currentButton = "feed"
                     self.curFeedArrayIndex = self.sessionFeedArray.index(of: session)!
@@ -170,8 +180,10 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                     self.sessionFeedCollectionView.dataSource = self
                     self.sessionFeedCollectionView.delegate = self
                 }
+                    }
                 
                 }
+                })
             })
 
         })

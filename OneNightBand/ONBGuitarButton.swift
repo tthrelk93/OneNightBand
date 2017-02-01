@@ -20,6 +20,8 @@ class ONBGuitarButton: UIImageView, UIGestureRecognizerDelegate {
     var _slope = CGFloat()
     var _baseX: CGFloat = 0.0
     
+    var sessionFeedKey: String?
+    
     let kStartY = 200
     let kMaxY = 12.5
     

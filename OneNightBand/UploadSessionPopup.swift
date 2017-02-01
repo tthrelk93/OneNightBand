@@ -136,6 +136,14 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         cell?.layer.borderWidth = 2.0
         cell?.layer.borderColor = UIColor.orange.cgColor
         self.selectedSession = sessionArray[indexPath.row]
+        cell?.isSelected = true
+        imagePickerController.sourceType = .photoLibrary
+        
+        imagePickerController.mediaTypes = ["public.movie"]
+        imagePickerController.delegate = self
+        
+        
+        present(imagePickerController, animated: true, completion: nil)
         /*collectionView.deselectItem(at: indexPath as IndexPath, animated: false)
         collectionView.cellForItem(at: indexPath)?.isSelected = !(collectionView.cellForItem(at: indexPath)?.isSelected)!
         collectionView.reloadData()*/
@@ -146,6 +154,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath){
         var cell = collectionView.cellForItem(at: indexPath)
         cell?.layer.borderColor = UIColor.clear.cgColor
+        cell?.isSelected = false
     }
 
     
@@ -301,7 +310,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     
-    @IBAction func addMediaSelected(_ sender: AnyObject) {
+    /*@IBAction func addMediaSelected(_ sender: AnyObject) {
         imagePickerController.sourceType = .photoLibrary
         
         imagePickerController.mediaTypes = ["public.movie"]
@@ -310,7 +319,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         
         present(imagePickerController, animated: true, completion: nil)
 
-    }
+    }*/
        
     /*func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         self.videoURL = info["UIImagePickerControllerReferenceURL"] as? NSURL
@@ -323,6 +332,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     var sessionVideoURL: String?
     var downloadURL: URL?
     var mediaArray = [String]()
+    var autoIdString = String()
     @IBAction func Upload(_ sender: AnyObject) {
         uploadMovieToFirebaseStorage(url: movieURLFromPicker!)
             }
@@ -342,46 +352,83 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                 print(self.selectedSession)
                 for cell in self.sessionCollectionView.visibleCells{
                     if cell.isSelected == true{
-                        var values = Dictionary<String, Any>()
-                        var values2 = Dictionary<String, Any>()
-                        values["sessionName"] = self.selectedSession.sessionName
-                        values["sessionArtists"] = self.selectedSession.sessionArtists
-                        values["sessionBio"] = self.selectedSession.sessionBio
-                        values["sessionDate"] = self.selectedSession.sessionDate
-                        values["sessionUID"] = self.selectedSession.sessionUID
-                        values["sessionPictureURL"] = self.selectedSession.sessionPictureURL
-                        //values["sessionMedia"] = metadata?.downloadURL()?.absoluteString
-                        
-                        //values2["sessionMedia"] = metadata?.downloadURL()?.absoluteString
-                        
-                        let currentUser = FIRAuth.auth()?.currentUser?.uid
-                        FIRDatabase.database().reference().child("users").child(currentUser!).child("sessionMedia").observeSingleEvent(of: .value, with: { (snapshot) in
-                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                                for snap in snapshots{
-                                    self.mediaArray.append(snap.value! as! String)
-                                }
-                                self.mediaArray.append((metadata?.downloadURL()?.absoluteString)!)
-                                var tempArray = [String]()
-                                tempArray.append((metadata?.downloadURL()?.absoluteString)!)
-                                values["sessionMedia"] = tempArray
-                                values2["sessionMedia"] = self.mediaArray
-                            
-                        recipient.childByAutoId().updateChildValues(values, withCompletionBlock: {(err, ref) in
-                            if err != nil {
-                                print(err as Any)
-                                return
-                            }
-                        })
-                        recipient2.updateChildValues(values2, withCompletionBlock: {(err, ref) in
-                            if err != nil {
-                                print(err)
-                                return
-                            }
-                        })
+                        print("isSelected")
+                        FIRDatabase.database().reference().child("sessionFeed").observeSingleEvent(of: .value, with:
+                            { (snapshot) in
+                                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                    print("inside snapshot: \(snapshots)")
+                                    var values = Dictionary<String, Any>()
+                                    var values2 = Dictionary<String, Any>()
+                                    
+                                        values["sessionName"] = self.selectedSession.sessionName
+                                        values["sessionArtists"] = self.selectedSession.sessionArtists
+                                        values["sessionBio"] = self.selectedSession.sessionBio
+                                        values["sessionDate"] = self.selectedSession.sessionDate
+                                        values["sessionUID"] = self.selectedSession.sessionUID
+                                        values["sessionPictureURL"] = self.selectedSession.sessionPictureURL
+                                        // values["sessionMedia"] = metadata?.downloadURL()?.absoluteString
+                                        
+                                        //values2["sessionMedia"] = metadata?.downloadURL()?.absoluteString
+                                        
+                                        let currentUser = FIRAuth.auth()?.currentUser?.uid
+                                        FIRDatabase.database().reference().child("users").child(currentUser!).child("sessionMedia").observeSingleEvent(of: .value, with: { (snapshot) in
+                                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                                for snap in snapshots{
+                                                    self.mediaArray.append(snap.value! as! String)
+                                                }
+                                                self.mediaArray.append((metadata?.downloadURL()?.absoluteString)!)
+                                                var tempArray = [String]()
+                                                tempArray.append((metadata?.downloadURL()?.absoluteString)!)
+                                                values["sessionMedia"] = tempArray
+                                                values2["sessionMedia"] = self.mediaArray
+                                                let autoId = recipient.childByAutoId()
+                                                //self.autoIdString = String(describing: autoId)
+                                                autoId.updateChildValues(values, withCompletionBlock: {(err, ref) in
+                                                    if err != nil {
+                                                        print(err as Any)
+                                                        return
+                                                    }
+                                                })
+                                                recipient2.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                                                    if err != nil {
+                                                        print(err)
+                                                        return
+                                                    }
+                                                })
+                                            }
+                                        })
+                                        
 
-                            }
+                                    
+                                    for snap in snapshots{
+                                        let tempDict = snap.value as! [String: Any]
+                                        if tempDict["sessionUID"] as! String == self.selectedSession.sessionUID! as String{
+                                            print("if")
+                                            
+                                        FIRDatabase.database().reference().child("sessions").child(self.selectedSession.sessionUID! as String).child("sessFeedKeys").observeSingleEvent(of: .value, with: {(snapshot) in
+                                                var sessFeedKeyArray = snapshot.value as! [String]
+                                     sessFeedKeyArray.append(self.autoIdString)
+                                           values["sessFeedKeys"] = sessFeedKeyArray
+                                     
+                                     
+                                            recipient2.updateChildValues(values, withCompletionBlock: {(err, ref) in
+                                                if err != nil {
+                                                    print(err as Any)
+                                                    return
+                                                }
+                                            })
+                                            
+                                            
+                                            
+                                            })
+                                        }
+                                        
+                                    }
+                                    }
+                                
                         })
                     }
+            
                 }
 
             }

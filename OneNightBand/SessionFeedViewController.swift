@@ -10,9 +10,6 @@ import UIKit
 import Firebase
 
 
-
-
-
 protocol FeedDismissalDelegate : class
 {
     func finishedShowing(viewController: UIViewController);
@@ -111,8 +108,20 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     func backToNav(){
         performSegue(withIdentifier: "BackToMainNav", sender: self)
     }
+    var sessionsInDatabase = [Session]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshots{
+                    let tempSess = Session()
+                    let dictionary = snap.value as? [String: AnyObject]
+                    tempSess.setValuesForKeys(dictionary!)
+                    self.sessionsInDatabase.append(tempSess)
+                }
+            }
+        })
         
         let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(SessionFeedViewController.backToNav))
         navigationItem.leftBarButtonItem = backButton
@@ -128,11 +137,16 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 for snap in snapshots{
                     let tempSess = Session()
                     let dictionary = snap.value as? [String: AnyObject]
+                    
+                 
                     tempSess.setValuesForKeys(dictionary!)
                     self.sessionArray.append(tempSess)
-                    
-                }
+                        }
+                    }
             }
+        
+            
+                
             self.view.clipsToBounds = true
             self.scrollOffset = 0
             
@@ -154,21 +168,21 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 tap.numberOfTapsRequired = 1
                 button.addGestureRecognizer(tap)
                 button.isUserInteractionEnabled = true
-                
-                
                 button.session = self.sessionArray[i]
+                    
+            
             }
-                
             for button in self.viewPins{
                 print((button as! ONBGuitarButton)._baseX)
                 print((button as! ONBGuitarButton).lane)
             }
+
+        })
+        
                 //self.currentButton = self.currentButtonFunc()
 
             //self.displaySessionInfo()
-            }
-            
-        })
+        
         
         
         
@@ -203,36 +217,30 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         //func goToSession()
     func displaySessionInfo(){
         
-        let cButton = currentButton
+        
+        let cButton = currentButtonFunc()
     
-       
-        let tempLabel = (cButton?.session?.sessionName)!
+        let tempLabel = (cButton.session?.sessionName)!
         sessionNameLabel.text = "Session Name: \(tempLabel)"
         
         sessionViewCountLabel.text = "Views: 346"//String(describing: currentButtonSess.sessionViews)  need to add views to Session in database
         //sessionImageView.loadImageUsingCacheWithUrlString((cButton.session?.sessionPictureURL)!)
-        self.ref.child("sessions").child((cButton?.session?.sessionUID)!).child("sessionMedia").observeSingleEvent(of: .value, with: {(snapshot) in
-            
-            //self.currentVideoURL = (snapshot.value as! URL)
-            
-            
-            
-            //let storageRef = FIRStorage.storage().reference().child("session_videos").child(self.currentVideoURL!)
-           
-            let url = NSURL(string: (snapshot.value as! [String]).first!)
-            
-            //let videoUrl = self.currentVideoURL
-            self.player?.setUrl(url as! URL)
-            self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
-            //self.player?.playerView = self.playerContainerView
-            if (cButton?.center.y)! >= self.sessionInfoView.bounds.maxY{
-                self.player?.playFromBeginning()
-            }else{
-                self.player?.stop()
-                //cButton.setIsDiplayedButton(isDisplayedButton: false)
-            }
-            
-        })
+        
+        let url = NSURL(string: (cButton.session?.sessionMedia.first!)!)
+        
+        //let videoUrl = self.currentVideoURL
+        self.player?.setUrl(url as! URL)
+        self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
+        //self.player?.playerView = self.playerContainerView
+        if (cButton.center.y) >= self.sessionInfoView.bounds.maxY{
+            self.player?.playFromBeginning()
+        }else{
+            self.player?.stop()
+            //cButton.setIsDiplayedButton(isDisplayedButton: false)
+        }
+
+                
+     
 
 
     }
@@ -302,9 +310,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             
         
         firstTouch = nextTouch!
-            if currentButtonFunc().isDisplayed == true{
-                displaySessionInfo()
-            }
+            
         /*if ((currentButton?.center.y)! >= self.sessionInfoView.bounds.maxY){
                 currentButton?.setIsDiplayedButton(isDisplayedButton: true)
             
@@ -320,7 +326,9 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         }
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        if currentButtonFunc().isDisplayed == true{
+            displaySessionInfo()
+        }
     }
 
     override func didReceiveMemoryWarning() {
