@@ -115,6 +115,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var startExploringButton: UIButton!
     
+    var mostRecentTagTouched = IndexPath()
     override func viewDidLoad(){
         super.viewDidLoad()
         
@@ -136,7 +137,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         dropDown.anchorView = self.view//collectionView.cellForItem(at: indexPath)
         dropDown.dataSource = ["1","2","3","4","5"]
         dropDown.selectionAction = {[unowned self] (index: Int, item: String) in
-            self.tagsAndSkill[self.TAGS[0]] = String(describing: index)
+            self.tagsAndSkill[self.TAGS[self.mostRecentTagTouched.row]] = index + 1
             self.dropDown.selectRow(at: index)
             //self.dropDown.selectRow(at: 2)
             self.dropDown.hide()
@@ -231,12 +232,14 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
     }
     
-    var tagsAndSkill = [String: String]()
+    var tagsAndSkill = [String: Int]()
+    //var instrumentDict = [String: Any]()
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //let dropDown = Drop
-        
+        self.mostRecentTagTouched = indexPath
         if(tags[indexPath.row].selected == true){
             selectedCount -= 1
+            tagsAndSkill.removeValue(forKey: TAGS[indexPath.row])
         }else{
             selectedCount += 1
             dropDown.show()
@@ -344,7 +347,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
             let ref = FIRDatabase.database().reference()
             let userRef = ref.child("users").child(user)
             var dict = [String: Any]()
-            dict["instruments"] = tagArray as Any?
+            dict["instruments"] = tagsAndSkill 
             dict["bio"] = editBioTextView.text as Any?
             userRef.updateChildValues(dict, withCompletionBlock: {(err, ref) in
                 if err != nil {

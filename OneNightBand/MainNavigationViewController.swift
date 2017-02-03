@@ -162,8 +162,9 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         ref.child("users").child(userID!).child("instruments").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
+                    
                     let tag = Tag()
-                    tag.name = (snap.value! as! String)
+                    tag.name = (snap.key as! String)
                     tag.selected = true
                     self.tags.append(tag)
                 }

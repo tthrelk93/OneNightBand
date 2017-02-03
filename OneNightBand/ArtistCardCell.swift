@@ -57,6 +57,10 @@ class ArtistCardCell: UICollectionViewCell {
                             self.viewController()?.present(alert, animated: true, completion: nil)
                             return
                             
+                        }else{
+                            let alert2 = UIAlertController(title: "Success!", message: "Invite Sent.", preferredStyle: UIAlertControllerStyle.alert)
+                            alert2.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+                            self.viewController()?.present(alert2, animated: true, completion: nil)
                         }
                     }
                 }
