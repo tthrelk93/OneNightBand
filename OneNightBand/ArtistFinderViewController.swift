@@ -148,9 +148,11 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                 print(self.artistAfterDist)
                             if self.artistAfterDist.isEmpty{
                                 self.noArtistsFoundLabel.isHidden = false
+                                self.artistCollectionView.isHidden = true
                                 return
                             }else{
                                 self.noArtistsFoundLabel.isHidden = true
+                                self.artistCollectionView.isHidden = false
 
                                 for _ in self.artistAfterDist{
                                     self.InstrumentPicker.delegate = self
@@ -296,6 +298,16 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                          }*/
                     }
                 })
+            }
+        })
+        self.ref.child("users").child(artistAfterDist[indexPath.row].artistUID!).child("instruments").observeSingleEvent(of: .value, with: {(snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshots{
+                    if snap.key == self.instrumentPicked{
+                        cell.reputationLabel.text = "skill lvl: " + String(describing: snap.value)
+                    }
+                }
+                
             }
         })
     }

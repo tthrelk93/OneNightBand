@@ -164,7 +164,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 for snap in snapshots{
                     
                     let tag = Tag()
-                    tag.name = (snap.key as! String)
+                    tag.name = (snap.key)
                     tag.selected = true
                     self.tags.append(tag)
                 }
