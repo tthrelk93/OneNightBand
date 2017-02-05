@@ -16,7 +16,6 @@
 		3B16D5C61DE6267200DC19AC /* ArtistCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */; };
 		3B1E04701DEA221400DCDAA4 /* ArtistProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */; };
 		3B47F9331DC2922B00FD1E94 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B47F9321DC2922B00FD1E94 /* Main.storyboard */; };
-		3B47F9351DC294D400FD1E94 /* InviteViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B47F9341DC294D400FD1E94 /* InviteViewData.swift */; };
 		3B486AF61DB931FB00A243C5 /* ArtistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B486AF51DB931FB00A243C5 /* ArtistCell.xib */; };
 		3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B486AF71DB9335600A243C5 /* ArtistCell.swift */; };
 		3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49277E1E479DA200A8D0B3 /* InviteCell.swift */; };
@@ -89,7 +88,6 @@
 		3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCardCell.swift; sourceTree = "<group>"; };
 		3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistProfileViewController.swift; sourceTree = "<group>"; };
 		3B47F9321DC2922B00FD1E94 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		3B47F9341DC294D400FD1E94 /* InviteViewData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteViewData.swift; sourceTree = "<group>"; };
 		3B486AF51DB931FB00A243C5 /* ArtistCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCell.xib; sourceTree = "<group>"; };
 		3B486AF71DB9335600A243C5 /* ArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
 		3B49277E1E479DA200A8D0B3 /* InviteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteCell.swift; sourceTree = "<group>"; };
@@ -179,7 +177,6 @@
 			isa = PBXGroup;
 			children = (
 				3B93D4DC1DC006F4009FAC53 /* SessionInvitesViewController.swift */,
-				3B47F9341DC294D400FD1E94 /* InviteViewData.swift */,
 				3B49277E1E479DA200A8D0B3 /* InviteCell.swift */,
 				3B49277F1E479DA200A8D0B3 /* InviteCell.xib */,
 			);
@@ -677,7 +674,6 @@
 			files = (
 				3B16D5C61DE6267200DC19AC /* ArtistCardCell.swift in Sources */,
 				3BF995181DA976CA00ABF5CF /* SessionMakerViewController.swift in Sources */,
-				3B47F9351DC294D400FD1E94 /* InviteViewData.swift in Sources */,
 				3B69E7111DA3042C00D97BE2 /* MainNavigationViewController.swift in Sources */,
 				3BF9951A1DA9AB6F00ABF5CF /* ArtistFinderViewController.swift in Sources */,
 				3BAD69121DA4639300C2CFC0 /* FlowLayout.swift in Sources */,

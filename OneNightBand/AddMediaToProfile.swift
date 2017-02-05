@@ -649,7 +649,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                 cell.removeVideoDelegate = self
                 cell.youtubePlayerView.isHidden = false
                 cell.videoURL = self.tempLink //NSURL(string: self.youtubeArray[indexPath.row])
-                cell.youtubePlayerView.loadVideoURL(videoURL: self.tempLink!)//NSURL(string: self.recentlyAddedVidArray[indexPath.row])!)
+                cell.youtubePlayerView.loadVideoURL(self.tempLink! as URL)//NSURL(string: self.recentlyAddedVidArray[indexPath.row])!)
         
                 cell.noVideosLabel.isHidden = true
             }

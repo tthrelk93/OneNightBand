@@ -10,10 +10,96 @@ import Foundation
 import Firebase
 import UIKit
 
-class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource  {
+protocol AcceptDeclineDelegate : class
+{
+    func acceptPressed(indexPath: NSIndexPath)
+    func declinePressed(indexPath: NSIndexPath)
+    
+}
+protocol AcceptDeclineData : class
+{
+    weak var acceptDeclineDelegate : AcceptDeclineDelegate? { get set }
+}
+
+
+class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, AcceptDeclineDelegate {
     //var inviteCollectionView: UICollectionView
     var inviteArray = [Invite]()
     var snapKey = [String: Any]()
+    var collectCount: Int?
+    var sessionsArray = [String]()
+    var currentArtistArray = [String]()
+    let currentUser = FIRAuth.auth()?.currentUser?.uid
+
+    internal func acceptPressed(indexPath: NSIndexPath) {
+        var tempDict = [String: Any]()
+        var tempDict2 = [String: Any]()
+        var tempDict3 = [String: Any]()
+        print("accept Pressed")
+    FIRDatabase.database().reference().child("users").child(currentUser!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    //var index = 0
+                    
+                for snap in snapshots{
+                        
+                    self.sessionsArray.append(snap.value as! String)
+                }
+                self.sessionsArray.append(self.inviteArray[indexPath.row].sessionID!)
+            
+        tempDict2["activeSessions"] = self.sessionsArray
+                
+            FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict2)
+        }
+            
+        })
+        
+    FIRDatabase.database().reference().child("sessions").child(inviteArray[indexPath.row].sessionID!).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
+        
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                //var index = 0
+                
+                for snap in snapshots{
+                    
+                    self.currentArtistArray.append(snap.value as! String)
+                }
+                self.currentArtistArray.append(self.currentUser!)
+                
+                tempDict3["sessionArtists"] = self.currentArtistArray
+                
+                FIRDatabase.database().reference().child("sessions").child(self.inviteArray[indexPath.row].sessionID!).updateChildValues(tempDict3)
+            }
+            
+        })
+
+        
+        
+        
+        inviteArray.remove(at: indexPath.row)
+        
+        inviteCollectionView.deleteItems(at: [indexPath as IndexPath])
+        
+        tempDict["invites"] = inviteArray
+        
+        FIRDatabase.database().reference().child("users").child(currentUser!).updateChildValues(tempDict)
+
+        
+        
+
+        
+        
+    }
+    internal func declinePressed(indexPath: NSIndexPath){
+        print("decline Pressed")
+        inviteArray.remove(at: indexPath.row)
+        
+        inviteCollectionView.deleteItems(at: [indexPath as IndexPath])
+
+        
+    }
+    var acceptDeclineDelegate: AcceptDeclineDelegate?
+    
     
     @IBOutlet weak var inviteCollectionView: UICollectionView!
     
@@ -38,7 +124,8 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        sessionsArray.removeAll()
+        currentArtistArray.removeAll()
         
         
         self.view.addSubview(emptyLabel)
@@ -46,7 +133,6 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
         emptyLabel.isHidden = true
         
         
-        let currentUser = FIRAuth.auth()?.currentUser?.uid
         
         FIRDatabase.database().reference().child("users").child(currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.childrenCount != 0{
@@ -70,7 +156,8 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                         //self.inviteCollectionView.backgroundColor = UIColor.clear
                         self.inviteCollectionView.dataSource = self
                         self.inviteCollectionView.delegate = self
-
+                        self.inviteCollectionView.gestureRecognizers?.first?.cancelsTouchesInView = false
+                        self.inviteCollectionView.gestureRecognizers?.first?.delaysTouchesBegan = false
                     
                     }
                     }
@@ -97,7 +184,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
     // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InviteCell", for: indexPath as IndexPath) as! InviteCell
-        
+        cell.acceptDeclineDelegate = self
         self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
         
         
@@ -119,10 +206,12 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                     cell.senderPic.loadImageUsingCacheWithUrlString((snap.value as! [String]).first!)
                 }
             }
-        cell.instrumentNeeded.text = self.inviteArray[indexPath.row].instrumentNeeded
+            cell.instrumentNeeded.text = self.inviteArray[indexPath.row].instrumentNeeded
+            cell.indexPath = indexPath
+            
 
-        cell.sessionDate.text = self.inviteArray[indexPath.row].sessionDate
-        cell.sessionName.text = self.inviteArray[indexPath.row].sessionID
+            cell.sessionDate.text = self.inviteArray[indexPath.row].sessionDate
+            cell.sessionName.text = self.inviteArray[indexPath.row].sessionID
             self.ref.child("sessions").child(self.inviteArray[indexPath.row].sessionID!).observeSingleEvent(of: .value, with: { (snapshot) in
                 let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
                 for snap in snapshots{
