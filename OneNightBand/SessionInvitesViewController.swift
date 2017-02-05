@@ -73,16 +73,38 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
             
         })
 
-        
+        FIRDatabase.database().reference().child("users").child(currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            var tempDict6 = [String:Any]()
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                //var index = 0
+                
+                for snap in snapshots{
+                    if snap.value as! Invite == self.inviteArray[indexPath.row]{
+                        
+    
+                    }else{
+                        tempDict[snap.key] = snap.value
+                    }
+                }
+                    tempDict6["invites"] = tempDict
+                    FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict6)
+                    
+                
+                
+                
+            }
+            
+        })
+
         
         
         inviteArray.remove(at: indexPath.row)
         
         inviteCollectionView.deleteItems(at: [indexPath as IndexPath])
         
-        tempDict["invites"] = inviteArray
         
-        FIRDatabase.database().reference().child("users").child(currentUser!).updateChildValues(tempDict)
+        
 
         
         
