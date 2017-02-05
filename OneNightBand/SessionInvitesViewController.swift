@@ -10,11 +10,12 @@ import Foundation
 import Firebase
 import UIKit
 
-class SessionInvitesViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate  {
-    var invitePageViewController: UIPageViewController!
+class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource  {
+    //var inviteCollectionView: UICollectionView
     var inviteArray = [Invite]()
     var snapKey = [String: Any]()
     
+    @IBOutlet weak var inviteCollectionView: UICollectionView!
     
    let emptyLabel: UILabel = {
         var tempLabel = UILabel()
@@ -32,7 +33,7 @@ class SessionInvitesViewController: UIViewController, UIPageViewControllerDataSo
     
     
     
-    
+    var sizingCell: InviteCell?
     var ref = FIRDatabase.database().reference()
     
     override func viewDidLoad() {
@@ -50,7 +51,8 @@ class SessionInvitesViewController: UIViewController, UIPageViewControllerDataSo
         FIRDatabase.database().reference().child("users").child(currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
             if snapshot.childrenCount != 0{
                 self.emptyLabel.isHidden = true
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                self.inviteCollectionView.isHidden = false
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //var index = 0
                 
                 for snap in snapshots{
@@ -62,29 +64,23 @@ class SessionInvitesViewController: UIViewController, UIPageViewControllerDataSo
                         invite.setValuesForKeys(dictionary)
                         self.inviteArray.append(invite)
                         //print(dictionary)
+                        let cellNib = UINib(nibName: "InviteCell", bundle: nil)
+                        self.inviteCollectionView.register(cellNib, forCellWithReuseIdentifier: "InviteCell")
+                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! InviteCell?)!
+                        //self.inviteCollectionView.backgroundColor = UIColor.clear
+                        self.inviteCollectionView.dataSource = self
+                        self.inviteCollectionView.delegate = self
+
                     
                     }
+                    }
                 }
-                }
-            self.invitePageViewController = self.storyboard?.instantiateViewController(withIdentifier: "UITutorialPageViewController") as! UIPageViewController
-            self.invitePageViewController.dataSource = self
-            self.invitePageViewController.delegate = self
+            
 
         
-                let initialContentViewController = self.pageTutorialAtIndex(0) as InviteViewData
-                var viewControllers = [InviteViewData]()
-                viewControllers = [initialContentViewController]
-                    
-                
-                self.invitePageViewController.setViewControllers(viewControllers, direction: UIPageViewControllerNavigationDirection.forward, animated: true, completion: nil)
-                //making pageView only take up top half of screen
-                self.invitePageViewController.view.frame.size.height = self.view.frame.size.height
-                //adding subview
-                self.addChildViewController(self.invitePageViewController)
-                self.view.addSubview(self.invitePageViewController.view)
-                self.invitePageViewController.didMove(toParentViewController: self)
-                self.invitePageViewController.gestureRecognizers.first?.cancelsTouchesInView = false
+           
             }else{
+                self.inviteCollectionView.isHidden = true
                 self.emptyLabel.isHidden = false
             }
 
@@ -92,53 +88,68 @@ class SessionInvitesViewController: UIViewController, UIPageViewControllerDataSo
     
     }
     
-    //PageController Functions
-    func pageTutorialAtIndex(_ index: Int) ->InviteViewData{        
-        let pageContentViewController = self.storyboard?.instantiateViewController(withIdentifier: "InviteViewData") as! InviteViewData
-        if(presentationCount(for: self.invitePageViewController) != 0){
-            pageContentViewController.pageIndex = index
-            pageContentViewController.inviteSenderText = self.inviteArray[index].sender
-            pageContentViewController.sessionNameText = self.inviteArray[index].sessionID
-            pageContentViewController.instrumentNeededText = self.inviteArray[index].instrumentNeeded
-            pageContentViewController.dateText = self.inviteArray[index].sessionDate            
-        }
-        
-        return pageContentViewController
-    }
-    
-    open func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController?{
-        let viewController = viewController as! InviteViewData
-        var index = viewController.pageIndex! as Int
-        if(index == 0 || index == NSNotFound){
-            return nil
-        }
-        index -= 1
-        return self.pageTutorialAtIndex(index)
-    }
-    
-    open func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController?{
-        let viewController = viewController as! InviteViewData
-        var index = viewController.pageIndex! as Int
-        
-        if(index == (inviteArray.endIndex) - 1 || index == NSNotFound){
-            return nil
-        }
-        index += 1
-        if(index == inviteArray.count){
-            return nil
-        }
-        return self.pageTutorialAtIndex(index)
-    }
-    
-    open func presentationCount(for pageViewController: UIPageViewController) -> Int{
-        
-        return inviteArray.count //inviteArray.count
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        return inviteArray.count
         
     }
     
-    open func presentationIndex(for pageViewController: UIPageViewController) -> Int{
-        return 0
-    }
+    
+    // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InviteCell", for: indexPath as IndexPath) as! InviteCell
+        
+        self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
+        
+        
+        return cell
 
+        
+    }
+    func configureCell(_ cell: InviteCell, forIndexPath indexPath: NSIndexPath){
+        
+        //cell.layer.borderColor = UIColor.white.cgColor
+        //cell.layer.borderWidth = 2
+        self.ref.child("users").child(inviteArray[indexPath.row].sender!).observeSingleEvent(of: .value, with: { (snapshot) in
+            let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+            for snap in snapshots{
+                if snap.key == "name"{
+                    cell.senderName.text = snap.value as? String
+                }
+                if snap.key == "profileImageUrl"{
+                    cell.senderPic.loadImageUsingCacheWithUrlString((snap.value as! [String]).first!)
+                }
+            }
+        cell.instrumentNeeded.text = self.inviteArray[indexPath.row].instrumentNeeded
+
+        cell.sessionDate.text = self.inviteArray[indexPath.row].sessionDate
+        cell.sessionName.text = self.inviteArray[indexPath.row].sessionID
+            self.ref.child("sessions").child(self.inviteArray[indexPath.row].sessionID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+                for snap in snapshots{
+                    if snap.key == "sessionName"{
+                        cell.sessionName.text = snap.value as! String?
+                    }
+                    if snap.key == "sessionBio"{
+                        cell.sessionDescription.text = snap.value as? String
+                    }
+                    if snap.key == "sessionDate"{
+                        cell.sessionDate.text = snap.value as? String
+                    }
+                    if snap.key == "sessionPictureURL"{
+                        cell.sessionImage.loadImageUsingCacheWithUrlString(snap.value as! String)
+                    }
+                }
+
+                
+                
+            })
+        })
+        }
+
+    
+    
+    
+    //PageController Functions
+    
     
 }

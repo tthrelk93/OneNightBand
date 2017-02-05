@@ -19,6 +19,8 @@
 		3B47F9351DC294D400FD1E94 /* InviteViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B47F9341DC294D400FD1E94 /* InviteViewData.swift */; };
 		3B486AF61DB931FB00A243C5 /* ArtistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B486AF51DB931FB00A243C5 /* ArtistCell.xib */; };
 		3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B486AF71DB9335600A243C5 /* ArtistCell.swift */; };
+		3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49277E1E479DA200A8D0B3 /* InviteCell.swift */; };
+		3B4927811E479DA400A8D0B3 /* InviteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B49277F1E479DA200A8D0B3 /* InviteCell.xib */; };
 		3B6248DE1DD4F5CB00847676 /* UploadSessionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */; };
 		3B69E7111DA3042C00D97BE2 /* MainNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */; };
 		3B72BCD61DF5E25A0084D4B5 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */; };
@@ -90,6 +92,8 @@
 		3B47F9341DC294D400FD1E94 /* InviteViewData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteViewData.swift; sourceTree = "<group>"; };
 		3B486AF51DB931FB00A243C5 /* ArtistCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCell.xib; sourceTree = "<group>"; };
 		3B486AF71DB9335600A243C5 /* ArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
+		3B49277E1E479DA200A8D0B3 /* InviteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteCell.swift; sourceTree = "<group>"; };
+		3B49277F1E479DA200A8D0B3 /* InviteCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InviteCell.xib; sourceTree = "<group>"; };
 		3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadSessionPopup.swift; sourceTree = "<group>"; };
 		3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigationViewController.swift; sourceTree = "<group>"; };
 		3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -176,6 +180,8 @@
 			children = (
 				3B93D4DC1DC006F4009FAC53 /* SessionInvitesViewController.swift */,
 				3B47F9341DC294D400FD1E94 /* InviteViewData.swift */,
+				3B49277E1E479DA200A8D0B3 /* InviteCell.swift */,
+				3B49277F1E479DA200A8D0B3 /* InviteCell.xib */,
 			);
 			name = InviteButtonTouched;
 			sourceTree = "<group>";
@@ -501,6 +507,7 @@
 				3B47F9331DC2922B00FD1E94 /* Main.storyboard in Resources */,
 				3BB0FE671DF7888E0028D544 /* PictureCollectionViewCell.xib in Resources */,
 				3B0F1C7A1DB064B000B5F6D8 /* GoogleService-Info.plist in Resources */,
+				3B4927811E479DA400A8D0B3 /* InviteCell.xib in Resources */,
 				3B16D5C41DE624E000DC19AC /* ArtistCardCell.xib in Resources */,
 				3BAD690F1DA4638300C2CFC0 /* TagCell.xib in Resources */,
 				3B72BCD71DF5E25A0084D4B5 /* VideoCollectionViewCell.xib in Resources */,
@@ -682,6 +689,7 @@
 				3BC9272E1DB2AC19005C753A /* CreateSessionPopup.swift in Sources */,
 				3BF0B8B51DAC4A05005DB1C9 /* ImageViewExtension.swift in Sources */,
 				3B1062941DAD7B9500D818ED /* ALRadialMenuButton.swift in Sources */,
+				3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */,
 				3B0AB7071D9DED340012AE56 /* CreateAccountViewController.swift in Sources */,
 				3BDFEE321DCBC96B004B4FA1 /* SessionFeedViewController.swift in Sources */,
 				3BFF119B1DC0389A000E574D /* Invite.swift in Sources */,

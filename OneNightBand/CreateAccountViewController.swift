@@ -84,7 +84,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     let createAccountLabelForLoginSegment: UILabel = {
         var tempLabel = UILabel()
         tempLabel.text = "OneNightBand"
-        tempLabel.font = UIFont.systemFont(ofSize: 40.0, weight: UIFontWeightThin)
+        tempLabel.font = UIFont.systemFont(ofSize: 55.0, weight: UIFontWeightThin)
         tempLabel.textAlignment = NSTextAlignment.center
         tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
         tempLabel.numberOfLines = 2
