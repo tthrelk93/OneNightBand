@@ -13,6 +13,6 @@ class Invite: NSObject {
     var sessionID: String?
     var instrumentNeeded: String?
     var sessionDate: String?
-    
+    var inviteKey: String?
     
 }

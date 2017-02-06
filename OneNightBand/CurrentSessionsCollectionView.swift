@@ -77,7 +77,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                     for snap in snapshots{
                         for id in self.sessionIDArray{
                             if snap.key == id{
-                                let dictionary = snap.value as? [String: AnyObject]
+                                let dictionary = snap.value as? [String: Any]
                                 let dateFormatter = DateFormatter()
                                 dateFormatter.timeStyle = DateFormatter.Style.none
                                 dateFormatter.dateStyle = DateFormatter.Style.short
@@ -144,7 +144,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                         }
                         }
                     }
-                
+            /******ADD THIS BACK END BUT REMOVE THE Array.removeAll()
             self.ref.child("sessionFeed").observeSingleEvent(of: .value, with: {(snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                     print(self.sessionIDArray)
@@ -162,7 +162,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                         }
 
                     
-                    }
+                    }*/
                     
                 
                 
@@ -182,8 +182,8 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                 }
                     }
                 
-                }
-                })
+                //}
+               // })
             })
 
         })

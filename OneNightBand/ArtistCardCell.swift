@@ -69,16 +69,16 @@ class ArtistCardCell: UICollectionViewCell {
             
             let recipient = self.ref.child("users").child(self.artistUID!).child("invites")
             let currentUser = FIRAuth.auth()?.currentUser?.uid
-            
+            let tempID = recipient.childByAutoId()
             var values = [String: Any]()
             //values[sessRef] = testArray //as Any?
             values["sender"] = currentUser!
             values["sessionID"] = self.invitedSessionID
             values["instrumentNeeded"] = self.buttonName
             values["sessionDate"] = self.sessionDate
+            values["inviteKey"] = String(describing: tempID)
             
-            
-            recipient.childByAutoId().updateChildValues(values, withCompletionBlock: {(err, ref) in
+            tempID.updateChildValues(values, withCompletionBlock: {(err, ref) in
                 if err != nil {
                     print(err as Any)
                     return
