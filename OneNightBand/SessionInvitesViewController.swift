@@ -12,8 +12,8 @@ import UIKit
 
 protocol AcceptDeclineDelegate : class
 {
-    func acceptPressed(indexPath: NSIndexPath)
-    func declinePressed(indexPath: NSIndexPath)
+    func acceptPressed(indexPathRow: Int, indexPath: IndexPath)
+    func declinePressed(indexPathRow: Int, indexPath: IndexPath)
     
 }
 protocol AcceptDeclineData : class
@@ -30,8 +30,9 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
     var sessionsArray = [String]()
     var currentArtistArray = [String]()
     let currentUser = FIRAuth.auth()?.currentUser?.uid
+    var cellArray = [InviteCell]()
 
-    internal func acceptPressed(indexPath: NSIndexPath) {
+    internal func acceptPressed(indexPathRow: Int, indexPath: IndexPath) {
         var tempDict = [String: Any]()
         var tempDict2 = [String: Any]()
         var tempDict3 = [String: Any]()
@@ -46,7 +47,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                         
                     self.sessionsArray.append(snap.value as! String)
                 }
-                self.sessionsArray.append(self.inviteArray[indexPath.row].sessionID!)
+                self.sessionsArray.append(self.inviteArray[indexPathRow].sessionID!)
             
         tempDict2["activeSessions"] = self.sessionsArray
                 
@@ -55,7 +56,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
             
         })
         
-    FIRDatabase.database().reference().child("sessions").child(inviteArray[indexPath.row].sessionID!).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
+    FIRDatabase.database().reference().child("sessions").child(inviteArray[indexPathRow].sessionID!).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
         var dictionary = [String:Any]()
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //var index = 0
@@ -65,12 +66,12 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                     self.currentArtistArray.append(snap.value as! String)
                     dictionary[snap.key] = snap.value
                 }
-                dictionary[self.currentUser!] = self.inviteArray[indexPath.row].instrumentNeeded
+                dictionary[self.currentUser!] = self.inviteArray[indexPathRow].instrumentNeeded
                 //self.currentArtistArray.append(self.currentUser!)
                 
                 tempDict3["sessionArtists"] = dictionary
                 
-                FIRDatabase.database().reference().child("sessions").child(self.inviteArray[indexPath.row].sessionID!).updateChildValues(tempDict3)
+                FIRDatabase.database().reference().child("sessions").child(self.inviteArray[indexPathRow].sessionID!).updateChildValues(tempDict3)
             }
             
         })
@@ -81,7 +82,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //var index = 0
                 
-                var temp = self.inviteArray[indexPath.row].dictionaryWithValues(forKeys: ["inviteKey"])
+                var temp = self.inviteArray[indexPathRow].dictionaryWithValues(forKeys: ["inviteKey"])
                 for snap in snapshots{
                     
                     if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
@@ -99,9 +100,17 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                 
             }
             DispatchQueue.main.async {
-                self.inviteArray.remove(at: indexPath.row)
+                self.inviteArray.remove(at: indexPathRow)
                 
                 self.inviteCollectionView.deleteItems(at: [indexPath as IndexPath])
+            }
+            if indexPathRow != self.cellArray.count - 1 && indexPathRow != 0{
+                for cell in self.cellArray/*(indexPathRow + 1)...self.cellArray.count - 1*/{
+                    if cell.indexPathRow > indexPathRow{
+                        cell.indexPathRow -= 1
+                    }
+                    //cellArray[].indexPathRow -= 1
+                }
             }
 
             
@@ -120,7 +129,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
         
     }
     //Problem is that indexPath.row goes out of index because we delete items from inviteArray
-    internal func declinePressed(indexPath: NSIndexPath){
+    internal func declinePressed(indexPathRow: Int, indexPath: IndexPath){
         print("decline Pressed")
         
         FIRDatabase.database().reference().child("users").child(currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -130,7 +139,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //var index = 0
                 print(indexPath.row)
-                var temp = self.inviteArray[indexPath.row].dictionaryWithValues(forKeys: ["inviteKey"])
+                var temp = self.inviteArray[indexPathRow].dictionaryWithValues(forKeys: ["inviteKey"])
                 for snap in snapshots{
                     
                     if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
@@ -147,7 +156,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                 
             }
             DispatchQueue.main.async {
-                self.inviteArray.remove(at: indexPath.row)
+                self.inviteArray.remove(at: indexPathRow)
                 
                 self.inviteCollectionView.deleteItems(at: [indexPath as IndexPath])
             }
@@ -167,7 +176,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
    let emptyLabel: UILabel = {
         var tempLabel = UILabel()
         tempLabel.text = "You have 0 pending invites"
-        tempLabel.textColor = UIColor.black
+        tempLabel.textColor = UIColor.white
         tempLabel.font = UIFont.systemFont(ofSize: 24.0, weight: UIFontWeightLight)
         tempLabel.translatesAutoresizingMaskIntoConstraints = false
         return tempLabel
@@ -246,8 +255,9 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "InviteCell", for: indexPath as IndexPath) as! InviteCell
         cell.acceptDeclineDelegate = self
-        self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
         
+        self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
+        cellArray.append(cell)
         
         return cell
 
@@ -268,8 +278,8 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                 }
             }
             cell.instrumentNeeded.text = self.inviteArray[indexPath.row].instrumentNeeded
-            cell.indexPath = indexPath
-            
+            cell.indexPath = indexPath as IndexPath!
+            cell.indexPathRow = indexPath.row
 
             cell.sessionDate.text = self.inviteArray[indexPath.row].sessionDate
             cell.sessionName.text = self.inviteArray[indexPath.row].sessionID

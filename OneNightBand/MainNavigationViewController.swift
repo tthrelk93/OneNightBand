@@ -131,7 +131,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
         
            }
-    var picArray = [String]()
+    var picArray = [UIImage]()
     var curCount = 0
     
     
@@ -249,10 +249,18 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
                 
                 for snap in snapshots{
-                    self.picArray.append(snap.value as! String)
+                    if let url = NSURL(string: snap.value as! String){
+                        if let data = NSData(contentsOf: url as URL){
+                            self.picArray.append(UIImage(data: data as Data)!)
+                        }
+                    }
                 }
                 if self.picArray.count == 0{
-                    self.picArray.append(snapshot.value as! String)
+                    if let url = NSURL(string: snapshot.value as! String){
+                        if let data = NSData(contentsOf: url as URL){
+                            self.picArray.append(UIImage(data: data as Data)!)
+                        }
+                    }
                 }
                 for _ in self.picArray{
                     
@@ -334,14 +342,15 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             //cell.layer.borderWidth = 0
             cell.youtubePlayerView.isHidden = false
             cell.videoURL = self.youtubeArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
+            cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
             cell.removeVideoButton.isHidden = true
              cell.noVideosLabel.isHidden = true
         }
     }
     func configureCell(_ cell: PictureCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
         
-            cell.picImageView.loadImageUsingCacheWithUrlString(self.picArray[indexPath.row])
+            cell.picImageView.image = self.picArray[indexPath.row]
+        cell.deleteButton.isHidden = true
        /* switch UIScreen.main.bounds.width{
         case 320:
             

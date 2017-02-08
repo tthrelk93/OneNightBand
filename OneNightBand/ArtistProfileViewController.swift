@@ -149,7 +149,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
     func configureCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
 
         cell.videoURL = self.tempLink
-        cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
+        cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
         
             
         

@@ -9,10 +9,26 @@
 import UIKit
 import YouTubePlayer
 
-class PictureCollectionViewCell: UICollectionViewCell, UIImagePickerControllerDelegate {
+class PictureCollectionViewCell: UICollectionViewCell, UIImagePickerControllerDelegate, RemovePicData {
 
-    @IBOutlet weak var picImageView: UIImageView!
+    weak var removePicDelegate: RemovePicDelegate?
     
+    @IBAction func removePicPressed(_ sender: AnyObject) {
+       // print("remove Pressed: \(self.picData)")
+        //removePicDelegate?.removePic(removalPic: picData)
+        
+    }
+
+    
+    @IBOutlet weak var deleteButton: UIButton!
+    @IBOutlet weak var picImageView: UIImageView!
+    var picData = UIImage()
+    
+    @IBAction func deletePressed(_ sender: Any) {
+        print("remove Pressed: \(self.picData)")
+        removePicDelegate?.removePic(removalPic: picData)
+
+    }
         
     override func awakeFromNib() {
         super.awakeFromNib()

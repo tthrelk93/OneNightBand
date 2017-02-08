@@ -43,6 +43,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     var videoIndex: Int?
     var videoURL: NSURL?
     var indexPath: IndexPath?
+    var indexPathRow: Int?
     //var isPlaying = Bool()
     //var isPaused = Bool()
     override func awakeFromNib() {
