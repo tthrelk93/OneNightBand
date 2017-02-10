@@ -304,7 +304,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
                     if snap.key == self.instrumentPicked{
-                        cell.reputationLabel.text = "skill lvl: " + String(describing: snap.value)
+                        cell.reputationLabel.text = "skill lvl: \(snap.value as! Int)"
                     }
                 }
                 

@@ -52,6 +52,8 @@ class ArtistCardCell: UICollectionViewCell {
                 for snap in snapshots{
                     if let dictionary = snap.value as? [String: Any] {
                         if dictionary["sessionID"] as! String == self.invitedSessionID{
+                            //ref.sessions.invitedsessionId.observe{
+                            //if invitedSession.sessionartists.contains(artistUID) != true{ carry on
                             let alert = UIAlertController(title: "Whoops!", message: "Artist already has pending invite for this session.", preferredStyle: UIAlertControllerStyle.alert)
                             alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
                             self.viewController()?.present(alert, animated: true, completion: nil)

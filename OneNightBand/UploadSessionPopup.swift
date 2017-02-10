@@ -334,8 +334,12 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     var mediaArray = [String]()
     var autoIdString = String()
     @IBAction func Upload(_ sender: AnyObject) {
-        uploadMovieToFirebaseStorage(url: movieURLFromPicker!)
-            }
+        if movieURLFromPicker != nil{
+            uploadMovieToFirebaseStorage(url: movieURLFromPicker!)
+        }else{
+            print("Missing Media")
+        }
+    }
     func uploadMovieToFirebaseStorage(url: NSURL){
         let videoName = NSUUID().uuidString
         let storageRef = FIRStorage.storage().reference(withPath: "session_videos").child("\(videoName).mov")

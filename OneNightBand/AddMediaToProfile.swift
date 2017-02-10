@@ -284,6 +284,9 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
         
     }
     
+    @IBAction func cancelPressed(_ sender: Any) {
+        self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
+    }
 
     var needToRemove = Bool()
     internal func removeVideo(removalVid: NSURL) {
