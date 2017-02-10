@@ -171,6 +171,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                 DispatchQueue.main.async{
                     print(self.sessionFeedArray)
                 for session in self.sessionFeedArray{
+                    //if currentartist.activeSessions contains session
                     self.currentButton = "feed"
                     self.curFeedArrayIndex = self.sessionFeedArray.index(of: session)!
                     let cellNib = UINib(nibName: "SessionCell", bundle: nil)

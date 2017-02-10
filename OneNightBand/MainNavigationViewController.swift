@@ -40,56 +40,34 @@ extension DismissalDelegate where Self: UIViewController
     }
 }
 
-protocol LoadCollectionViewDelegate : class
-{
-    func loadCollectView()
+
+
+
+
+class MainNavigationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PerformSegueInRootProtocol, DismissalDelegate  {
     
-}
-protocol LoadCollectionViewData : class
-{
-    weak var loadDataDelegate : LoadCollectionViewDelegate? { get set }
-}
-
-
-
-class MainNavigationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PerformSegueInRootProtocol, DismissalDelegate, LoadCollectionViewDelegate  /*,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout*/{
-    internal func loadCollectView() {
-        print("loadCollectView")
-        loadYoutubeCollection()
-        loadPicCollection()
-    }
 
     
-    //func loadCollectView() {
-     //   print("loadCollectView")
-     //   loadYoutubeCollection()
-      //  loadPicCollection()
-  //  }
-    var loadDelegate: LoadCollectionViewDelegate?
+    
     func prepareForSegue(segue: UIStoryboardSegue, sender _: AnyObject?) {
-        if let vc = segue.destination as? Dismissable
-        {
-            vc.dismissalDelegate = self
-        }
+            if let vc = segue.destination as? Dismissable
+            {
+                vc.dismissalDelegate = self
+            }
     }
-    
-    
     @IBOutlet weak var profilePicCollectionView: UICollectionView!
-    //@IBOutlet weak var flowLayout: FlowLayout!
-    //@IBOutlet weak var collectionView: UICollectionView!
+   
    
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.none
     }
     @IBOutlet weak var backgroundImage: UIImageView!
-    //@IBOutlet weak var profilePicture: UIImageView!
-    //@IBOutlet weak var photoSelectorButton: UIButton!
+    
     @IBOutlet weak var bioTextView: UITextView!
     
     
     @IBOutlet weak var createSessionButton: ALRadialMenu!
-    //@IBOutlet weak var editBioUpdateButton: UIButton!
-    //@IBOutlet weak var editBioLabel: UILabel!
+    
     
     var sizingCell: PictureCollectionViewCell?
     var sizingCell2: VideoCollectionViewCell?
@@ -130,17 +108,20 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         self.view.alpha = 0.6
         
         
+        
            }
     var picArray = [UIImage]()
     var curCount = 0
     
+    let userID = FIRAuth.auth()?.currentUser?.uid
     
-    
-    override func viewDidLoad(){
+    /*override func viewDidLoad(){
         super.viewDidLoad()
         curCount = 0
- 
-        profilePicCollectionView.delegate = self
+        //let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+        //self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+       //profilePicCollectionView.delegate = self
+        //profilePicCollectionView.dataSource = self
         //createSessionButton.setTitle("Menu", for: .normal)
         createSessionButton.titleLabel?.textAlignment = .center
         createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
@@ -150,15 +131,28 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
         self.bioTextView.delegate = self
         
+            
+        
+        self.ref.child("users").child(self.userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            let value = snapshot.value as? NSDictionary
+            self.bioTextView.text = value?["bio"] as! String
+            self.navigationItem.title = (value?["name"] as! String)
+        })
+        
+
        
-        let userID = FIRAuth.auth()?.currentUser?.uid
-        ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
+            
+        self.ref.child("users").child(self.userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 self.sessionsPlayed.text = String(snapshots.count)
                 
             }
+        })
+        
+        
             
-            })
+        
         ref.child("users").child(userID!).child("instruments").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
@@ -171,41 +165,13 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             }
           
         })
-    
-
         
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
-        if FIRAuth.auth()?.currentUser?.uid == nil {
-            perform(#selector(handleLogout), with: nil, afterDelay: 0)
-        }
-    }
-    
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        loadYoutubeCollection()
-        loadPicCollection()
-        self.view.backgroundColor = UIColor.clear
-        self.view.alpha = 1.0
-
-    }
-    
-    
-    
-    var tempLink: NSURL?
-    @IBOutlet weak var youtubeCollectionView: UICollectionView!
-    
-    public func loadYoutubeCollection(){
-        let userID = FIRAuth.auth()?.currentUser?.uid
-
-        ref.child("users").child(userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
+        /*self.ref.child("users").child(self.userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
                     self.currentCollect = "youtube"
-                    
+                    print(snap.value!)
                     self.youtubeArray.append(NSURL(string: snap.value as! String)!)
                     self.tempLink = NSURL(string: (snap.value as? String)!)
                     //self.tempTitle = snap.key
@@ -214,7 +180,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
                     
                     self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                    self.youtubeCollectionView.backgroundColor = UIColor.clear
+                    //self.youtubeCollectionView.backgroundColor = UIColor.clear
                     self.youtubeCollectionView.dataSource = self
                     self.youtubeCollectionView.delegate = self
                 }
@@ -225,45 +191,27 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
                 
                 self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                self.youtubeCollectionView.backgroundColor = UIColor.clear
+                //self.youtubeCollectionView.backgroundColor = UIColor.clear
                 self.youtubeCollectionView.dataSource = self
                 self.youtubeCollectionView.delegate = self
-
+                
             }else{
                 self.videoCollectEmpty = false
             }
-        })
-
-    }
-    var videoCollectEmpty: Bool?
-    var currentCollect: String?
-    func loadPicCollection(){
-        let userID = FIRAuth.auth()?.currentUser?.uid
-        ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
-
-            let value = snapshot.value as? NSDictionary
-            self.bioTextView.text = value?["bio"] as! String
-            self.navigationItem.title = (value?["name"] as! String)
-            
-          self.ref.child("users").child(userID!).child("profileImageUrl").observeSingleEvent(of: .value, with: { (snapshot) in
-               let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+            self.ref.child("users").child(self.userID!).child("profileImageUrl").observeSingleEvent(of: .value, with: { (snapshot) in
+                let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
                 
                 for snap in snapshots{
                     if let url = NSURL(string: snap.value as! String){
                         if let data = NSData(contentsOf: url as URL){
                             self.picArray.append(UIImage(data: data as Data)!)
+                            
+                            
                         }
                     }
                 }
-                if self.picArray.count == 0{
-                    if let url = NSURL(string: snapshot.value as! String){
-                        if let data = NSData(contentsOf: url as URL){
-                            self.picArray.append(UIImage(data: data as Data)!)
-                        }
-                    }
-                }
-                for _ in self.picArray{
-                    
+                for snap in snapshots{
+                    print(snap.value!)
                     self.currentCollect = "pic"
                     let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
                     self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
@@ -271,31 +219,295 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.profilePicCollectionView.backgroundColor = UIColor.clear
                     self.profilePicCollectionView.dataSource = self
                     self.profilePicCollectionView.delegate = self
-                    self.curCount += 1
-                    
                 }
+                if self.picArray.count == 0{
+                    if let url = NSURL(string: snapshot.value as! String){
+                        if let data = NSData(contentsOf: url as URL){
+                            self.picArray.append(UIImage(data: data as Data)!)
+                            self.currentCollect = "pic"
+                            let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                            self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                            self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                            self.profilePicCollectionView.backgroundColor = UIColor.clear
+                            self.profilePicCollectionView.dataSource = self
+                            self.profilePicCollectionView.delegate = self
+                            
+                        }
+                    }
+                }
+            })*/
+
+                /*DispatchQueue.main.async{
+        print("pArray: \(self.picArray)")
+        self.currentCollect = "pic"
+        //self.videoCollectEmpty = false
+        for _ in self.picArray{
+            //self.tempLink = NSURL(string: (snap.value as? String)!)
+            
+            //self.YoutubeArray.append(snap.value as! String)
+            
+            let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+            self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+            
+            self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+            self.profilePicCollectionView.backgroundColor = UIColor.clear
+            self.profilePicCollectionView.dataSource = self
+            self.profilePicCollectionView.delegate = self
+            
+        }
+        }*/
+
+        
+
+            /*let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+         
+            for snap in snapshots{
+                if let url = NSURL(string: snap.value as! String){
+                    if let data = NSData(contentsOf: url as URL){
+                        self.picArray.append(UIImage(data: data as Data)!)
+                        
+                        
+                    }
+                }
+            }
+            for snap in snapshots{
+                print(snap.value!)
+                self.currentCollect = "pic"
+                let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                self.profilePicCollectionView.backgroundColor = UIColor.clear
+                self.profilePicCollectionView.dataSource = self
+                self.profilePicCollectionView.delegate = self
+            }
+            if self.picArray.count == 0{
+                if let url = NSURL(string: snapshot.value as! String){
+                    if let data = NSData(contentsOf: url as URL){
+                        self.picArray.append(UIImage(data: data as Data)!)
+                        self.currentCollect = "pic"
+                        let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                        self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                        self.profilePicCollectionView.backgroundColor = UIColor.clear
+                        self.profilePicCollectionView.dataSource = self
+                        self.profilePicCollectionView.delegate = self
+                        
+                    }
+                }
+            }
+        })*/
+
+
+        
+    
+    
+    
+
+
+    
+
+        
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
+        if FIRAuth.auth()?.currentUser?.uid == nil {
+            perform(#selector(handleLogout), with: nil, afterDelay: 0)
+        }
+       
+        
+        
+    }*/
+    
+    override func viewDidLoad(){
+        super.viewDidLoad()
+        
+        
+    }
+    
+    
+    var viewDidAppearBool = false
+    
+    /*var indicator = UIActivityIndicatorView()
+    
+    func activityIndicator() {
+        indicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 40, 40))
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        indicator.center = self.view.center
+        self.view.addSubview(indicator)
+    }*/
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.view.backgroundColor = UIColor.clear
+        self.view.alpha = 1.0
+        createSessionButton.titleLabel?.textAlignment = .center
+        createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        createSessionButton.layer.cornerRadius = 15
+        createSessionButton.clipsToBounds = true
+        createSessionButton.layer.masksToBounds = false
+        
+        self.bioTextView.delegate = self
+        
+        var group = DispatchGroup()
+        if viewDidAppearBool == false{
+            //recentlyAddedVidArray.removeAll()
+            //youtubeDataArray.removeAll()
+            //needToRemove = false
+            //needToRemovePic = false
+            //imagePicker.delegate = self
+            // picker.delegate = self
+            //curCount = 0
+            
+            
+        self.ref.child("users").child(self.userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
+                group.enter()
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    self.currentCollect = "youtube"
+                    
+                    for snap in snapshots{
+                        
+                        self.youtubeArray.append(NSURL(string: snap.value as! String)!)
+                        
+                        
+                    }
+                    if self.youtubeArray.count == 0{
+                        self.videoCollectEmpty = true
+                        let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                        self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                        
+                        self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                        self.youtubeCollectionView.backgroundColor = UIColor.clear
+                        self.youtubeCollectionView.dataSource = self
+                        self.youtubeCollectionView.delegate = self
+                        
+                    }else{
+                        self.videoCollectEmpty = false
+                        for snap in snapshots{
+                            self.tempLink = NSURL(string: (snap.value as? String)!)
+                            
+                            //self.YoutubeArray.append(snap.value as! String)
+                            
+                            let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                            self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                            
+                            self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                            self.youtubeCollectionView.backgroundColor = UIColor.clear
+                            self.youtubeCollectionView.dataSource = self
+                            self.youtubeCollectionView.delegate = self
+                            //self.curCount += 1
+                            
+                        }
+                    }
+                }
+                
+                self.ref.child("users").child(self.userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    
+                    let value = snapshot.value as? NSDictionary
+                    self.bioTextView.text = value?["bio"] as! String
+                    self.navigationItem.title = (value?["name"] as! String)
+                })
+                
+                
+                
+                
+                self.ref.child("users").child(self.userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                        self.sessionsPlayed.text = String(snapshots.count)
+                        
+                    }
+                })
+        
+            group.leave()
             
                 
-            })
-           /* DispatchQueue.main.async {
-                self.profilePicCollectionView.reloadData()
+                group.enter()
+            self.ref.child("users").child(self.userID!).child("profileImageUrl").observeSingleEvent(of: .value, with: { (snapshot) in
                 
-            }*/
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    
+                    
+                    for snap in snapshots{
+                        
+                        if let url = NSURL(string: snap.value as! String){
+                            if let data = NSData(contentsOf: url as URL){
+                                self.picArray.append(UIImage(data: data as Data)!)
+                                
+                            }
+                            
+                        }
+                    }
+                }
+                    print("pArray: \(self.picArray)")
+            
+                    self.videoCollectEmpty = false
+                    for pic in self.picArray{
+                        //self.tempLink = NSURL(string: (snap.value as? String)!)
+                        self.currentCollect = "pic"
+                        //self.YoutubeArray.append(snap.value as! String)
+                        
+                        let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                        self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                        
+                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                        self.profilePicCollectionView.backgroundColor = UIColor.clear
+                        self.profilePicCollectionView.dataSource = self
+                        self.profilePicCollectionView.delegate = self
+                        
+                    }
+            })
+            group.leave()
+            })
+           
+            
 
+            self.viewDidAppearBool = true
+            
 
-        }) { (error) in
-            print(error.localizedDescription)
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+        
+            /*var delay: Double = 0
+            for i in 0..<10 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
+                    // Put your code which should be executed with a delay here
+                    //let image = self.logoImage[i]
+                    //self.imageView.image = image
+                    print(delay)
+                })
+                delay += 0.8
+            }*/
+        
+    
+        
+        
+        
+        
+        
+        
+        
 
     }
     
     
     
+    var tempLink: NSURL?
+     //let userID = FIRAuth.auth()?.currentUser?.uid
+    @IBOutlet weak var youtubeCollectionView: UICollectionView!
+    
+    var videoCollectEmpty: Bool?
+    var currentCollect: String?
+    
+    
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         if self.currentCollect == "pic"{
-            return self.curCount
+            return self.picArray.count
         }else{
-            if self.videoCollectEmpty == true{
+            if self.youtubeArray.count == 0{
                 return 1
             }else{
                 return self.youtubeArray.count
@@ -304,18 +516,20 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if currentCollect == "pic"{
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PictureCollectionViewCell", for: indexPath as IndexPath) as! PictureCollectionViewCell
-        
-            self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
+        if currentCollect != "pic"{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
+            self.configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
+            cell.indexPath = indexPath
             
-        
+            //self.curIndexPath.append(indexPath)
+            
             return cell
         }else{
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PictureCollectionViewCell", for: indexPath as IndexPath) as! PictureCollectionViewCell
+            self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
             
-            self.configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
             
+            //self.curIndexPath.append(indexPath)
             
             return cell
         }

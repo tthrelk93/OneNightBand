@@ -58,25 +58,15 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
                     let tag = Tag()
-                    tag.name = (snap.value! as! String)
+                    tag.name = (snap.key)
                     tag.selected = true
                     self.tags.append(tag)
                 }
             }
-            /* let cellNib = UINib(nibName: "TagCell", bundle: nil)
-             self.collectionView.register(cellNib, forCellWithReuseIdentifier: "TagCell")
-             self.collectionView.backgroundColor = UIColor.clear
-             self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! TagCell?
-             
-             //self.flowLayout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8)
-             self.collectionView.dataSource = self
-             self.collectionView.delegate = self*/
-            
             self.ref.child("users").child(self.artistUID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                     for snap in snapshots{
-                        //self.currentCollect = "youtube"
                         
                         self.youtubeArray.append(NSURL(string: snap.value as! String)!)
                         self.tempLink = NSURL(string: (snap.value as? String)!)
@@ -95,38 +85,11 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
             
         })
         
-        
-        
-        
-        //print (instrumentArray)
-        //initializing TagCell and creating a cell for each item in array TAGS
-        
-        //add logout button to Nav Bar
-        //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        //navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
-        //if FIRAuth.auth()?.currentUser?.uid == nil {
-          //  perform(#selector(handleLogout), with: nil, afterDelay: 0)
-       // }
-        
-        //set image picker delegate and then set profile pic constraints
-        
         profilePicture.layer.borderWidth = 2
         profilePicture.layer.masksToBounds = false
         profilePicture.layer.borderColor = UIColor.white.cgColor
         profilePicture.layer.cornerRadius = profilePicture.frame.width/2
         profilePicture.clipsToBounds = true
-        
-        
-        //creating and adding blur effect to subview
-        /*let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
-         let blurEffectView = UIVisualEffectView(effect: blurEffect)
-         //always fill the view
-         blurEffectView.frame = self.view.bounds
-         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-         self.backgroundImage.addSubview(blurEffectView)*/
-        //let gesture = UITapGestureRecognizer(target: self, action: #selector(showMenu()))
-        //view.addGestureRecognizer(gesture)
-        
         
     }
     

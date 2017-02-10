@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		3B02D6CB1DDE67300076860A /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B02D6CA1DDE67300076860A /* Player.swift */; };
 		3B0AB7071D9DED340012AE56 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0AB7061D9DED340012AE56 /* CreateAccountViewController.swift */; };
+		3B0CA9E41E4E4FDF00D871B6 /* LoadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0CA9E31E4E4FDF00D871B6 /* LoadViewController.swift */; };
+		3B0CA9E61E4E5AE700D871B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B0CA9E51E4E5AE700D871B6 /* Main.storyboard */; };
 		3B0F1C7A1DB064B000B5F6D8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B0F1C791DB064B000B5F6D8 /* GoogleService-Info.plist */; };
 		3B1062921DAD7B5600D818ED /* ALRadialMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1062911DAD7B5600D818ED /* ALRadialMenu.swift */; };
 		3B1062941DAD7B9500D818ED /* ALRadialMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */; };
 		3B16D5C41DE624E000DC19AC /* ArtistCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */; };
 		3B16D5C61DE6267200DC19AC /* ArtistCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */; };
 		3B1E04701DEA221400DCDAA4 /* ArtistProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */; };
-		3B47F9331DC2922B00FD1E94 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B47F9321DC2922B00FD1E94 /* Main.storyboard */; };
 		3B486AF61DB931FB00A243C5 /* ArtistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B486AF51DB931FB00A243C5 /* ArtistCell.xib */; };
 		3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B486AF71DB9335600A243C5 /* ArtistCell.swift */; };
 		3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49277E1E479DA200A8D0B3 /* InviteCell.swift */; };
@@ -81,13 +82,14 @@
 		37F6E43F2BED7D41D25C45BF /* Pods_OneNightBandUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneNightBandUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B02D6CA1DDE67300076860A /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		3B0AB7061D9DED340012AE56 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
+		3B0CA9E31E4E4FDF00D871B6 /* LoadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadViewController.swift; sourceTree = "<group>"; };
+		3B0CA9E51E4E5AE700D871B6 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		3B0F1C791DB064B000B5F6D8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3B1062911DAD7B5600D818ED /* ALRadialMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALRadialMenu.swift; sourceTree = "<group>"; };
 		3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALRadialMenuButton.swift; sourceTree = "<group>"; };
 		3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCardCell.xib; sourceTree = "<group>"; };
 		3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCardCell.swift; sourceTree = "<group>"; };
 		3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistProfileViewController.swift; sourceTree = "<group>"; };
-		3B47F9321DC2922B00FD1E94 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		3B486AF51DB931FB00A243C5 /* ArtistCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCell.xib; sourceTree = "<group>"; };
 		3B486AF71DB9335600A243C5 /* ArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
 		3B49277E1E479DA200A8D0B3 /* InviteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteCell.swift; sourceTree = "<group>"; };
@@ -285,12 +287,13 @@
 				3BE29F4B1D9C5ACC007A326B /* TextFieldEffect */,
 				3BAD69131DA4734400C2CFC0 /* InstrumentTags */,
 				3BE29F1A1D9B256A007A326B /* Assets.xcassets */,
-				3B47F9321DC2922B00FD1E94 /* Main.storyboard */,
+				3B0CA9E51E4E5AE700D871B6 /* Main.storyboard */,
 				3BE29F1C1D9B256A007A326B /* LaunchScreen.storyboard */,
 				3BE29F1F1D9B256A007A326B /* Info.plist */,
 				3B0F1C791DB064B000B5F6D8 /* GoogleService-Info.plist */,
 				3B1062911DAD7B5600D818ED /* ALRadialMenu.swift */,
 				3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */,
+				3B0CA9E31E4E4FDF00D871B6 /* LoadViewController.swift */,
 			);
 			path = OneNightBand;
 			sourceTree = "<group>";
@@ -501,8 +504,8 @@
 			files = (
 				3B486AF61DB931FB00A243C5 /* ArtistCell.xib in Resources */,
 				3BE29F1E1D9B256A007A326B /* LaunchScreen.storyboard in Resources */,
-				3B47F9331DC2922B00FD1E94 /* Main.storyboard in Resources */,
 				3BB0FE671DF7888E0028D544 /* PictureCollectionViewCell.xib in Resources */,
+				3B0CA9E61E4E5AE700D871B6 /* Main.storyboard in Resources */,
 				3B0F1C7A1DB064B000B5F6D8 /* GoogleService-Info.plist in Resources */,
 				3B4927811E479DA400A8D0B3 /* InviteCell.xib in Resources */,
 				3B16D5C41DE624E000DC19AC /* ArtistCardCell.xib in Resources */,
@@ -690,6 +693,7 @@
 				3BDFEE321DCBC96B004B4FA1 /* SessionFeedViewController.swift in Sources */,
 				3BFF119B1DC0389A000E574D /* Invite.swift in Sources */,
 				3BE29F471D9C4469007A326B /* KaedeTextField.swift in Sources */,
+				3B0CA9E41E4E4FDF00D871B6 /* LoadViewController.swift in Sources */,
 				3BCC0BAF1DDA66540008BF19 /* ChatViewController.swift in Sources */,
 				3BDFEE351DCBDEDE004B4FA1 /* ONBGuitarButton.swift in Sources */,
 				3B9641A91DB544F900E35480 /* CurrentSessionsCollectionView.swift in Sources */,
