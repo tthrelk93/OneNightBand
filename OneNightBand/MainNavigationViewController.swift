@@ -322,6 +322,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         super.viewDidLoad()
         
         
+        
     }
     
     
@@ -463,6 +464,11 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             
 
         }
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
+        if FIRAuth.auth()?.currentUser?.uid == nil {
+            perform(#selector(handleLogout), with: nil, afterDelay: 0)
+    }
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -152,7 +152,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         
     }
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath){
-        var cell = collectionView.cellForItem(at: indexPath)
+        let cell = collectionView.cellForItem(at: indexPath)
         cell?.layer.borderColor = UIColor.clear.cgColor
         cell?.isSelected = false
     }

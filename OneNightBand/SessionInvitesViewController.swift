@@ -12,8 +12,8 @@ import UIKit
 
 protocol AcceptDeclineDelegate : class
 {
-    func acceptPressed(indexPathRow: Int, indexPath: IndexPath)
-    func declinePressed(indexPathRow: Int, indexPath: IndexPath)
+    func acceptPressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell)
+    func declinePressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell)
     
 }
 protocol AcceptDeclineData : class
@@ -32,7 +32,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
     let currentUser = FIRAuth.auth()?.currentUser?.uid
     var cellArray = [InviteCell]()
 
-    internal func acceptPressed(indexPathRow: Int, indexPath: IndexPath) {
+    internal func acceptPressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell) {
         var tempDict = [String: Any]()
         var tempDict2 = [String: Any]()
         var tempDict3 = [String: Any]()
@@ -47,16 +47,17 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                         
                     self.sessionsArray.append(snap.value as! String)
                 }
-                self.sessionsArray.append(self.inviteArray[indexPathRow].sessionID!)
+                self.sessionsArray.append(self.inviteArray[curCell.indexPath.row].sessionID!)
             
         tempDict2["activeSessions"] = self.sessionsArray
                 
             FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict2)
         }
-            
-        })
+    })
         
-    FIRDatabase.database().reference().child("sessions").child(inviteArray[indexPathRow].sessionID!).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
+        
+        
+    FIRDatabase.database().reference().child("sessions").child(self.inviteArray[curCell.indexPath.row].sessionID!).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
         var dictionary = [String:Any]()
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //var index = 0
@@ -66,23 +67,23 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                     self.currentArtistArray.append(snap.value as! String)
                     dictionary[snap.key] = snap.value
                 }
-                dictionary[self.currentUser!] = self.inviteArray[indexPathRow].instrumentNeeded
+                dictionary[self.currentUser!] = self.inviteArray[curCell.indexPath.row].instrumentNeeded
                 //self.currentArtistArray.append(self.currentUser!)
                 
                 tempDict3["sessionArtists"] = dictionary
                 
-                FIRDatabase.database().reference().child("sessions").child(self.inviteArray[indexPathRow].sessionID!).updateChildValues(tempDict3)
+                FIRDatabase.database().reference().child("sessions").child(self.inviteArray[curCell.indexPath.row].sessionID!).updateChildValues(tempDict3)
             }
             
         })
 
-        FIRDatabase.database().reference().child("users").child(currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
+        FIRDatabase.database().reference().child("users").child(self.currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
             
             var tempDict6 = [String:Any]()
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //var index = 0
                 
-                var temp = self.inviteArray[indexPathRow].dictionaryWithValues(forKeys: ["inviteKey"])
+                var temp = self.inviteArray[curCell.indexPath.row].dictionaryWithValues(forKeys: ["inviteKey"])
                 for snap in snapshots{
                     
                     if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
@@ -99,22 +100,28 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                 
                 
             }
-            DispatchQueue.main.async {
-                self.inviteArray.remove(at: indexPathRow)
+        })
+            
                 
-                self.inviteCollectionView.deleteItems(at: [indexPath as IndexPath])
-            }
-            if indexPathRow != self.cellArray.count - 1 && indexPathRow != 0{
-                for cell in self.cellArray/*(indexPathRow + 1)...self.cellArray.count - 1*/{
-                    if cell.indexPathRow > indexPathRow{
-                        cell.indexPathRow -= 1
+                
+                
+                for invite in 0...self.inviteArray.count-1{
+                    if curCell == self.inviteArray[invite]{
+                        self.inviteArray.remove(at: invite)
+                        DispatchQueue.main.async{
+                            self.inviteCollectionView.deleteItems(at: [IndexPath(row: invite, section: 0)])
+                            //print("PiccollectionViewCells: \(self.picCollectionView.visibleCells.count)")
+                        }
+                        break
                     }
-                    //cellArray[].indexPathRow -= 1
                 }
-            }
+
 
             
-        })
+            
+            
+       
+        
 
         
         
@@ -129,7 +136,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
         
     }
     //Problem is that indexPath.row goes out of index because we delete items from inviteArray
-    internal func declinePressed(indexPathRow: Int, indexPath: IndexPath){
+    internal func declinePressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell){
         print("decline Pressed")
         
         FIRDatabase.database().reference().child("users").child(currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -139,7 +146,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //var index = 0
                 print(indexPath.row)
-                var temp = self.inviteArray[indexPathRow].dictionaryWithValues(forKeys: ["inviteKey"])
+                var temp = self.inviteArray[curCell.indexPath.row].dictionaryWithValues(forKeys: ["inviteKey"])
                 for snap in snapshots{
                     
                     if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
@@ -155,14 +162,23 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                 
                 
             }
-            DispatchQueue.main.async {
-                self.inviteArray.remove(at: indexPathRow)
-                
-                self.inviteCollectionView.deleteItems(at: [indexPath as IndexPath])
+        })
+            
+                for invite in 0...self.inviteArray.count-1{
+                    if curCell == self.inviteArray[invite]{
+                        self.inviteArray.remove(at: invite)
+                        
+                            self.inviteCollectionView.deleteItems(at: [IndexPath(row: invite, section: 0)])
+                            //print("PiccollectionViewCells: \(self.picCollectionView.visibleCells.count)")
+                        
+                        break
+                    }
+
             }
             
             
-        })
+            
+        
         
 
             //}

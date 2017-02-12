@@ -11,10 +11,10 @@ import UIKit
 class InviteCell: UICollectionViewCell, AcceptDeclineData  {
 
     @IBAction func acceptButtonPressed(_ sender: Any) {
-        acceptDeclineDelegate?.acceptPressed(indexPathRow: self.indexPathRow, indexPath: self.indexPath)
+        acceptDeclineDelegate?.acceptPressed(indexPathRow: self.indexPathRow, indexPath: self.indexPath,curCell: self)
     }
     @IBAction func declineButtonPressed(_ sender: Any) {
-        acceptDeclineDelegate?.declinePressed(indexPathRow: self.indexPathRow, indexPath: self.indexPath)
+        acceptDeclineDelegate?.declinePressed(indexPathRow: self.indexPathRow, indexPath: self.indexPath, curCell: self)
     }
     @IBOutlet weak var sessionImage: UIImageView!
     @IBOutlet weak var senderPic: UIImageView!
