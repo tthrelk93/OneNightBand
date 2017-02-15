@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YouTubePlayer
+//import YouTubePlayer
 
 class PictureCollectionViewCell: UICollectionViewCell, UIImagePickerControllerDelegate, RemovePicData {
 

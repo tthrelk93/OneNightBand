@@ -33,91 +33,125 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
     var cellArray = [InviteCell]()
 
     internal func acceptPressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell) {
+        DispatchQueue.main.async {
+            
         var tempDict = [String: Any]()
         var tempDict2 = [String: Any]()
         var tempDict3 = [String: Any]()
         print("accept Pressed")
-    FIRDatabase.database().reference().child("users").child(currentUser!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                    //var index = 0
-                    
-                for snap in snapshots{
-                        
-                    self.sessionsArray.append(snap.value as! String)
-                }
-                self.sessionsArray.append(self.inviteArray[curCell.indexPath.row].sessionID!)
-            
-        tempDict2["activeSessions"] = self.sessionsArray
-                
-            FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict2)
-        }
-    })
-        
-        
-        
-    FIRDatabase.database().reference().child("sessions").child(self.inviteArray[curCell.indexPath.row].sessionID!).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
-        var dictionary = [String:Any]()
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                //var index = 0
-                
-                for snap in snapshots{
-                    
-                    self.currentArtistArray.append(snap.value as! String)
-                    dictionary[snap.key] = snap.value
-                }
-                dictionary[self.currentUser!] = self.inviteArray[curCell.indexPath.row].instrumentNeeded
-                //self.currentArtistArray.append(self.currentUser!)
-                
-                tempDict3["sessionArtists"] = dictionary
-                
-                FIRDatabase.database().reference().child("sessions").child(self.inviteArray[curCell.indexPath.row].sessionID!).updateChildValues(tempDict3)
-            }
-            
-        })
-
-        FIRDatabase.database().reference().child("users").child(self.currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            var tempDict6 = [String:Any]()
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                //var index = 0
-                
-                var temp = self.inviteArray[curCell.indexPath.row].dictionaryWithValues(forKeys: ["inviteKey"])
-                for snap in snapshots{
-                    
-                    if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
-                        
     
-                    }else{
-                        tempDict[snap.key] = snap.value
+        for invite in 0...self.cellArray.count-1{
+            
+            if curCell == self.cellArray[invite]{
+                
+                FIRDatabase.database().reference().child("users").child(self.currentUser!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
+                    
+                    
+                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                        //var index = 0
+                        
+                        for snap in snapshots{
+                            
+                            self.sessionsArray.append(snap.value as! String)
+                        }
+                        self.sessionsArray.append(self.inviteArray[invite].sessionID!)
+                        
+                        tempDict2["activeSessions"] = self.sessionsArray
+                        
+                        FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict2)
                     }
-                }
-                    tempDict6["invites"] = tempDict
-                    FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict6)
+                    
+                    
+                    
+                    
+                    FIRDatabase.database().reference().child("sessions").child(self.inviteArray[curCell.indexPath.row].sessionID!).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
+                        var dictionary = [String:Any]()
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            //var index = 0
+                            
+                            for snap in snapshots{
+                                
+                                self.currentArtistArray.append(snap.value as! String)
+                                dictionary[snap.key] = snap.value
+                            }
+                            dictionary[self.currentUser!] = self.inviteArray[invite].instrumentNeeded
+                            //self.currentArtistArray.append(self.currentUser!)
+                            
+                            tempDict3["sessionArtists"] = dictionary
+                            
+                            FIRDatabase.database().reference().child("sessions").child(self.inviteArray[curCell.indexPath.row].sessionID!).updateChildValues(tempDict3)
+                        }
+                        
+                    })
+                    
+                    FIRDatabase.database().reference().child("users").child(self.currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
+                        
+                        var tempDict6 = [String:Any]()
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            //var index = 0
+                            
+                            var temp = self.inviteArray[invite].dictionaryWithValues(forKeys: ["inviteKey"])
+                            for snap in snapshots{
+                                
+                                if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
+                                    
+                                    
+                                }else{
+                                    tempDict[snap.key] = snap.value
+                                }
+                            }
+                            tempDict6["invites"] = tempDict
+                            FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict6)
+                            
+                            
+                            
+                            
+                        }
+                    })
+                
+                
+                
+                        DispatchQueue.main.async {
+                        
+                        self.inviteArray.remove(at: invite)
+                        self.cellArray.remove(at: invite)
+                        self.inviteCollectionView.deleteItems(at: [IndexPath(row: invite, section: 0)])
+                        print("InviteCollectionViewCells: \(self.inviteCollectionView.visibleCells.count)")
+                    }
                     
                 
+            
+            
+                })
+                break
+                
+                }
                 
                 
-            }
-        })
+                }
+            
+        
+        
+        
+        
+       
             
                 
                 
                 
-                for invite in 0...self.inviteArray.count-1{
+                /*for invite in 0...self.inviteArray.count-1{
                     if curCell == self.inviteArray[invite]{
                         self.inviteArray.remove(at: invite)
                         DispatchQueue.main.async{
-                            self.inviteCollectionView.deleteItems(at: [IndexPath(row: invite, section: 0)])
+                            self.inviteCollectionView.deleteItems(at: [self.inviteCollectionView.indexPath(for: curCell)!] )
                             //print("PiccollectionViewCells: \(self.picCollectionView.visibleCells.count)")
                         }
                         break
                     }
-                }
+        }*/
 
 
-            
+        
             
             
        
@@ -128,61 +162,74 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
         
         
         
-
+        }
         
         
 
         
         
     }
+    func removeAnimate()
+    {
+        UIView.animate(withDuration: 0.25, animations: {
+            self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            self.view.alpha = 0.0;
+        }, completion:{(finished : Bool)  in
+            if (finished)
+            {
+                self.view.removeFromSuperview()
+            }
+        });
+    }
+
     //Problem is that indexPath.row goes out of index because we delete items from inviteArray
     internal func declinePressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell){
         print("decline Pressed")
         
-        FIRDatabase.database().reference().child("users").child(currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            var tempDict6 = [String:Any]()
-            var tempDict = [String:Any]()
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                //var index = 0
-                print(indexPath.row)
-                var temp = self.inviteArray[curCell.indexPath.row].dictionaryWithValues(forKeys: ["inviteKey"])
-                for snap in snapshots{
-                    
-                    if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
+        
+            for invite in 0...self.cellArray.count-1{
+                
+                if curCell == self.cellArray[invite]{
+                    FIRDatabase.database().reference().child("users").child(self.currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
                         
-                    }else{
-                        tempDict[snap.key] = snap.value
-                    }
-                }
-                tempDict6["invites"] = tempDict
-                FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict6)
-                
-                
-                
-                
-            }
-        })
-            
-                for invite in 0...self.inviteArray.count-1{
-                    if curCell == self.inviteArray[invite]{
-                        self.inviteArray.remove(at: invite)
-                        
+                        var tempDict6 = [String:Any]()
+                        var tempDict = [String:Any]()
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            //var index = 0
+                            print(indexPath.row)
+                            var temp = self.inviteArray[invite].dictionaryWithValues(forKeys: ["inviteKey"])
+                            for snap in snapshots{
+                                
+                                if (snap.value as! [String: Any])["inviteKey"] as! String == temp["inviteKey"] as! String{
+                                    
+                                }else{
+                                    tempDict[snap.key] = snap.value
+                                }
+                            }
+                            tempDict6["invites"] = tempDict
+                            FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict6)
+                            
+                            
+                            
+                            
+                        }
+                        DispatchQueue.main.async {
+                            
+                            self.inviteArray.remove(at: invite)
+                            self.cellArray.remove(at: invite)
                             self.inviteCollectionView.deleteItems(at: [IndexPath(row: invite, section: 0)])
-                            //print("PiccollectionViewCells: \(self.picCollectionView.visibleCells.count)")
-                        
-                        break
-                    }
+                            print("InviteCollectionViewCells: \(self.inviteCollectionView.visibleCells.count)")
+                        }
 
-            }
-            
-            
-            
-        
-        
+                    })
 
-            //}
-        //})
+                    
+                    break
+                    
+                }
+
+        }
+        
     }
     var acceptDeclineDelegate: AcceptDeclineDelegate?
     
@@ -273,12 +320,14 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
         cell.acceptDeclineDelegate = self
         
         self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
+        
         cellArray.append(cell)
         
         return cell
 
         
     }
+    
     func configureCell(_ cell: InviteCell, forIndexPath indexPath: NSIndexPath){
         
         //cell.layer.borderColor = UIColor.white.cgColor
@@ -296,6 +345,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
             cell.instrumentNeeded.text = self.inviteArray[indexPath.row].instrumentNeeded
             cell.indexPath = indexPath as IndexPath!
             cell.indexPathRow = indexPath.row
+            //cell.curCell = cell
 
             cell.sessionDate.text = self.inviteArray[indexPath.row].sessionDate
             cell.sessionName.text = self.inviteArray[indexPath.row].sessionID

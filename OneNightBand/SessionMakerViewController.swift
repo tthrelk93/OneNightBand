@@ -29,7 +29,7 @@ protocol SessionIDDest : class
 
 
 
-class SessionMakerViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, GetSessionIDDelegate{
+class SessionMakerViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, GetSessionIDDelegate{
     
     var sessionID: String?
     
@@ -75,7 +75,9 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     var sessionIDArray = [String]()
     var thisSession = Session()
     var sessionChat = ChatViewController()
+    var sizingCell2: VideoCollectionViewCell?
     
+    @IBOutlet weak var sessionVidCollectionView: UICollectionView!
     
     @IBOutlet weak var chatButton: UIButton!
     
@@ -88,7 +90,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         editSessionButton.setTitle("Edit Session", for: .normal)
         editSessionButton.titleLabel?.numberOfLines = 2
         editSessionButton.setTitleColor(UIColor.darkGray, for: .normal)
-        editSessionButton.titleLabel?.font = UIFont.systemFont(ofSize: 25.0, weight: UIFontWeightLight)
+        editSessionButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
         editSessionButton.titleLabel?.textAlignment = NSTextAlignment.center
         
         AddMusiciansButton.setTitle("Find Musicians", for: .normal)
@@ -100,7 +102,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         chatButton.setTitle("Session Chat", for: .normal)
         chatButton.titleLabel?.numberOfLines = 2
         chatButton.setTitleColor(UIColor.darkGray, for: .normal)
-        chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 25.0, weight: UIFontWeightLight)
+        chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
         chatButton.titleLabel?.textAlignment = NSTextAlignment.center
 
         
@@ -123,6 +125,17 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                             tempSess.setValuesForKeys(dictionary!)
                             self.thisSession = tempSess
                             
+                            for val in tempSess.sessionMedia{
+                                self.vidArray.append(NSURL(string: val)!)
+                                let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                                self.sessionVidCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                                
+                                self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                                self.sessionVidCollectionView.backgroundColor = UIColor.clear
+                                self.sessionVidCollectionView.delegate = self
+                                self.sessionVidCollectionView.dataSource = self
+
+                            }
                             self.sessionID = self.thisSession.sessionUID
                             self.sessionInfoTextView?.text = tempSess.sessionBio!
                             self.sessionImageView?.loadImageUsingCacheWithUrlString(tempSess.sessionPictureURL!)
@@ -132,7 +145,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                             self.sessionArtistsTableView.register(cellNib, forCellReuseIdentifier: "ArtistCell")
                             self.sessionArtistsTableView.delegate = self
                             self.sessionArtistsTableView.dataSource = self
-                        }
+                                                    }
                     }
             }
             DispatchQueue.main.async{
@@ -154,6 +167,69 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         //print((self.thisSession.sessionArtists?.count)!)
         return (self.thisSession.sessionArtists.count)
     }
+    
+    
+    var vidArray = [NSURL]()
+    var videoCollectEmpty: Bool?
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        if vidArray.count != 0{
+            self.videoCollectEmpty = false
+            return self.vidArray.count
+            
+        }else{
+            self.videoCollectEmpty = true
+            return 1
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
+            configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
+            cell.indexPath = indexPath
+            
+            //self.curIndexPath.append(indexPath)
+            
+            return cell
+    }
+    
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
+    func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
+        if self.videoCollectEmpty == true{
+            //cell.layer.borderColor = UIColor.white.cgColor
+            //cell.layer.borderWidth = 2
+            print("rmpty")
+            cell.videoURL = nil
+            cell.youtubePlayerView.isHidden = true
+            //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.removeVideoButton.isHidden = true
+            cell.noVideosLabel.isHidden = false
+            cell.layer.borderWidth = 2
+            cell.layer.borderColor = UIColor.white.cgColor
+            
+            
+        }else{
+            //cell.layer.borderColor = UIColor.clear.cgColor
+            //cell.layer.borderWidth = 0
+            cell.youtubePlayerView.isHidden = false
+            cell.videoURL = self.vidArray[indexPath.row]
+            cell.youtubePlayerView.loadVideoURL(videoURL: self.vidArray[indexPath.row])
+            cell.removeVideoButton.isHidden = true
+            cell.noVideosLabel.isHidden = true
+        }
+    }
+    
+
+    
+    
+    
+    
+    
 
     
     

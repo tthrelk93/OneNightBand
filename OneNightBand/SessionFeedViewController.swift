@@ -246,22 +246,24 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     }
     
     func currentButtonFunc()->ONBGuitarButton{
-        var closest = self.viewPins[0]
-        for i in viewPins{
-            if(fabs((i as! ONBGuitarButton).center.y - CGFloat(kFretY)) < (fabs((closest as! ONBGuitarButton).center.y - CGFloat(kFretY)))){
-                closest = i
-                
-            }
-        }
-        if (currentButton != nil) && currentButton != closest as? ONBGuitarButton{
-            currentButton?.setIsDiplayedButton(isDisplayedButton: false)
-        }
         
-        if(closest as! ONBGuitarButton).center.y >= self.sessionInfoView.bounds.maxY{
-            (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
-        }else{
-            (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
-        }
+        if self.viewPins.count != 0 {
+            var closest = self.viewPins[0]
+            for i in viewPins{
+                if(fabs((i as! ONBGuitarButton).center.y - CGFloat(kFretY)) < (fabs((closest as! ONBGuitarButton).center.y - CGFloat(kFretY)))){
+                    closest = i as! ONBGuitarButton
+                
+                }
+            }
+            if (currentButton != nil) && currentButton != closest as? ONBGuitarButton{
+                currentButton?.setIsDiplayedButton(isDisplayedButton: false)
+            }
+        
+            if(closest as! ONBGuitarButton).center.y >= self.sessionInfoView.bounds.maxY{
+                (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
+            }else{
+                (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
+            }
         /*if (closest as! ONBGuitarButton).center.y >= self.sessionInfoView.bounds.maxY{
             (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
             
@@ -278,8 +280,14 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             tempButton.setIsDiplayedButton(isDisplayedButton: false)
         }*/
 
-        self.currentButton = (closest as! ONBGuitarButton)
-        return (closest as! ONBGuitarButton)
+            self.currentButton = (closest as! ONBGuitarButton)
+            return (closest as! ONBGuitarButton)
+            
+        }else{
+            let temp = ONBGuitarButton()
+            return temp
+        }
+       
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

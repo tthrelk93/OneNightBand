@@ -14,7 +14,10 @@ class InviteCell: UICollectionViewCell, AcceptDeclineData  {
         acceptDeclineDelegate?.acceptPressed(indexPathRow: self.indexPathRow, indexPath: self.indexPath,curCell: self)
     }
     @IBAction func declineButtonPressed(_ sender: Any) {
+        
+            
         acceptDeclineDelegate?.declinePressed(indexPathRow: self.indexPathRow, indexPath: self.indexPath, curCell: self)
+        
     }
     @IBOutlet weak var sessionImage: UIImageView!
     @IBOutlet weak var senderPic: UIImageView!
@@ -24,13 +27,15 @@ class InviteCell: UICollectionViewCell, AcceptDeclineData  {
     @IBOutlet weak var sessionName: UILabel!
     @IBOutlet weak var sessionDescription: UITextView!
     
+    var curCell: InviteCell?
+    
     weak var acceptDeclineDelegate : AcceptDeclineDelegate?
     
     var indexPathRow = Int()
     var indexPath = IndexPath()
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        self.curCell = self
         // Initialization code
     }
 

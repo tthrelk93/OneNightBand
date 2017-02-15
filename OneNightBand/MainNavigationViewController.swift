@@ -555,6 +555,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
             cell.removeVideoButton.isHidden = true
             cell.noVideosLabel.isHidden = false
+            cell.layer.borderWidth = 2
+            cell.layer.borderColor = UIColor.white.cgColor
             
 
         }else{

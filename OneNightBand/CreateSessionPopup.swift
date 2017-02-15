@@ -120,7 +120,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         popupView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         popupView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
         datePicker.datePickerMode = UIDatePickerMode.date
-        
+        datePicker.backgroundColor = UIColor.white.withAlphaComponent(0.6)
         sessionBioTextView.layer.borderColor = UIColor.darkGray.cgColor
         sessionBioTextView.layer.borderWidth = 2
         sessionBioTextView.layer.masksToBounds = false
@@ -128,7 +128,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         view.addSubview(sessionImageViewButton)
         setupSessionImageView()
         setupSessionImageViewButton()
-        backgroundView.backgroundColor = UIColor.black
+        //backgroundView.backgroundColor = UIColor.black
         //backgroundView.alpha = 0.7
         sessionBioTextView.delegate = self
         self.view.backgroundColor = UIColor.clear
@@ -301,6 +301,9 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         print("canceled picker")
         dismiss(animated: true, completion: nil)
     }
+    
+       
+
 
     
 }

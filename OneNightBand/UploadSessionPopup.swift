@@ -162,7 +162,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         
         cell.sessionCellImageView.loadImageUsingCacheWithUrlString(sessionArray[indexPath.row].sessionPictureURL!)
         cell.sessionCellLabel.text = sessionArray[indexPath.row].sessionName
-        cell.sessionCellLabel.textColor = UIColor.black
+        cell.sessionCellLabel.textColor = UIColor.white
         //cell.layer.borderWidth = cell.isSelected ? 2 : 0
         //cell.layer.borderColor = cell.isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
 

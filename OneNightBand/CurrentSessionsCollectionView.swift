@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Firebase
 
-class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
 
     var currentButton: String? // make array for sessions from each button
     var activeBool = false
@@ -22,6 +22,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
     var upcomingSessionArray = [Session]()
     var activeSessionsArray = [Session]()
     var sessionFeedArray = [Session]()
+    var allSessions = [Session]()
 
     var sessionIDArray = [String]()
     var cellArray = [SessionCell]()
@@ -35,6 +36,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
     var pastSessionsDidLoad = false
     var activeSessionsDidLoad = false
     
+    @IBOutlet weak var allSessionsCollectionView: UICollectionView!
     @IBOutlet weak var sessionCollectionView: UICollectionView!
     
     @IBOutlet weak var sessionFeedCollectionView: UICollectionView!
@@ -49,6 +51,14 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.loadCollectionViews()
+        sessionPicker.delegate = self
+        sessionPicker.dataSource = self
+        DispatchQueue.main.async{
+            self.allSessionsCollectionView.isHidden = false
+        }
+        
+        //sessionPicker.selectRow(0, inComponent: 0, animated: false)
+        
     }
     
     var curFeedArrayIndex = 0
@@ -56,14 +66,82 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
     var curActiveArrayIndex = 0
     var curUpcomingArrayIndex = 0
     
+    var sessText = ["All Sessions", "Past Sessions", "Active Sessions", "Upcoming Sessions", "Sessions on Feed"]
+    
+    @IBOutlet weak var sessionPicker: UIPickerView!
+    
+    
+    public func numberOfComponents(in pickerView: UIPickerView) -> Int{
+        return 1
+    }
+    // returns the # of rows in each component..
+    
+    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
+        
+        return sessText.count
+        
+    }
+    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+       
+            let titleData = sessText[row]
+            
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.black])
+            return myTitle
+    }
+    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
+        if self.sessText[row] == "Past Sessions"{
+            sessionCollectionView.isHidden = true
+            upcomingSessionsCollectionView.isHidden = true
+            pastSessionsCollectionView.isHidden = false
+            sessionFeedCollectionView.isHidden = true
+            allSessionsCollectionView.isHidden = true
+        }else if self.sessText[row] == "Active Sessions"{
+            sessionCollectionView.isHidden = false
+            upcomingSessionsCollectionView.isHidden = true
+            pastSessionsCollectionView.isHidden = true
+            sessionFeedCollectionView.isHidden = true
+            allSessionsCollectionView.isHidden = true
+        }else if self.sessText[row] == "Upcoming Sessions"{
+            sessionCollectionView.isHidden = true
+            upcomingSessionsCollectionView.isHidden = false
+            pastSessionsCollectionView.isHidden = true
+            sessionFeedCollectionView.isHidden = true
+            allSessionsCollectionView.isHidden = true
+        }
+         else if self.sessText[row] == "All Sessions"{
+            sessionCollectionView.isHidden = true
+            upcomingSessionsCollectionView.isHidden = true
+            pastSessionsCollectionView.isHidden = true
+            sessionFeedCollectionView.isHidden = true
+            allSessionsCollectionView.isHidden = false
+            
+        }
+        else{
+            sessionCollectionView.isHidden = true
+            upcomingSessionsCollectionView.isHidden = true
+            pastSessionsCollectionView.isHidden = true
+            sessionFeedCollectionView.isHidden = false
+            allSessionsCollectionView.isHidden = true
+            
+
+        }
+        
+        
+    }
+
+    
     func loadCollectionViews(){
         activeSessionsArray.removeAll()
         pastSessionArray.removeAll()
         upcomingSessionArray.removeAll()
         sessionFeedArray.removeAll()
         sessionIDArray.removeAll()
+        allSessions.removeAll()
         navigationItem.title = "My Sessions"
-        sessionCollectionView.isHidden = false
+        sessionCollectionView.isHidden = true
+        upcomingSessionsCollectionView.isHidden = true
+        pastSessionsCollectionView.isHidden = true
+        sessionFeedCollectionView.isHidden = true
         let userID = FIRAuth.auth()?.currentUser?.uid
         ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -85,6 +163,10 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                                 let order = Calendar.current.compare(now, to: self.dateFormatted(dateString: dictionary?["sessionDate"] as! String), toGranularity: .day)
                                 print(now)
                                 print(self.dateFormatted(dateString: dictionary?["sessionDate"] as! String))
+                                let tempSess2 = Session()
+                                tempSess2.setValuesForKeys(dictionary!)
+                                self.allSessions.append(tempSess2)
+                                
                                 switch order {
                                 case .orderedSame:
                                     let tempSess = Session()
@@ -141,6 +223,18 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                             self.upcomingSessionsCollectionView.dataSource = self
                             self.upcomingSessionsCollectionView.delegate = self
                             }
+                            DispatchQueue.main.async{
+                                for session in self.allSessions{
+                                    self.currentButton = "all"
+                                    //self.curAllArrayIndex = self.allSessions.index(of: session)!
+                                    let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                                    self.allSessionsCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                                    self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                                    self.allSessionsCollectionView.backgroundColor = UIColor.clear
+                                    self.allSessionsCollectionView.dataSource = self
+                                    self.allSessionsCollectionView.delegate = self
+                                }
+                            }
                         }
                         }
                     }
@@ -171,7 +265,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                 DispatchQueue.main.async{
                     print(self.sessionFeedArray)
                 for session in self.sessionFeedArray{
-                    //if currentartist.activeSessions contains session
+                    if self.sessionIDArray.contains(session.sessionUID!){
                     self.currentButton = "feed"
                     self.curFeedArrayIndex = self.sessionFeedArray.index(of: session)!
                     let cellNib = UINib(nibName: "SessionCell", bundle: nil)
@@ -180,11 +274,10 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                     self.sessionFeedCollectionView.backgroundColor = UIColor.clear
                     self.sessionFeedCollectionView.dataSource = self
                     self.sessionFeedCollectionView.delegate = self
-                }
                     }
+                    }
+                }
                 
-                //}
-               // })
             })
 
         })
@@ -201,16 +294,19 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
             
             
         }
-        if(self.currentButton == "past"){
+        else if(self.currentButton == "past"){
             return pastSessionArray.count
             
         }
-        if(self.currentButton == "feed"){
+        else if(self.currentButton == "feed"){
             return sessionFeedArray.count
         }
-        if(self.currentButton == "active"){
+        else if(self.currentButton == "active"){
             return activeSessionsArray.count
-        }else{
+        }else if(self.currentButton == "all"){
+            return allSessions.count
+        }
+        else{
             return 0
         }
         
@@ -246,6 +342,11 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
         if(collectionView == self.sessionCollectionView){
             tempIndex = indexPath.row
             self.pressedButton = "active"
+            performSegue(withIdentifier: "SessionCollectionToSessionView", sender: self)
+        }
+        if (collectionView == self.allSessionsCollectionView){
+            tempIndex = indexPath.row
+            self.pressedButton = "all"
             performSegue(withIdentifier: "SessionCollectionToSessionView", sender: self)
         }
 
@@ -311,7 +412,72 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
             }
             cellArray.append(cell)
             }
+        if(self.currentButton == "all"){
+            if allSessions.count == 0{
+                cell.sessionCellLabel.text = "No Sessions"
+                cell.sessionCellLabel.textColor = UIColor.white
+            }
+            if(indexPath.row < allSessions.count){
+                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(allSessions[indexPath.row].sessionPictureURL!)
+                cell.sessionCellLabel.text = allSessions[indexPath.row].sessionName
+                cell.sessionCellLabel.textColor = UIColor.white
+                cell.sessionId = sessionIDArray[indexPath.row]
+            }
+            cellArray.append(cell)
+        }
+
+        
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        if(self.currentButton == "active"){
+            
+            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.activeSessionsArray.count)
+            let totalSpacingWidth = 10 * (self.activeSessionsArray.count - 1)
+            
+            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+            let rightInset = leftInset
+            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+        }
+        else if(self.currentButton == "past"){
+            
+            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.pastSessionArray.count)
+            let totalSpacingWidth = 10 * (self.pastSessionArray.count - 1)
+            
+            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+            let rightInset = leftInset
+            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+        }
+        else if(self.currentButton == "upcoming"){
+            
+            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.upcomingSessionArray.count)
+            let totalSpacingWidth = 10 * (self.upcomingSessionArray.count - 1)
+            
+            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+            let rightInset = leftInset
+            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+        }
+        else if(self.currentButton == "all"){
+            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.allSessions.count)
+            let totalSpacingWidth = 10 * (self.allSessions.count - 1)
+            
+            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+            let rightInset = leftInset
+            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+        }
+        else{
+            print("")
+            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.sessionFeedArray.count)
+            let totalSpacingWidth = 10 * (self.sessionFeedArray.count - 1)
+            
+            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+            let rightInset = leftInset
+            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+        }
+        
+    }
+    
+    
     var pressedButton = ""
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SessionCollectionToSessionView" {
@@ -328,6 +494,9 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                 }
                 if(self.pressedButton == "active"){
                     viewController.sessionID = self.activeSessionsArray[tempIndex!].sessionUID                    
+                }
+                if(self.pressedButton == "all"){
+                    viewController.sessionID = self.allSessions[tempIndex!].sessionUID
                 }
             }
         }

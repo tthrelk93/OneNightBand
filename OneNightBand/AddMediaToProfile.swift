@@ -230,10 +230,10 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                             return
                         }
                     })
-                            if count == self.profPicArray.count-1{
-                                self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
-                            }
-                            count += 1
+                            //if count == self.profPicArray.count-1{
+                            //    self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
+                            //}
+                            //count += 1
                             
                             
                         })
@@ -247,6 +247,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
 
         
             }
+           
         }
         
         
@@ -256,7 +257,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
         
              
         
-      
+       self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
 
         
     }
