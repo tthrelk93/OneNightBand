@@ -9,7 +9,10 @@
 import Foundation
 import UIKit
 import FirebaseStorage
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+
+//import Firebase
 
 class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, Dismissable{
     

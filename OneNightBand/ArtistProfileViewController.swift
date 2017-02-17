@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
-import Firebase
+//import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+
 
 class ArtistProfileViewController: UIViewController, UINavigationControllerDelegate, UITextViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -233,7 +236,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
             //cell.layer.borderWidth = 0
             cell.youtubePlayerView.isHidden = false
             cell.videoURL = self.youtubeArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
             cell.removeVideoButton.isHidden = true
             cell.noVideosLabel.isHidden = true
         }

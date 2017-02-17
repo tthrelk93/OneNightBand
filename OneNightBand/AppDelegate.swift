@@ -7,7 +7,10 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseCore
+import FirebaseAuth
+
+//import Firebase
 
 import IQKeyboardManagerSwift
 import DropDown

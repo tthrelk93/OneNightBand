@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+//import Firebase
 
 class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
 
@@ -165,9 +168,11 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                                 print(self.dateFormatted(dateString: dictionary?["sessionDate"] as! String))
                                 let tempSess2 = Session()
                                 tempSess2.setValuesForKeys(dictionary!)
+                                
                                 self.allSessions.append(tempSess2)
                                 
                                 switch order {
+                                    
                                 case .orderedSame:
                                     let tempSess = Session()
                                     tempSess.setValuesForKeys(dictionary!)
@@ -430,49 +435,67 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        
         if(self.currentButton == "active"){
+            if self.activeSessionsArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
+                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.activeSessionsArray.count)
+                let totalSpacingWidth = 10 * (self.activeSessionsArray.count - 1)
             
-            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.activeSessionsArray.count)
-            let totalSpacingWidth = 10 * (self.activeSessionsArray.count - 1)
-            
-            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
-            let rightInset = leftInset
-            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
         }
         else if(self.currentButton == "past"){
-            
+            if self.pastSessionArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
             let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.pastSessionArray.count)
             let totalSpacingWidth = 10 * (self.pastSessionArray.count - 1)
             
             let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
             let rightInset = leftInset
             return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
         }
         else if(self.currentButton == "upcoming"){
+            if self.upcomingSessionArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
+                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.upcomingSessionArray.count)
+                let totalSpacingWidth = 10 * (self.upcomingSessionArray.count - 1)
             
-            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.upcomingSessionArray.count)
-            let totalSpacingWidth = 10 * (self.upcomingSessionArray.count - 1)
-            
-            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
-            let rightInset = leftInset
-            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
         }
         else if(self.currentButton == "all"){
-            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.allSessions.count)
-            let totalSpacingWidth = 10 * (self.allSessions.count - 1)
+            if self.allSessions.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
+                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.allSessions.count)
+                let totalSpacingWidth = 10 * (self.allSessions.count - 1)
             
-            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
-            let rightInset = leftInset
-            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
         }
         else{
-            print("")
-            let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.sessionFeedArray.count)
-            let totalSpacingWidth = 10 * (self.sessionFeedArray.count - 1)
+            if sessionFeedArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
             
-            let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
-            let rightInset = leftInset
-            return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.sessionFeedArray.count)
+                let totalSpacingWidth = 10 * (self.sessionFeedArray.count - 1)
+            
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
         }
         
     }

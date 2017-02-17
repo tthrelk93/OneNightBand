@@ -7,6 +7,7 @@
 //
 
 import XCTest
+//import Firebase
 @testable import OneNightBand
 
 class OneNightBandTests: XCTestCase {

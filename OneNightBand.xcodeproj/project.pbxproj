@@ -56,9 +56,9 @@
 		3BFD58FD1DF0DC3300C85225 /* AddMediaToProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFD58FC1DF0DC3300C85225 /* AddMediaToProfile.swift */; };
 		3BFE84E21DB1674300E105F2 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFE84E11DB1674300E105F2 /* Session.swift */; };
 		3BFF119B1DC0389A000E574D /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFF119A1DC0389A000E574D /* Invite.swift */; };
-		746D61DAD37E0502858D5E35 /* Pods_OneNightBandTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55371D3D0916B619B5F29CA1 /* Pods_OneNightBandTests.framework */; };
-		D152B4A07F1769B41EB4DA0A /* Pods_OneNightBandUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37F6E43F2BED7D41D25C45BF /* Pods_OneNightBandUITests.framework */; };
-		D39D82CEFA526B6CE4562D1E /* Pods_OneNightBand.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFCA264E2519699204738A27 /* Pods_OneNightBand.framework */; };
+		AD5C5B9BE3380A6789C2A5D3 /* Pods_OneNightBand.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B9726EC282C17C1DBCE4D4 /* Pods_OneNightBand.framework */; };
+		C57FCDD1C9A4FDB7A0549380 /* Pods_OneNightBand_OneNightBandUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D42672A422727658B73417A /* Pods_OneNightBand_OneNightBandUITests.framework */; };
+		CADF35FC0ED14D233D879BC5 /* Pods_OneNightBand_OneNightBandTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2A3847EA19B92EC32E1357 /* Pods_OneNightBand_OneNightBandTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,7 +79,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		37F6E43F2BED7D41D25C45BF /* Pods_OneNightBandUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneNightBandUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0714B798EAD6BFEDE33B7110 /* Pods-OneNightBand-OneNightBandTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBand-OneNightBandTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBand-OneNightBandTests/Pods-OneNightBand-OneNightBandTests.release.xcconfig"; sourceTree = "<group>"; };
+		1C2A3847EA19B92EC32E1357 /* Pods_OneNightBand_OneNightBandTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneNightBand_OneNightBandTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B02D6CA1DDE67300076860A /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		3B0AB7061D9DED340012AE56 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		3B0CA9E31E4E4FDF00D871B6 /* LoadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadViewController.swift; sourceTree = "<group>"; };
@@ -137,14 +138,13 @@
 		3BFD58FC1DF0DC3300C85225 /* AddMediaToProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMediaToProfile.swift; sourceTree = "<group>"; };
 		3BFE84E11DB1674300E105F2 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		3BFF119A1DC0389A000E574D /* Invite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
-		55371D3D0916B619B5F29CA1 /* Pods_OneNightBandTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneNightBandTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6579F36A42EFE00AE3D85BB8 /* Pods-OneNightBandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBandUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBandUITests/Pods-OneNightBandUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		7627C082EA8B36216B8F3F3C /* Pods-OneNightBandUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBandUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBandUITests/Pods-OneNightBandUITests.release.xcconfig"; sourceTree = "<group>"; };
+		4D42672A422727658B73417A /* Pods_OneNightBand_OneNightBandUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneNightBand_OneNightBandUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		697DD1449A22C046DA1F03A2 /* Pods-OneNightBand-OneNightBandUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBand-OneNightBandUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBand-OneNightBandUITests/Pods-OneNightBand-OneNightBandUITests.release.xcconfig"; sourceTree = "<group>"; };
+		79B9726EC282C17C1DBCE4D4 /* Pods_OneNightBand.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneNightBand.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83AEDA21797BE500634FF2EA /* Pods-OneNightBand.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBand.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBand/Pods-OneNightBand.debug.xcconfig"; sourceTree = "<group>"; };
 		8B6DBEC41657ABD3A157CFFF /* Pods-OneNightBand.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBand.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBand/Pods-OneNightBand.release.xcconfig"; sourceTree = "<group>"; };
-		918B520AF7F72319587C21F6 /* Pods-OneNightBandTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBandTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBandTests/Pods-OneNightBandTests.release.xcconfig"; sourceTree = "<group>"; };
-		BF76D8C0E3163F6A503A20EC /* Pods-OneNightBandTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBandTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBandTests/Pods-OneNightBandTests.debug.xcconfig"; sourceTree = "<group>"; };
-		EFCA264E2519699204738A27 /* Pods_OneNightBand.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneNightBand.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B36924152A7A325FF78D340E /* Pods-OneNightBand-OneNightBandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBand-OneNightBandUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBand-OneNightBandUITests/Pods-OneNightBand-OneNightBandUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		CBFD418AD930BB61A583AC56 /* Pods-OneNightBand-OneNightBandTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneNightBand-OneNightBandTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OneNightBand-OneNightBandTests/Pods-OneNightBand-OneNightBandTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,7 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D39D82CEFA526B6CE4562D1E /* Pods_OneNightBand.framework in Frameworks */,
+				AD5C5B9BE3380A6789C2A5D3 /* Pods_OneNightBand.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,7 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				746D61DAD37E0502858D5E35 /* Pods_OneNightBandTests.framework in Frameworks */,
+				CADF35FC0ED14D233D879BC5 /* Pods_OneNightBand_OneNightBandTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,7 +168,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D152B4A07F1769B41EB4DA0A /* Pods_OneNightBandUITests.framework in Frameworks */,
+				C57FCDD1C9A4FDB7A0549380 /* Pods_OneNightBand_OneNightBandUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,10 +357,10 @@
 			children = (
 				83AEDA21797BE500634FF2EA /* Pods-OneNightBand.debug.xcconfig */,
 				8B6DBEC41657ABD3A157CFFF /* Pods-OneNightBand.release.xcconfig */,
-				BF76D8C0E3163F6A503A20EC /* Pods-OneNightBandTests.debug.xcconfig */,
-				918B520AF7F72319587C21F6 /* Pods-OneNightBandTests.release.xcconfig */,
-				6579F36A42EFE00AE3D85BB8 /* Pods-OneNightBandUITests.debug.xcconfig */,
-				7627C082EA8B36216B8F3F3C /* Pods-OneNightBandUITests.release.xcconfig */,
+				B36924152A7A325FF78D340E /* Pods-OneNightBand-OneNightBandUITests.debug.xcconfig */,
+				697DD1449A22C046DA1F03A2 /* Pods-OneNightBand-OneNightBandUITests.release.xcconfig */,
+				CBFD418AD930BB61A583AC56 /* Pods-OneNightBand-OneNightBandTests.debug.xcconfig */,
+				0714B798EAD6BFEDE33B7110 /* Pods-OneNightBand-OneNightBandTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -368,9 +368,9 @@
 		FB3406CB0C265996987C69F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EFCA264E2519699204738A27 /* Pods_OneNightBand.framework */,
-				55371D3D0916B619B5F29CA1 /* Pods_OneNightBandTests.framework */,
-				37F6E43F2BED7D41D25C45BF /* Pods_OneNightBandUITests.framework */,
+				79B9726EC282C17C1DBCE4D4 /* Pods_OneNightBand.framework */,
+				1C2A3847EA19B92EC32E1357 /* Pods_OneNightBand_OneNightBandTests.framework */,
+				4D42672A422727658B73417A /* Pods_OneNightBand_OneNightBandUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -452,12 +452,15 @@
 				TargetAttributes = {
 					3BE29F0F1D9B256A007A326B = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 55D7278478;
+						DevelopmentTeam = 2A8TEKG3F8;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 0;
 							};
 						};
 					};
@@ -560,7 +563,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBandTests/Pods-OneNightBandTests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBand-OneNightBandTests/Pods-OneNightBand-OneNightBandTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		82D198EEA61A5207146702D4 /* [CP] Check Pods Manifest.lock */ = {
@@ -575,7 +578,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		A328C38225A05282D887286D /* [CP] Copy Pods Resources */ = {
@@ -590,7 +593,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBandUITests/Pods-OneNightBandUITests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBand-OneNightBandUITests/Pods-OneNightBand-OneNightBandUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A38D9CF320A0BC802DF6B34A /* [CP] Check Pods Manifest.lock */ = {
@@ -605,7 +608,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		A3A09C9006C70BDEC788DF3D /* [CP] Embed Pods Frameworks */ = {
@@ -620,7 +623,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBandTests/Pods-OneNightBandTests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBand-OneNightBandTests/Pods-OneNightBand-OneNightBandTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E2CD2458BDDF3232B1686311 /* [CP] Check Pods Manifest.lock */ = {
@@ -635,7 +638,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		F09EA46EEA1EB230E0B3C608 /* [CP] Embed Pods Frameworks */ = {
@@ -650,7 +653,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBandUITests/Pods-OneNightBandUITests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OneNightBand-OneNightBandUITests/Pods-OneNightBand-OneNightBandUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FCE74FA9B2E590DEDEC52208 /* [CP] Copy Pods Resources */ = {
@@ -779,9 +782,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Thomas Threlkeld (2A8TEKG3F8)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 55D7278478;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -801,6 +806,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.onenightband.ios;
+				PROVISIONING_PROFILE = "0faad626-b501-41b7-abbe-bca2da614373";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -830,9 +837,11 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Thomas Threlkeld (2A8TEKG3F8)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 55D7278478;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -845,6 +854,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.onenightband.ios;
+				PROVISIONING_PROFILE = "0faad626-b501-41b7-abbe-bca2da614373";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -859,13 +870,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OneNightBand/OneNightBand.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 55D7278478;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 2A8TEKG3F8;
+				HEADER_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				INFOPLIST_FILE = OneNightBand/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.onenightband.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "98adc8b7-7e05-4494-a135-3f6709212d43";
+				PROVISIONING_PROFILE_SPECIFIER = OneNightBand;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -878,13 +892,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OneNightBand/OneNightBand.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 55D7278478;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 2A8TEKG3F8;
+				HEADER_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				INFOPLIST_FILE = OneNightBand/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.onenightband.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "98adc8b7-7e05-4494-a135-3f6709212d43";
+				PROVISIONING_PROFILE_SPECIFIER = OneNightBand;
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -892,7 +909,7 @@
 		};
 		3BE29F3C1D9B256A007A326B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BF76D8C0E3163F6A503A20EC /* Pods-OneNightBandTests.debug.xcconfig */;
+			baseConfigurationReference = CBFD418AD930BB61A583AC56 /* Pods-OneNightBand-OneNightBandTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -908,7 +925,7 @@
 		};
 		3BE29F3D1D9B256A007A326B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 918B520AF7F72319587C21F6 /* Pods-OneNightBandTests.release.xcconfig */;
+			baseConfigurationReference = 0714B798EAD6BFEDE33B7110 /* Pods-OneNightBand-OneNightBandTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -924,7 +941,7 @@
 		};
 		3BE29F3F1D9B256A007A326B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6579F36A42EFE00AE3D85BB8 /* Pods-OneNightBandUITests.debug.xcconfig */;
+			baseConfigurationReference = B36924152A7A325FF78D340E /* Pods-OneNightBand-OneNightBandUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 55D7278478;
@@ -939,7 +956,7 @@
 		};
 		3BE29F401D9B256A007A326B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7627C082EA8B36216B8F3F3C /* Pods-OneNightBandUITests.release.xcconfig */;
+			baseConfigurationReference = 697DD1449A22C046DA1F03A2 /* Pods-OneNightBand-OneNightBandUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 55D7278478;

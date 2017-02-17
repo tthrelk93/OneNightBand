@@ -8,7 +8,11 @@
 
 import Foundation
 import Photos
-import Firebase
+//import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+
 import JSQMessagesViewController
 
 final class ChatViewController: JSQMessagesViewController, SessionIDDest  {

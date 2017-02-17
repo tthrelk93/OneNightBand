@@ -6,7 +6,7 @@
 //  Copyright © 2016 Thomas Threlkeld. All rights reserved.
 //
 
-import Firebase
+//import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import Foundation
@@ -564,7 +564,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             //cell.layer.borderWidth = 0
             cell.youtubePlayerView.isHidden = false
             cell.videoURL = self.youtubeArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
             cell.removeVideoButton.isHidden = true
              cell.noVideosLabel.isHidden = true
         }

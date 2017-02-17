@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseDatabase
+//import Firebase
 
 
 protocol FeedDismissalDelegate : class
@@ -123,7 +124,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             }
         })
         
-        let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(SessionFeedViewController.backToNav))
+        let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done , target: self, action: #selector(SessionFeedViewController.backToNav))
         navigationItem.leftBarButtonItem = backButton
         let uploadButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(SessionFeedViewController.addNewSession))
         navigationItem.rightBarButtonItem = uploadButton

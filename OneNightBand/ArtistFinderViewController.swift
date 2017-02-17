@@ -8,8 +8,10 @@
 
 import Foundation
 import UIKit
-import Firebase
+//import Firebase
+import FirebaseDatabase
 import CoreLocation
+import FirebaseAuth
 
 
 class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, SessionIDDest, PerformSegueInArtistFinderController, UIPickerViewDelegate,UIPickerViewDataSource{

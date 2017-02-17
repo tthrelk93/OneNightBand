@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
+import FirebaseStorage
+//import Firebase
 
 
 
@@ -42,7 +45,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         super.viewDidLoad()
         
         navigationController?.navigationBar.barTintColor = UIColor.black.withAlphaComponent(0.60)
-        let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(UploadSessionPopup.backToFeed))
+        let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(UploadSessionPopup.backToFeed))
         
         navigationItem.leftBarButtonItem = backButton
         
@@ -50,6 +53,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         loadPastAndCurrentSessions()
         sessionCollectionView.visibleCells.first?.layer.borderWidth = 2
         sessionCollectionView.visibleCells.first?.layer.borderColor = UIColor.orange.cgColor
+        
+       
         
     }
     
@@ -337,7 +342,9 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         if movieURLFromPicker != nil{
             uploadMovieToFirebaseStorage(url: movieURLFromPicker!)
         }else{
-            print("Missing Media")
+            let alert = UIAlertController(title: "No Session Selected", message: "Select one of the above sessions. Only Sessions that you played in will show up.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     func uploadMovieToFirebaseStorage(url: NSURL){
@@ -407,7 +414,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                                     for snap in snapshots{
                                         let tempDict = snap.value as! [String: Any]
                                         if tempDict["sessionUID"] as! String == self.selectedSession.sessionUID! as String{
-                                            print("if")
+                                            
                                             
                                         FIRDatabase.database().reference().child("sessions").child(self.selectedSession.sessionUID! as String).child("sessFeedKeys").observeSingleEvent(of: .value, with: {(snapshot) in
                                                 var sessFeedKeyArray = snapshot.value as! [String]

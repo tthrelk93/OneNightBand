@@ -6,7 +6,7 @@
 //  Copyright © 2016 Thomas Threlkeld. All rights reserved.
 //
 
-import Firebase
+//import Firebase
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseDatabase
@@ -367,17 +367,23 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     func handleLogin(){
         guard let email = emailTextField.text, let password = passwordTextField.text
             else{
-                print("Form is not valid")
+                let alert = UIAlertController(title: "Login/Register Failed", message: "Check that you entered the correct information.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
                 return
         }
         FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: {
             (user: FIRUser?, error) in
             
             if error != nil{
-                print(error as Any)
+                let alert = UIAlertController(title: "Login/Register Failed", message: "Check that you entered the correct information.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                
                 return
             }
             else{
+                
                 print("Successful Login")
                 self.performSegue(withIdentifier: "LoginSegue", sender: self)
             }
@@ -390,7 +396,10 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     func handleRegister(){
         guard let email = emailTextField.text, let password = passwordTextField.text, let profileImage = profileImageView.image
             else{
-                print("Form is not valid")
+                let alert = UIAlertController(title: "Login/Register Failed", message: "Check that you entered the correct information.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                
                 return
         }
         let name = nameTextField.text
@@ -398,6 +407,12 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, error) in
             if error != nil {
                 print(error as Any)
+                let alert = UIAlertController(title: "Login/Register Failed", message: "Check that you entered the correct information.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                
+                
+
                 return
             }
             guard let uid = user?.uid else{

@@ -7,10 +7,12 @@
 //
 
 import Foundation
-import Firebase
+//import Firebase
 import FirebaseStorage
-import Firebase
+import FirebaseDatabase
+//import Firebase
 import UIKit
+import FirebaseAuth
 
 
 
@@ -87,7 +89,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     override func viewDidLoad(){
         super.viewDidLoad()
         let userID = FIRAuth.auth()?.currentUser?.uid
-        editSessionButton.setTitle("Edit Session", for: .normal)
+        editSessionButton.setTitle("Add/Remove Media", for: .normal)
         editSessionButton.titleLabel?.numberOfLines = 2
         editSessionButton.setTitleColor(UIColor.darkGray, for: .normal)
         editSessionButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
@@ -218,7 +220,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             //cell.layer.borderWidth = 0
             cell.youtubePlayerView.isHidden = false
             cell.videoURL = self.vidArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(videoURL: self.vidArray[indexPath.row])
+            cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
             cell.removeVideoButton.isHidden = true
             cell.noVideosLabel.isHidden = true
         }

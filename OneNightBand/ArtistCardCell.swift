@@ -8,8 +8,11 @@
 
 import Foundation
 import UIKit
-import Firebase
+//import Firebase
+import FirebaseDatabase
+//import Firebase
 import CoreLocation
+import FirebaseAuth
 
 
 /*protocol LoadProperSessionProtocol {

@@ -7,7 +7,9 @@
 //
 
 import Foundation
-import Firebase
+//import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 import UIKit
 
 protocol AcceptDeclineDelegate : class
@@ -82,7 +84,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                             FIRDatabase.database().reference().child("sessions").child(self.inviteArray[curCell.indexPath.row].sessionID!).updateChildValues(tempDict3)
                         }
                         
-                    })
+                    
                     
                     FIRDatabase.database().reference().child("users").child(self.currentUser!).child("invites").observeSingleEvent(of: .value, with: { (snapshot) in
                         
@@ -107,7 +109,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                             
                             
                         }
-                    })
+                    
                 
                 
                 
@@ -118,6 +120,10 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                         self.inviteCollectionView.deleteItems(at: [IndexPath(row: invite, section: 0)])
                         print("InviteCollectionViewCells: \(self.inviteCollectionView.visibleCells.count)")
                     }
+                        
+                        })
+                        
+                    })
                     
                 
             
