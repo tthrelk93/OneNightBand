@@ -88,7 +88,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
        
             let titleData = sessText[row]
             
-            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.black])
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
             return myTitle
     }
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
@@ -539,7 +539,6 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
     }
     
     
-    
+
 
 }
-

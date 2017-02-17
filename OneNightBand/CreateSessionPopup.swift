@@ -212,11 +212,12 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         var values = Dictionary<String, Any>()
                         tempArray2.append((FIRAuth.auth()?.currentUser?.uid)! as String)
                         values["sessionName"] =  self.sessionNameTextField.text
-                        values["sessionArtists"] = [(FIRAuth.auth()?.currentUser?.uid)!:"-"]
+                        values["sessionArtists"] = [(FIRAuth.auth()?.currentUser?.uid)!:"Session Founder"]
                         values["sessionBio"] = self.sessionBioTextView.text
                         values["sessionPictureURL"] = sessionImageUrl
                         values["sessionMedia"] = [""]
                         values["messages"] = [String: Any]()
+                        values["views"] = 0
                         let dateformatter = DateFormatter()
                         
                         dateformatter.dateStyle = DateFormatter.Style.short

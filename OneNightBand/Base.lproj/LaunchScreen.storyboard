@@ -32,7 +32,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="One Night Band" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="do4-Zh-jro">
                                         <rect key="frame" x="8" y="179" width="359" height="308"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="52"/>
+                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="42"/>
                                         <color key="textColor" red="1" green="0.5" blue="0.0" alpha="0.61078891871165641" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>

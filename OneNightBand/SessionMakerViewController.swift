@@ -89,10 +89,10 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     override func viewDidLoad(){
         super.viewDidLoad()
         let userID = FIRAuth.auth()?.currentUser?.uid
-        editSessionButton.setTitle("Add/Remove Media", for: .normal)
-        editSessionButton.titleLabel?.numberOfLines = 2
+        editSessionButton.setTitle("Add and Remove Media", for: .normal)
+        editSessionButton.titleLabel?.numberOfLines = 3
         editSessionButton.setTitleColor(UIColor.darkGray, for: .normal)
-        editSessionButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
+        editSessionButton.titleLabel?.font = UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightLight)
         editSessionButton.titleLabel?.textAlignment = NSTextAlignment.center
         
         AddMusiciansButton.setTitle("Find Musicians", for: .normal)
@@ -104,7 +104,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         chatButton.setTitle("Session Chat", for: .normal)
         chatButton.titleLabel?.numberOfLines = 2
         chatButton.setTitleColor(UIColor.darkGray, for: .normal)
-        chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
+        chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightLight)
         chatButton.titleLabel?.textAlignment = NSTextAlignment.center
 
         

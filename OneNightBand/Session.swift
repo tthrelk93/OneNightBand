@@ -18,6 +18,7 @@ class Session: NSObject{
     var messages = [String: Any]()
     var sessionMedia = [String]()
     var sessFeedKeys = [String]()
+    var views = Int()
    
     
     

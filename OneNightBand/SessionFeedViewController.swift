@@ -75,7 +75,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         //self.playerContainerView.viewController().
         //self.player?.delegate = self
         
-        switch UIScreen.main.bounds.width{
+        /*switch UIScreen.main.bounds.width{
         case 320:
             self.player?.view.frame = CGRect(x: 35,y:50,width:250,height:130)
             
@@ -91,7 +91,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             
             
             
-        }
+        }*/
         
 
         
@@ -191,6 +191,8 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         // Do any additional setup after loading the view.
     }
     
+    var ViewArray = [Int]()
+    
     
     
     func prepareForSegue(segue: UIStoryboardSegue, sender _: AnyObject?) {
@@ -218,8 +220,10 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         //func goToSession()
     func displaySessionInfo(){
         
-        
+        self.playerFinished = false
         let cButton = currentButtonFunc()
+        if cButton.isDisplayed == true{
+            self.player?.playerView.isHidden = false
     
         let tempLabel = (cButton.session?.sessionName)!
         sessionNameLabel.text = "Session Name: \(tempLabel)"
@@ -233,19 +237,37 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         self.player?.setUrl(url as! URL)
         self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
         //self.player?.playerView = self.playerContainerView
+           NotificationCenter.default.addObserver(self, selector:#selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.playerItem)
         if (cButton.center.y) >= self.sessionInfoView.bounds.maxY{
             self.player?.playFromBeginning()
+            
         }else{
+            let currentTime = Float(CACurrentMediaTime())
+            //let minutes = currentTime/60
+            //let seconds = currentTime - minutes * 60
+            if currentTime >= 30 || playerFinished == true{
+                cButton.sessionViews! += 1
+            }
             self.player?.stop()
             //cButton.setIsDiplayedButton(isDisplayedButton: false)
         }
+        }else{
+            self.player?.stop()
+            self.player?.playerView.isHidden = true
+            sessionNameLabel.text = " "
+            
+            sessionViewCountLabel.text = " "
+        }
 
-                
+        
      
 
 
     }
-    
+    var playerFinished: Bool?
+    func playerDidFinishPlaying(note: NSNotification){
+        self.playerFinished = true
+    }
     func currentButtonFunc()->ONBGuitarButton{
         
         if self.viewPins.count != 0 {
@@ -264,6 +286,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
             }else{
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
+                self.player?.stop()
             }
         /*if (closest as! ONBGuitarButton).center.y >= self.sessionInfoView.bounds.maxY{
             (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)

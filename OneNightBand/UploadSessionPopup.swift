@@ -54,7 +54,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         sessionCollectionView.visibleCells.first?.layer.borderWidth = 2
         sessionCollectionView.visibleCells.first?.layer.borderColor = UIColor.orange.cgColor
         
-       
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(SessionFeedViewController.backToNav))
+        navigationItem.leftBarButtonItem = cancelButton
         
     }
     
@@ -377,6 +378,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                                         values["sessionDate"] = self.selectedSession.sessionDate
                                         values["sessionUID"] = self.selectedSession.sessionUID
                                         values["sessionPictureURL"] = self.selectedSession.sessionPictureURL
+                                    values["views"] = 0
                                         // values["sessionMedia"] = metadata?.downloadURL()?.absoluteString
                                         
                                         //values2["sessionMedia"] = metadata?.downloadURL()?.absoluteString
