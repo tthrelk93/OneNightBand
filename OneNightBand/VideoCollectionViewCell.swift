@@ -18,7 +18,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
    
     @IBAction func removeVideoPressed(_ sender: AnyObject) {
         print("remove Pressed: \(self.videoURL)")
-        removeVideoDelegate?.removeVideo(removalVid: self.videoURL!)
+        removeVideoDelegate?.removeVideo(removalVid: self.videoURL!, isYoutube: self.isYoutube!)
         
     }
     
@@ -27,6 +27,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     
     @IBOutlet weak var removeVideoButton: UIButton!
     @IBOutlet weak var youtubePlayerView: YouTubePlayerView!
+    var player: Player?
     //var player:Player?
     @IBOutlet weak var playPauseButton: UIButton!
     @IBAction func playPauseTouched(_ sender: AnyObject) {
@@ -44,17 +45,32 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
     var videoURL: NSURL?
     var indexPath: IndexPath?
     var indexPathRow: Int?
+    var isYoutube: Bool?
     //var isPlaying = Bool()
     //var isPaused = Bool()
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         // Initialization code
+        self.player = Player()
+        self.addSubview((self.player?.view)!)
          self.youtubePlayerView.frame = self.frame//CGRect(x: 0,y:0,width:103,height:103)
-        if self.videoURL == nil{
-            self.noVideosLabel.isHidden = false
+        self.player?.view.frame = self.youtubePlayerView.frame
+        self.bringSubview(toFront: self.removeVideoButton)
+        self.sendSubview(toBack: (self.player?.view)!)
+        
+        if isYoutube == true{
+            self.youtubePlayerView.isHidden = false
+            self.player?.view.isHidden = true
         }else{
-            self.noVideosLabel.isHidden = true
+            self.youtubePlayerView.isHidden = true
+            self.player?.view.isHidden = false
         }
+            if self.videoURL == nil{
+                self.noVideosLabel.isHidden = false
+            }else{
+                self.noVideosLabel.isHidden = true
+            }
         //self.removeVideoButton.isHidden = true
          //isPlaying = false
         //isPaused = true

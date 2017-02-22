@@ -45,16 +45,16 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         super.viewDidLoad()
         
         navigationController?.navigationBar.barTintColor = UIColor.black.withAlphaComponent(0.60)
-        let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(UploadSessionPopup.backToFeed))
+        //let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(UploadSessionPopup.backToFeed))
         
-        navigationItem.leftBarButtonItem = backButton
+       // navigationItem.leftBarButtonItem = backButton
         
         //sessionCollectionView.allowsSelection = true
         loadPastAndCurrentSessions()
         sessionCollectionView.visibleCells.first?.layer.borderWidth = 2
         sessionCollectionView.visibleCells.first?.layer.borderColor = UIColor.orange.cgColor
         
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(SessionFeedViewController.backToNav))
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(UploadSessionPopup.backToFeed))
         navigationItem.leftBarButtonItem = cancelButton
         
     }

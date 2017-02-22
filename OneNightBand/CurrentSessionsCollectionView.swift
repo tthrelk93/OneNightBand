@@ -194,7 +194,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                
                     
                 
-                                    DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                     for session in self.activeSessionsArray{
                         self.currentButton = "active"
                         self.curActiveArrayIndex = self.activeSessionsArray.index(of: session)!
@@ -242,7 +242,8 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                             }
                         }
                         }
-                    }
+                        
+                }
             /******ADD THIS BACK END BUT REMOVE THE Array.removeAll()
             self.ref.child("sessionFeed").observeSingleEvent(of: .value, with: {(snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{

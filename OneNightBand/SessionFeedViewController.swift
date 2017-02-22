@@ -66,6 +66,8 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     override func viewDidAppear(_ animated: Bool) {
         //self.player = storyboard.view
         self.player = Player()
+        var currentItem = player?.playerItem
+        print(currentItem)
         
         //self.currentButton = currentButtonFunc()
         
@@ -93,6 +95,9 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             
         }*/
         
+        
+        
+        
 
         
         
@@ -100,9 +105,20 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         
         self.addChildViewController(self.player!)
         sessionInfoView.addSubview((self.player?.view)!)
-       // self.sessionInfoView.addSubview((controller?.view)!)
+       
+        NotificationCenter.default.addObserver(self, selector:#selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.playerItem)
         
         }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(false)
+            for session in 0...sessionArray.count-1{
+                var tempDict = [String:Int]()
+                tempDict["views"] = viewArray[session]
+                ref.child("sessionFeed").child(sessFeedKeyArray[session]).updateChildValues(tempDict)
+            }
+    }
+    
     func addNewSession(){
         performSegue(withIdentifier: "FeedToUpload", sender: self)
     }
@@ -110,6 +126,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         performSegue(withIdentifier: "BackToMainNav", sender: self)
     }
     var sessionsInDatabase = [Session]()
+    var sessFeedKeyArray = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -141,7 +158,9 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                     
                  
                     tempSess.setValuesForKeys(dictionary!)
+                    self.viewArray.append(tempSess.views)
                     self.sessionArray.append(tempSess)
+                    self.sessFeedKeyArray.append(snap.key as String)
                         }
                     }
             }
@@ -158,6 +177,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 button.initWithLane(lane: Int(arc4random_uniform(6)))
                 button.setYPosition(yPosition: (3 - CGFloat(i)) * 2.3)
                 //button.image = UIImage(named:"GuitarPin_Red.png")
+                button.sessionFeedKey = self.sessFeedKeyArray[i]
                 
                 
                 
@@ -170,6 +190,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 button.addGestureRecognizer(tap)
                 button.isUserInteractionEnabled = true
                 button.session = self.sessionArray[i]
+                button.sessionViews = self.viewArray[i]
                     
             
             }
@@ -191,7 +212,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         // Do any additional setup after loading the view.
     }
     
-    var ViewArray = [Int]()
+    var viewArray = [Int]()
     
     
     
@@ -220,34 +241,31 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         //func goToSession()
     func displaySessionInfo(){
         
-        self.playerFinished = false
+        
         let cButton = currentButtonFunc()
         if cButton.isDisplayed == true{
             self.player?.playerView.isHidden = false
-    
+            
         let tempLabel = (cButton.session?.sessionName)!
         sessionNameLabel.text = "Session Name: \(tempLabel)"
         
-        sessionViewCountLabel.text = "Views: 346"//String(describing: currentButtonSess.sessionViews)  need to add views to Session in database
-        //sessionImageView.loadImageUsingCacheWithUrlString((cButton.session?.sessionPictureURL)!)
+        sessionViewCountLabel.text = "Views: \(String(describing: cButton.sessionViews!))"
         
         let url = NSURL(string: (cButton.session?.sessionMedia.first!)!)
-        
+            
+          //  let item = AVPlayerItem(asset: asset)
         //let videoUrl = self.currentVideoURL
         self.player?.setUrl(url as! URL)
         self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
         //self.player?.playerView = self.playerContainerView
-           NotificationCenter.default.addObserver(self, selector:#selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.playerItem)
         if (cButton.center.y) >= self.sessionInfoView.bounds.maxY{
             self.player?.playFromBeginning()
             
+            swiftTimer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(SessionFeedViewController.updateCounter), userInfo: nil, repeats: true)
+                //print("ct \(player?.currentTime)")
+           
         }else{
-            let currentTime = Float(CACurrentMediaTime())
-            //let minutes = currentTime/60
-            //let seconds = currentTime - minutes * 60
-            if currentTime >= 30 || playerFinished == true{
-                cButton.sessionViews! += 1
-            }
+            
             self.player?.stop()
             //cButton.setIsDiplayedButton(isDisplayedButton: false)
         }
@@ -258,16 +276,28 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             
             sessionViewCountLabel.text = " "
         }
-
-        
-     
-
-
     }
-    var playerFinished: Bool?
+    var swiftTimer = Timer()
+    //problem is caused by current button moving before update count occurs
     func playerDidFinishPlaying(note: NSNotification){
-        self.playerFinished = true
+        print("pf")
+        currentButtonFunc().sessionViews! += 1
+        viewArray[sessionArray.index(of: currentButtonFunc().session!)!] += 1
     }
+    
+    var count = Int()
+    func updateCounter() {
+        if count == 30{
+            currentButtonFunc().sessionViews! += 1
+            viewArray[sessionArray.index(of: currentButtonFunc().session!)!] += 1
+            swiftTimer.invalidate()
+            count = 0
+        }
+        count += 1
+        //countingLabel.text = String(SwiftCounter++)
+    }
+    
+    
     func currentButtonFunc()->ONBGuitarButton{
         
         if self.viewPins.count != 0 {
@@ -313,9 +343,9 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         }
        
     }
-    
+    var touchesBeganBool = Bool()
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        touchesBeganBool = true
         let t = touches.first
         //print(t)
         firstTouch = (t?.location(in: self.view))!
@@ -358,6 +388,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         }
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touchesBeganBool = false
         if currentButtonFunc().isDisplayed == true{
             displaySessionInfo()
         }

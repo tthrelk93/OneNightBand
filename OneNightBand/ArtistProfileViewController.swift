@@ -74,7 +74,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
 
             
         })
-        ref.child("users").child(self.artistUID).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
+       /* ref.child("users").child(self.artistUID).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
             self.group.enter()
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 self.currentCollect = "youtube"
@@ -167,7 +167,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
                 }
             })
             self.group.leave()
-        })
+        })*/
     
 
     
@@ -177,6 +177,112 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
     
     var videoCollectEmpty: Bool?
     var currentCollect: String?
+    var vidFromPhoneArray = [NSURL]()
+    var viewDidAppearBool = false
+    var nsurlArray = [NSURL]()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.view.backgroundColor = UIColor.clear
+        self.view.alpha = 1.0
+        
+        
+        
+        if viewDidAppearBool == false{
+            
+            
+            self.ref.child("users").child(self.artistUID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    //fill datasources for collectionViews
+                    for snap in snapshots{
+                        if snap.key == "media"{
+                            let mediaSnaps = snap.children.allObjects as? [FIRDataSnapshot]
+                            for m_snap in mediaSnaps!{
+                                //fill youtubeArray
+                                if m_snap.key == "youtube"{
+                                    for y_snap in m_snap.value as! [String]
+                                    {
+                                        
+                                        self.youtubeArray.append(NSURL(string: y_snap)!)
+                                        self.nsurlArray.append(NSURL(string: y_snap)!)
+                                        //self.nsurlDict[NSURL(string: y_snap)!] = "y"
+                                    }
+                                }
+                                    //fill vidsFromPhone array
+                                else{
+                                    for v_snap in m_snap.value as! [String]
+                                    {
+                                        self.vidFromPhoneArray.append(NSURL(string: v_snap)!)
+                                        self.nsurlArray.append(NSURL(string: v_snap)!)
+                                        //self.nsurlDict[NSURL(string: v_snap)!] = "v"
+                                    }
+                                }
+                            }
+                            //fill prof pic array
+                        } else if snap.key == "profileImageUrl"{
+                            if let snapshots = snap.children.allObjects as? [FIRDataSnapshot]{
+                                for p_snap in snapshots{
+                                    if let url = NSURL(string: p_snap.value as! String){
+                                        if let data = NSData(contentsOf: url as URL){
+                                            self.picArray.append(UIImage(data: data as Data)!)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                print(self.nsurlArray)
+                for vid in self.nsurlArray{
+                    
+                    // Put your code which should be executed with a delay here
+                    self.currentCollect = "youtube"
+                    
+                    self.tempLink = vid
+                    
+                    let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                    
+                    self.videoCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                    self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                    self.videoCollectionView.backgroundColor = UIColor.clear
+                    self.videoCollectionView.dataSource = self
+                    self.videoCollectionView.delegate = self
+                }
+                
+                
+                self.viewDidAppearBool = true
+                
+                self.ref.child("users").child(self.artistUID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    let value = snapshot.value as? NSDictionary
+                    self.bioTextView.text = value?["bio"] as! String
+                    self.navigationItem.title = (value?["name"] as! String)
+                })
+                self.ref.child("users").child(self.artistUID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                       // self.sessionsPlayed.text = String(snapshots.count)
+                        
+                    }
+                    for _ in self.picArray{
+                        self.currentCollect = "pic"
+                        //self.tempLink = NSURL(string: (snap.value as? String)!)
+                        
+                        //self.YoutubeArray.append(snap.value as! String)
+                        
+                        let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                        self.pictureCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                        
+                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                        self.pictureCollectionView.backgroundColor = UIColor.clear
+                        self.pictureCollectionView.dataSource = self
+                        self.pictureCollectionView.delegate = self
+                        
+                    }
+                    
+                })
+            })
+            //self.viewDidAppearBool = true
+        }
+    }
+
     
     
     
@@ -185,10 +291,10 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
         if self.currentCollect == "pic"{
             return self.picArray.count
         }else{
-            if self.youtubeArray.count == 0{
+            if self.nsurlArray.count == 0{
                 return 1
             }else{
-                return self.youtubeArray.count
+                return self.nsurlArray.count
             }
         }
     }
@@ -216,55 +322,125 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-    }
-    func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
-        if self.videoCollectEmpty == true{
-            //cell.layer.borderColor = UIColor.white.cgColor
-            //cell.layer.borderWidth = 2
-            cell.videoURL = nil
-            cell.youtubePlayerView.isHidden = true
-            //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
-            cell.removeVideoButton.isHidden = true
-            cell.noVideosLabel.isHidden = false
-            cell.layer.borderWidth = 2
-            cell.layer.borderColor = UIColor.white.cgColor
+        if collectionView != self.pictureCollectionView{
+        if (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtube") == false {
+            if (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playbackState == .playing {
+                (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.stop()
+                
+            }else{
+                (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playFromBeginning()
+            }
             
-            
-        }else{
-            //cell.layer.borderColor = UIColor.clear.cgColor
-            //cell.layer.borderWidth = 0
-            cell.youtubePlayerView.isHidden = false
-            cell.videoURL = self.youtubeArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
-            cell.removeVideoButton.isHidden = true
-            cell.noVideosLabel.isHidden = true
         }
+        }
+
     }
-    func configureCell(_ cell: PictureCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
-        
-        cell.picImageView.image = self.picArray[indexPath.row]
-        cell.deleteButton.isHidden = true
-        /* switch UIScreen.main.bounds.width{
-         case 320:
-         
-         cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width:320, height:267)
-         
-         case 375:
-         cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:375,height:267)
-         
-         
-         case 414:
-         cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
-         
-         default:
-         cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
-         
-         
-         
-         }*/
-        
-    }
+        func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
+            /*if self.videoCollectEmpty == true{
+             //cell.layer.borderColor = UIColor.white.cgColor
+             //cell.layer.borderWidth = 2
+             cell.videoURL = nil
+             cell.isYoutube = true
+             cell.youtubePlayerView.isHidden = true
+             cell.player?.view.isHidden = true
+             //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+             cell.removeVideoButton.isHidden = true
+             cell.noVideosLabel.isHidden = false
+             cell.layer.borderWidth = 2
+             cell.layer.borderColor = UIColor.white.cgColor
+             
+             
+             }else{
+             //cell.layer.borderColor = UIColor.clear.cgColor
+             //cell.layer.borderWidth = 0
+             if self.isYoutubeCell == true{
+             cell.isYoutube = true
+             cell.player?.view.isHidden = true
+             cell.youtubePlayerView.isHidden = false
+             cell.videoURL = self.youtubeArray[indexPath.row]
+             cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
+             cell.removeVideoButton.isHidden = true
+             cell.noVideosLabel.isHidden = true
+             }else{
+             cell.youtubePlayerView.isHidden = true
+             cell.isYoutube = false
+             
+             //cell.videoURL = self.vidArray[indexPath.row]
+             //cell.player?.setUrl(self.vidArray[indexPath.row] as URL)
+             //print(self.vidArray[indexPath.row])
+             // cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
+             cell.removeVideoButton.isHidden = true
+             cell.noVideosLabel.isHidden = true
+             
+             }
+             }*/
+            print("cC:\(self.currentCollect!)")
+            if self.nsurlArray.count == 0{
+                cell.layer.borderColor = UIColor.white.cgColor
+                cell.layer.borderWidth = 2
+                cell.removeVideoButton.isHidden = true
+                cell.videoURL = nil
+                cell.player?.view.isHidden = true
+                cell.youtubePlayerView.isHidden = true
+                //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+                cell.removeVideoButton.isHidden = true
+                cell.noVideosLabel.isHidden = false
+            }else {
+                
+                cell.layer.borderColor = UIColor.clear.cgColor
+                cell.layer.borderWidth = 0
+                
+                //cell.youtubePlayerView.isHidden = true
+                cell.removeVideoButton.isHidden = true
+                cell.noVideosLabel.isHidden = true
+                
+                
+                
+                cell.videoURL =  self.nsurlArray[indexPath.row] as NSURL?
+                if(String(describing: cell.videoURL).contains("youtube")){
+                    cell.youtubePlayerView.loadVideoURL(cell.videoURL as! URL)
+                    cell.youtubePlayerView.isHidden = false
+                    cell.player?.view.isHidden = true
+                    cell.isYoutube = true
+                }else{
+                    cell.player?.setUrl(cell.videoURL as! URL)
+                    cell.player?.view.isHidden = false
+                    cell.youtubePlayerView.isHidden = true
+                    cell.isYoutube = false
+                    cell.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
+                }
+                //print(self.vidArray[indexPath.row])
+                //cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
+                //self.group.leave()
+            }
+            
+            
+            
+        }
+        func configureCell(_ cell: PictureCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
+            
+            cell.picImageView.image = self.picArray[indexPath.row]
+            cell.deleteButton.isHidden = true
+            /* switch UIScreen.main.bounds.width{
+             case 320:
+             
+             cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width:320, height:267)
+             
+             case 375:
+             cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:375,height:267)
+             
+             
+             case 414:
+             cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
+             
+             default:
+             cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
+             
+             
+             
+             }*/
+            
+        }
     
 
     

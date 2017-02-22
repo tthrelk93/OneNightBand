@@ -30,7 +30,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 45.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
+            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
             return tempLabel
@@ -40,7 +40,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 50.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
+            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
              return tempLabel
@@ -50,7 +50,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 55.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
+            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
              return tempLabel
@@ -61,7 +61,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 55.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
+            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
             return tempLabel
@@ -84,9 +84,9 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     let createAccountLabelForLoginSegment: UILabel = {
         var tempLabel = UILabel()
         tempLabel.text = "OneNightBand"
-        tempLabel.font = UIFont.systemFont(ofSize: 45.0, weight: UIFontWeightThin)
+        tempLabel.font = UIFont.systemFont(ofSize: 46.0, weight: UIFontWeightThin)
         tempLabel.textAlignment = NSTextAlignment.center
-        tempLabel.textColor = UIColor.orange.withAlphaComponent(0.8)
+        tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
         tempLabel.numberOfLines = 2
         tempLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -297,7 +297,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     }()
     func setupLoginRegisterSegmentedControl(){
         //need x, y, width, height constraints
-        loginRegisterSegmentedControl.tintColor = UIColor.orange
+        loginRegisterSegmentedControl.tintColor = UIColor.orange.withAlphaComponent(0.6)
         loginRegisterSegmentedControl.alpha = 0.7
         loginRegisterSegmentedControl.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
         loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

@@ -15,7 +15,7 @@ class ArtistCell: UITableViewCell {
 
     @IBOutlet weak var artistNameLabel: UILabel!
     @IBOutlet weak var artistInstrumentLabel: UILabel!
-    
+    var artistUID = String()
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = UIColor.white

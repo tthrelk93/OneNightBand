@@ -44,7 +44,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     @IBOutlet weak var removeArtistButton: UIButton!
     
     @IBOutlet weak var editSessionButton: UIButton!
-    
+    var cellTouchedArtistUID = String()
     @IBOutlet weak var uploadSessionToFeed: UIButton!
     override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         if segue.identifier == "SessionToArtistFinder"{
@@ -61,6 +61,11 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 vc.thisSessionID = getSessID()
                 vc.senderId = userID
                 vc.senderDisplayName = userID
+            }
+        }
+        if segue.identifier == "ArtistCellTouched"{
+            if let vc = segue.destination as? ArtistProfileViewController{
+                vc.artistUID = cellTouchedArtistUID
             }
         }
     }
@@ -86,7 +91,10 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     func getSessID()->String{
         return sessionID!
     }
+    
+    var mediaKidArray = [String]()
     override func viewDidLoad(){
+        
         super.viewDidLoad()
         let userID = FIRAuth.auth()?.currentUser?.uid
         editSessionButton.setTitle("Add and Remove Media", for: .normal)
@@ -104,7 +112,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         chatButton.setTitle("Session Chat", for: .normal)
         chatButton.titleLabel?.numberOfLines = 2
         chatButton.setTitleColor(UIColor.darkGray, for: .normal)
-        chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightLight)
+        chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
         chatButton.titleLabel?.textAlignment = NSTextAlignment.center
 
         
@@ -128,15 +136,8 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                             self.thisSession = tempSess
                             
                             for val in tempSess.sessionMedia{
+                                //self.mediaKidArray.append(val)
                                 self.vidArray.append(NSURL(string: val)!)
-                                let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
-                                self.sessionVidCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
-                                
-                                self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                                self.sessionVidCollectionView.backgroundColor = UIColor.clear
-                                self.sessionVidCollectionView.delegate = self
-                                self.sessionVidCollectionView.dataSource = self
-
                             }
                             self.sessionID = self.thisSession.sessionUID
                             self.sessionInfoTextView?.text = tempSess.sessionBio!
@@ -147,11 +148,29 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                             self.sessionArtistsTableView.register(cellNib, forCellReuseIdentifier: "ArtistCell")
                             self.sessionArtistsTableView.delegate = self
                             self.sessionArtistsTableView.dataSource = self
-                                                    }
+                        }
+                }
+                    for _ in self.vidArray{
+                        
+                        let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                        self.sessionVidCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                        
+                        self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                        self.sessionVidCollectionView.backgroundColor = UIColor.clear
+                        self.sessionVidCollectionView.delegate = self
+                        self.sessionVidCollectionView.dataSource = self
+                        self.sessionChat.thisSessionID = self.getSessID()
+                        //self.view.setNeedsDisplay()
+                        
                     }
+
+
             }
             DispatchQueue.main.async{
                 self.sessionArtistsTableView.reloadData()
+                //self.sessionVidCollectionView.reloadData()
+                print("vidArray: \(self.vidArray)")
+                
             }
 
             
@@ -161,20 +180,26 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     
     
     })
-        self.sessionChat.thisSessionID = self.getSessID()
-        //self.view.setNeedsDisplay()
+        
 }
- 
+    
+    //var vidCellBool: Bool?
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         //print((self.thisSession.sessionArtists?.count)!)
         return (self.thisSession.sessionArtists.count)
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        //(tableView.cellForRow(at: indexPath) as ArtistCell).artistUID
+        self.cellTouchedArtistUID = (tableView.cellForRow(at: indexPath) as! ArtistCell).artistUID
+        performSegue(withIdentifier: "ArtistCellTouched", sender: self)
     }
     
     
     var vidArray = [NSURL]()
     var videoCollectEmpty: Bool?
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if vidArray.count != 0{
+        if self.vidArray.count != 0{
             self.videoCollectEmpty = false
             return self.vidArray.count
             
@@ -199,10 +224,15 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        if (self.sessionVidCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playbackState == .playing {
+            (self.sessionVidCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.stop()
+            
+        }else{
+            (self.sessionVidCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playFromBeginning()
+        }
     }
     func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
-        if self.videoCollectEmpty == true{
+        if String(describing: self.vidArray[0]) == ""{
             //cell.layer.borderColor = UIColor.white.cgColor
             //cell.layer.borderWidth = 2
             print("rmpty")
@@ -216,11 +246,18 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             
             
         }else{
-            //cell.layer.borderColor = UIColor.clear.cgColor
-            //cell.layer.borderWidth = 0
-            cell.youtubePlayerView.isHidden = false
+            print("not empty")
+            cell.layer.borderColor = UIColor.clear.cgColor
+            cell.layer.borderWidth = 0
+            cell.youtubePlayerView.isHidden = true
+            cell.isYoutube = false
+            
             cell.videoURL = self.vidArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
+            
+            cell.player?.setUrl(self.vidArray[indexPath.row] as URL)
+            cell.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
+            //print(self.vidArray[indexPath.row])
+           // cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
             cell.removeVideoButton.isHidden = true
             cell.noVideosLabel.isHidden = true
         }
@@ -265,6 +302,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                     
                 }
             }*/
+            cell.artistUID = tempArtist.artistUID!
             
             cell.artistNameLabel.text = tempArtist.name
             cell.artistInstrumentLabel.text = "test"

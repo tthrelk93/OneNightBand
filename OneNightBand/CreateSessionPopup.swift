@@ -120,6 +120,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
     @IBOutlet weak var backgroundView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.finalizeSessionButton.isEnabled = true
         popupView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         popupView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
         datePicker.datePickerMode = UIDatePickerMode.date
@@ -260,6 +261,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                                     return
                                 }
                             })
+                            self.finalizeSessionButton.isEnabled = true
                             self.dismissalDelegate?.finishedShowing(viewController: self)
                             self.removeAnimate()
                             //this is ridiculously stupid way to reload currentSession data. find someway to fix
@@ -272,6 +274,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
 
             
         }else{
+            self.finalizeSessionButton.isEnabled = true
             let alert = UIAlertController(title: "Error", message: "Missing Information", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
