@@ -14,6 +14,7 @@ import Foundation
 import UIKit
 import QuartzCore
 import CoreLocation
+import SwiftOverlays
 
 class CreateAccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,CLLocationManagerDelegate{
     
@@ -372,6 +373,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                 self.present(alert, animated: true, completion: nil)
                 return
         }
+        SwiftOverlays.showBlockingWaitOverlayWithText("Loading Session Feed")
         FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: {
             (user: FIRUser?, error) in
             
@@ -391,17 +393,21 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         })
         
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        SwiftOverlays.removeAllBlockingOverlays()
+    }
     
     
     func handleRegister(){
         guard let email = emailTextField.text, let password = passwordTextField.text, let profileImage = profileImageView.image
             else{
-                let alert = UIAlertController(title: "Login/Register Failed", message: "Check that you entered the correct information.", preferredStyle: UIAlertControllerStyle.alert)
+                /*let alert = UIAlertController(title: "Login/Register Failed", message: "Check that you entered the correct information.", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)*/
                 
                 return
         }
+       SwiftOverlays.showBlockingWaitOverlayWithText("Loading Session Feed")
         let name = nameTextField.text
         
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, error) in

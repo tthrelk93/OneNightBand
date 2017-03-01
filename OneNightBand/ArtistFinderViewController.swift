@@ -66,56 +66,64 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         var tempLong2: CLLocationDegrees?
         var tempLat2: CLLocationDegrees?
         var tempDistInMeters: Double?
-        
-
+        artistArray.removeAll()
+        artistAfterDist.removeAll()
+        instrumentArray.removeAll()
+        self.instrumentPicked = self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]
+        print("ip: \(instrumentPicked)")
         artistArray = [Artist]()
         artistAfterDist = [Artist]()
         FIRDatabase.database().reference().child("users").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                var index = 0
+                
                 var artistsAlreadyInSession = [String]()
-                FIRDatabase.database().reference().child("sessions").child(self.thisSession).child("sessionArtists").observeSingleEvent(of: .value, with: { (snapshot) in
                 for snap in snapshots{
-                    if(snap.key != FIRAuth.auth()?.currentUser?.uid){
-                        
-                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                            for snap in snapshots{
-                                artistsAlreadyInSession.append(snap.value as! String)
-                            }
+                    let dictionary = snap.value as? [String: Any]
+                    let artist = Artist()
+                    artist.setValuesForKeys(dictionary!)
+                    self.artistArray.append(artist)
+                }
+                FIRDatabase.database().reference().child("sessions").child(self.thisSession).child("sessionArtists").observeSingleEvent(of: .value, with: { (ssnapshot) in
+                    if let ssnapshots = ssnapshot.children.allObjects as? [FIRDataSnapshot]{
+                        for ssnap in ssnapshots{
+                            artistsAlreadyInSession.append(ssnap.value as! String)
                         }
-                        
-                        if let dictionary = snap.value as? [String: Any] {
-                            let artist = Artist()
-                            artist.setValuesForKeys(dictionary)
-                            if(artistsAlreadyInSession.contains(artist.artistUID!) == false){
-                                if(self.artistArray.contains(artist) == false){
-                                    
-                                    //if(artist.instruments.contains(where: (key: self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)],value: self.menuText.index(of: self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]))) == true){
-                                    
-                                    for key in artist.instruments.keys{
-                                        self.instrumentArray.append(key)
-                                    }
-                                    if(self.instrumentArray.contains(self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]) == true){
-                                        self.instrumentPicked = self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]
-                                        self.artistArray.append(artist)
-                                        index += 1
-                                    }
-                                }
-                                if(self.artistArray.contains(artist) == true){
-                                    if(self.instrumentArray.contains(self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]) == false){
-                                        self.artistArray.remove(at: index)
-                                        index -= 1
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
-                        }
-                    }
                     }
                     
-        DispatchQueue.main.async {
+                    
+                    for artist in self.artistArray{
+                        if(artist.artistUID != FIRAuth.auth()?.currentUser?.uid){
+                                if(artistsAlreadyInSession.contains(artist.artistUID!) == false){
+                                        
+                                        //if(artist.instruments.contains(where: (key: self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)],value: self.menuText.index(of: self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]))) == true){
+                                        
+                                        for key in artist.instruments.keys{
+                                            self.instrumentArray.append(key)
+                                        }
+                                        print("test: \(self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)])")
+                                    
+                                        if(self.instrumentArray.contains(self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]) == false){
+                                            self.artistArray.remove(at: self.artistArray.index(of: artist)! )
+                                            
+                                            
+                                    }
+                                    
+                                            
+                                    
+                            
+                            }
+                        }else{
+                            self.artistArray.remove(at: self.artistArray.index(of: artist)! )
+                        }
+                    }
+                
+                    
+                    
+                    
+            
+            
+                    
+                    DispatchQueue.main.async{
             print(self.artistArray)
             let userID = FIRAuth.auth()?.currentUser?.uid
             self.ref.child("users").child(userID!).child("location").observeSingleEvent(of: .value, with: { (snapshot) in
@@ -124,8 +132,6 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                 tempLong = artist.location["long"] as? CLLocationDegrees
                                 tempLat = artist.location["lat"] as? CLLocationDegrees
                                 tempCoordinate = CLLocation(latitude: tempLat!, longitude: tempLong!)
-                
-                
                                         if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                                             for snap in snapshots{
                                                 if snap.key == "long"{
@@ -143,10 +149,8 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                                 self.artistAfterDist.append(artist)
                                                 //tempIndex += 1
                                             }
-                                        }
                 }
-                
-            
+                }
                 print(self.artistAfterDist)
                             if self.artistAfterDist.isEmpty{
                                 self.noArtistsFoundLabel.isHidden = false
@@ -170,19 +174,15 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                                     self.artistCollectionView.gestureRecognizers?.first?.cancelsTouchesInView = false
                                     self.artistCollectionView.gestureRecognizers?.first?.delaysTouchesBegan = false
                                 }
-            }
-        
-        
-            
-    
-        
-                    })
+                }
+            })
                     }
+                    
                 })
-                
-                
             }
-            self.reloadInputViews()
+             //DispatchQueue.main.async {
+              // self.artistCollectionView.reloadData()
+            //}
         })
         
 
@@ -330,7 +330,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         if pickerView == self.distancePicker{
             let titleData = distanceMenuText[row]
             
-            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.white])
+            let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 15.0)!,NSForegroundColorAttributeName:UIColor.black])
             return myTitle
         }else{
             let titleData = menuText[row]

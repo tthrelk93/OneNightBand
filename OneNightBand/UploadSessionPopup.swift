@@ -11,6 +11,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
+import SwiftOverlays
 //import Firebase
 
 
@@ -40,7 +41,9 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         //present(vc, animated: true, completion: nil)
         performSegue(withIdentifier: "CancelPressed", sender: self)
     }
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        SwiftOverlays.removeAllBlockingOverlays()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -341,6 +344,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     var autoIdString = String()
     @IBAction func Upload(_ sender: AnyObject) {
         if movieURLFromPicker != nil{
+            SwiftOverlays.showBlockingTextOverlay("Uploading Session to Feed")
             uploadMovieToFirebaseStorage(url: movieURLFromPicker!)
         }else{
             let alert = UIAlertController(title: "No Session Selected", message: "Select one of the above sessions. Only Sessions that you played in will show up.", preferredStyle: UIAlertControllerStyle.alert)
@@ -407,6 +411,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                                                         print(err)
                                                         return
                                                     }
+                                                    self.performSegue(withIdentifier: "CancelPressed", sender: self)
                                                 })
                                             }
                                         })

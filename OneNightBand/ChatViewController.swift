@@ -19,7 +19,7 @@ final class ChatViewController: JSQMessagesViewController, SessionIDDest  {
     
     // MARK: Properties
     var getSessionID: GetSessionIDDelegate?
-    
+    var senderName = String()
     private let imageURLNotSetKey = "NOTSET"
     var thisSessionID: String!
     var sessionRef: FIRDatabaseReference?
@@ -57,7 +57,20 @@ final class ChatViewController: JSQMessagesViewController, SessionIDDest  {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         print("sessID: ", thisSessionID)
         self.sessionRef = FIRDatabase.database().reference().child("sessions").child(thisSessionID)
+        //let tempUser = FIRDatabase.database().reference().child("users").child((FIRAuth.auth()?.currentUser?.uid)!).observe(.value, with: FIRDataSnapshot)
+        
+        FIRDatabase.database().reference().child("users").child((FIRAuth.auth()?.currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
+            let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+            for snap in snapshots{
+                if snap.key == "name"{
+                    self.senderName = snap.value as! String
+                }
+            }
+        })
+
+        
         self.senderId = FIRAuth.auth()?.currentUser?.uid
+       // self.senderId = FIRAuth.auth()?.currentUser?
         //addMessage(withId: "foo", name: "Mr.Bolt", text: "I am so fast!")
         //addMessage(withId: senderId, name: "Me", text: "I bet I can run faster than you!")
         //addMessage(withId: senderId, name: "Me", text: "I like to run!")
@@ -241,7 +254,7 @@ final class ChatViewController: JSQMessagesViewController, SessionIDDest  {
         // 2
         let messageItem = [
             "senderId": senderId!,
-            "senderName": senderDisplayName!,
+            "senderName": self.senderName,
             "text": text!,
             ]
         
@@ -262,6 +275,7 @@ final class ChatViewController: JSQMessagesViewController, SessionIDDest  {
         let messageItem = [
             "photoURL": imageURLNotSetKey,
             "senderId": senderId!,
+            //"senderName":
             ]
         
         itemRef.setValue(messageItem)

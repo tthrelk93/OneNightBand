@@ -11,6 +11,7 @@ import UIKit
 import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
+import SwiftOverlays
 
 //import Firebase
 
@@ -197,6 +198,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
     }
     @IBAction func finalizeTouched(_ sender: AnyObject) {
         if(sessionImageView.image != nil && sessionNameTextField.text != "" && sessionBioTextView.text != "tap to add a little info about the type of session you are trying to create."){
+            SwiftOverlays.showBlockingWaitOverlayWithText("Loading Your Sessions")
             let imageName = NSUUID().uuidString
             let storageRef = FIRStorage.storage().reference().child("session_images").child("\(imageName).jpg")
             
@@ -265,7 +267,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                             self.dismissalDelegate?.finishedShowing(viewController: self)
                             self.removeAnimate()
                             //this is ridiculously stupid way to reload currentSession data. find someway to fix
-                            self.performSegue(withIdentifier: "FinalizeSessionToProfile", sender: self)
+                            //self.performSegue(withIdentifier: "FinalizeSessionToProfile", sender: self)
                             self.performSegue(withIdentifier: "CreateSessionPopupToCurrentSession", sender: self)
                         })
                     }
@@ -280,6 +282,12 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
             self.present(alert, animated: true, completion: nil)
         }
             }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        SwiftOverlays.removeAllBlockingOverlays()
+    }
+    
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         var selectedImageFromPicker: UIImage?

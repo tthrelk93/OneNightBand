@@ -12,6 +12,8 @@ import FirebaseDatabase
 import Foundation
 import UIKit
 import QuartzCore
+import SwiftOverlays
+
 
 protocol DismissalDelegate : class
 {
@@ -27,27 +29,17 @@ protocol Dismissable : class
 
 extension DismissalDelegate where Self: UIViewController
 {
-    func finishedShowing(viewController: UIViewController) {
-        if viewController.isBeingPresented && viewController.presentingViewController == self
-        {
-            self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
-            
-            self.dismiss(animated: true, completion: nil)
-            return
-        }
-        
-        self.navigationController?.popViewController(animated: true)
     }
-}
 
 
 
 
 
-class MainNavigationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PerformSegueInRootProtocol, DismissalDelegate  {
+class MainNavigationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PerformSegueInRootProtocol, DismissalDelegate, UITableViewDelegate, UITableViewDataSource  {
     
+    @IBOutlet weak var instrumentTableView: UITableView!
 
-    
+    //func view
     
     func prepareForSegue(segue: UIStoryboardSegue, sender _: AnyObject?) {
             if let vc = segue.destination as? Dismissable
@@ -74,7 +66,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     var youtubeArray = [NSURL]()
     var nsurlArray = [NSURL]()
     var ref = FIRDatabase.database().reference()
-    var dictionaryOfInstruments: [NSDictionary] = [NSDictionary]()
+    var dictionaryOfInstruments = [String: Any]()
     var tags = [Tag]()
     
     let skillsLabel: UILabel = {
@@ -104,17 +96,23 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     override func viewDidLoad(){
         super.viewDidLoad()
          //loadVidFromPhone()
+        SwiftOverlays.showBlockingTextOverlay("Finalizing")
     }
     
     var vidFromPhoneArray = [NSURL]()
     var viewDidAppearBool = false
     var isYoutubeCell: Bool?
+    var skillArray = [Int]()
    // let group = DispatchGroup()
     //let backgroundQ = DispatchQueue.global(qos: .default)
     var nsurlDict = [NSURL: String]()
+    override func viewDidAppear(_ animated: Bool) {
+        SwiftOverlays.removeAllBlockingOverlays()
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.view.backgroundColor = UIColor.clear
+        self.shadeView.isHidden = true
         self.view.alpha = 1.0
         createSessionButton.titleLabel?.textAlignment = .center
         createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
@@ -170,6 +168,19 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     }
                 }
                 print(self.nsurlArray)
+                if self.nsurlArray.count == 0{
+                    self.currentCollect = "youtube"
+                    
+                    self.tempLink = nil
+                    
+                    let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                    self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                    self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                    self.youtubeCollectionView.backgroundColor = UIColor.clear
+                    self.youtubeCollectionView.dataSource = self
+                    self.youtubeCollectionView.delegate = self
+
+                }
                 for vid in self.nsurlArray{
                     
                         // Put your code which should be executed with a delay here
@@ -190,9 +201,26 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
             
             self.ref.child("users").child(self.userID!).observeSingleEvent(of: .value, with: { (snapshot) in
                 let value = snapshot.value as? NSDictionary
+                
                 self.bioTextView.text = value?["bio"] as! String
                 self.navigationItem.title = (value?["name"] as! String)
-            })
+                let instrumentDict = value?["instruments"] as! [String: Any]
+                self.dictionaryOfInstruments = value?["instruments"] as! [String: Any]
+                //var instrumentArray = [String]()
+                for (key, value) in instrumentDict{
+                    self.instrumentArray.append(key)
+                    self.skillArray.append(value as! Int)
+                    
+                }
+                
+                //print(instrumentArray)
+                for instrument in self.instrumentArray{
+                    let cellNib = UINib(nibName: "InstrumentTableViewCell", bundle: nil)
+                    self.instrumentTableView.register(cellNib, forCellReuseIdentifier: "InstrumentCell")
+                    self.instrumentTableView.delegate = self
+                    self.instrumentTableView.dataSource = self
+                }
+            
             self.ref.child("users").child(self.userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                     self.sessionsPlayed.text = String(snapshots.count)
@@ -213,9 +241,14 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.profilePicCollectionView.delegate = self
                     
                 }
+                
 
             })
+                DispatchQueue.main.async{
+                    self.instrumentTableView.reloadData()
+                }
              })
+            })
             //self.viewDidAppearBool = true
         }
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
@@ -254,6 +287,22 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     var currentCollect: String?
     
     
+    @IBOutlet weak var shadeView: UIView!
+    
+    
+    func finishedShowing(viewController: UIViewController) {
+        //if viewController.isBeingPresented && viewController.presentingViewController == self
+        //{
+        self.shadeView.isHidden = true
+        self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
+        
+        self.dismiss(animated: true, completion: nil)
+        return
+        //}
+        
+        // self.navigationController?.popViewController(animated: true)
+    }
+
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
@@ -308,45 +357,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
     }
     func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
-        /*if self.videoCollectEmpty == true{
-            //cell.layer.borderColor = UIColor.white.cgColor
-            //cell.layer.borderWidth = 2
-            cell.videoURL = nil
-            cell.isYoutube = true
-            cell.youtubePlayerView.isHidden = true
-            cell.player?.view.isHidden = true
-            //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
-            cell.removeVideoButton.isHidden = true
-            cell.noVideosLabel.isHidden = false
-            cell.layer.borderWidth = 2
-            cell.layer.borderColor = UIColor.white.cgColor
-            
-
-        }else{
-            //cell.layer.borderColor = UIColor.clear.cgColor
-            //cell.layer.borderWidth = 0
-            if self.isYoutubeCell == true{
-                cell.isYoutube = true
-                cell.player?.view.isHidden = true
-            cell.youtubePlayerView.isHidden = false
-            cell.videoURL = self.youtubeArray[indexPath.row]
-            cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
-            cell.removeVideoButton.isHidden = true
-             cell.noVideosLabel.isHidden = true
-            }else{
-                cell.youtubePlayerView.isHidden = true
-                cell.isYoutube = false
-                
-                //cell.videoURL = self.vidArray[indexPath.row]
-                //cell.player?.setUrl(self.vidArray[indexPath.row] as URL)
-                //print(self.vidArray[indexPath.row])
-                // cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
-                cell.removeVideoButton.isHidden = true
-                cell.noVideosLabel.isHidden = true
-
-            }
-        }*/
-        print("cC:\(self.currentCollect!)")
+        
+       
             if self.nsurlArray.count == 0{
                 cell.layer.borderColor = UIColor.white.cgColor
                 cell.layer.borderWidth = 2
@@ -369,7 +381,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 
                 
                 cell.videoURL =  self.nsurlArray[indexPath.row] as NSURL?
-                if(String(describing: cell.videoURL).contains("youtube")){
+                if(String(describing: cell.videoURL).contains("youtube") || String(describing: cell.videoURL).contains("youtu.be")){
                     cell.youtubePlayerView.loadVideoURL(cell.videoURL as! URL)
                     cell.youtubePlayerView.isHidden = false
                     cell.player?.view.isHidden = true
@@ -412,6 +424,70 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         }*/
  
         }
+    
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        //print((self.thisSession.sessionArtists?.count)!)
+        return self.instrumentArray.count
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        //(tableView.cellForRow(at: indexPath) as ArtistCell).artistUID
+        //self.cellTouchedArtistUID = (tableView.cellForRow(at: indexPath) as! ArtistCell).artistUID
+        //performSegue(withIdentifier: "ArtistCellTouched", sender: self)
+    }
+    
+    
+  /*  var vidArray = [NSURL]()
+    var videoCollectEmpty: Bool?
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        if self.vidArray.count != 0{
+            self.videoCollectEmpty = false
+            return self.vidArray.count
+            
+        }else{
+            self.videoCollectEmpty = true
+            return 1
+        }
+    }*/
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InstrumentCell", for: indexPath as IndexPath) as! InstrumentTableViewCell
+            cell.instrumentLabel.text = self.instrumentArray[indexPath.row]
+        cell.skillLabel.text = String(describing: self.skillArray[indexPath.row])
+        //let tempArtist = Artist()
+        //let userID = FIRAuth.auth()?.currentUser?.uid
+        //var artistArray = [String]()
+        //var instrumentArray = [String]()
+        /*for value in thisSession.sessionArtists{
+            artistArray.append(value.key)
+            instrumentArray.append(value.value as! String)
+        }
+        
+        
+        ref.child("users").child(artistArray[indexPath.row]).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            
+            let dictionary = snapshot.value as? [String: AnyObject]
+            tempArtist.setValuesForKeys(dictionary!)
+            
+            /*var tempInstrument = ""
+             let userID = FIRAuth.auth()?.currentUser?.uid
+             for value in self.thisSession.sessionArtists{
+             if value.key == userID{
+             tempInstrument = value.value as! String
+             
+             }
+             }*/
+            cell.artistUID = tempArtist.artistUID!
+            
+            cell.artistNameLabel.text = tempArtist.name
+            cell.artistInstrumentLabel.text = "test"
+            cell.artistImageView.loadImageUsingCacheWithUrlString(tempArtist.profileImageUrl.first!)
+            cell.artistInstrumentLabel.text = instrumentArray[indexPath.row]*/
+            
+        return cell
+    }
+
             
     
 
@@ -421,6 +497,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     func createSessionButtonSelected() {
         //self.view.backgroundColor = UIColor.black
         //self.view.alpha = 0.6
+        shadeView.isHidden = false
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame

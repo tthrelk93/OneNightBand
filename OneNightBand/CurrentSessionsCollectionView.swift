@@ -132,7 +132,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
         
     }
 
-    
+    var allSessionsDict = [String: Session]()
     func loadCollectionViews(){
         activeSessionsArray.removeAll()
         pastSessionArray.removeAll()
@@ -145,13 +145,46 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
         upcomingSessionsCollectionView.isHidden = true
         pastSessionsCollectionView.isHidden = true
         sessionFeedCollectionView.isHidden = true
+        
         let userID = FIRAuth.auth()?.currentUser?.uid
-        ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
+        self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshots{
+                    let dictionary = snap.value as? [String: Any]
+                    let tempSess = Session()
+                    tempSess.setValuesForKeys(dictionary!)
+                    self.allSessionsDict[tempSess.sessionUID!] = tempSess
+                }
+            }
+
+        self.ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
                     self.sessionIDArray.append((snap.value! as! String))
                 }
             }
+            
+            self.ref.child("sessionFeed").observeSingleEvent(of: .value, with: { (snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    for snap in snapshots{
+                        let sessionKids = snap.children.allObjects as? [FIRDataSnapshot]
+                        for ssnap in sessionKids!{
+                            if ssnap.key == "sessionUID"{
+                    
+                                let dictionary = snap.value as? [String: Any]
+                                let tempSess = Session()
+                                tempSess.setValuesForKeys(dictionary!)
+                                if self.sessionIDArray.contains(tempSess.sessionUID!) {
+                                    
+                                    self.sessionFeedArray.append(self.allSessionsDict[tempSess.sessionUID!]!)
+                                    
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            
             
             self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -232,6 +265,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                                 for session in self.allSessions{
                                     self.currentButton = "all"
                                     //self.curAllArrayIndex = self.allSessions.index(of: session)!
+                                    
                                     let cellNib = UINib(nibName: "SessionCell", bundle: nil)
                                     self.allSessionsCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
                                     self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
@@ -239,6 +273,8 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                                     self.allSessionsCollectionView.dataSource = self
                                     self.allSessionsCollectionView.delegate = self
                                 }
+                                
+                                    
                             }
                         }
                         }
@@ -263,35 +299,34 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
 
                     
                     }*/
-                    
-                
-                
-
-                
-                DispatchQueue.main.async{
-                    print(self.sessionFeedArray)
+                print(self.sessionFeedArray)
                 for session in self.sessionFeedArray{
                     if self.sessionIDArray.contains(session.sessionUID!){
-                    self.currentButton = "feed"
-                    self.curFeedArrayIndex = self.sessionFeedArray.index(of: session)!
-                    let cellNib = UINib(nibName: "SessionCell", bundle: nil)
-                    self.sessionFeedCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
-                    self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
-                    self.sessionFeedCollectionView.backgroundColor = UIColor.clear
-                    self.sessionFeedCollectionView.dataSource = self
-                    self.sessionFeedCollectionView.delegate = self
-                    }
+                        self.currentButton = "feed"
+                        self.curFeedArrayIndex = self.sessionFeedArray.index(of: session)!
+                        let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                        self.sessionFeedCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                        self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                        self.sessionFeedCollectionView.backgroundColor = UIColor.clear
+                        self.sessionFeedCollectionView.dataSource = self
+                        self.sessionFeedCollectionView.delegate = self
                     }
                 }
                 
+
+                })
+                
+
+                    })
+            
             })
 
         })
     }
-    
-    
-    
-    
+
+
+
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print(currentButton as Any)
         if(self.currentButton == "upcoming"){

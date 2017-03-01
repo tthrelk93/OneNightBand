@@ -109,6 +109,26 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                             
                             
                         }
+                        /*FIRDatabase.database().reference().child("sessionFeed").observeSingleEvent(of: .value, with: { (snapshot) in
+                                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                    for snap in snapshots{
+                                        let sessionKids = snap.children.allObjects as? [FIRDataSnapshot]
+                                        for ssnap in sessionKids!{
+                                            if ssnap.key == "sessionUID"{
+                                                let dictionary = snap.value as? [String: Any]
+                                                let tempSess = Session()
+                                                tempSess.setValuesForKeys(dictionary!)
+                                                if self.sessionsArray.contains(ssnap.value as! String) || tempSess.sessionName == self.cellArray[invite].sessionName.text{
+                                                    
+                                                    
+                                                    
+                                                }
+                                            }
+                                            
+                                        }
+                                    }
+                                }*/
+
                     
                 
                 

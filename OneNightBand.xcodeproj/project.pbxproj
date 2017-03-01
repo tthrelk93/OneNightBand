@@ -16,6 +16,8 @@
 		3B1062941DAD7B9500D818ED /* ALRadialMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */; };
 		3B16D5C41DE624E000DC19AC /* ArtistCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */; };
 		3B16D5C61DE6267200DC19AC /* ArtistCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */; };
+		3B19CB491E64B61100390DDA /* InstrumentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */; };
+		3B19CB4A1E64B61100390DDA /* InstrumentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */; };
 		3B1E04701DEA221400DCDAA4 /* ArtistProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */; };
 		3B486AF61DB931FB00A243C5 /* ArtistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B486AF51DB931FB00A243C5 /* ArtistCell.xib */; };
 		3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B486AF71DB9335600A243C5 /* ArtistCell.swift */; };
@@ -90,6 +92,8 @@
 		3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALRadialMenuButton.swift; sourceTree = "<group>"; };
 		3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCardCell.xib; sourceTree = "<group>"; };
 		3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCardCell.swift; sourceTree = "<group>"; };
+		3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstrumentTableViewCell.swift; sourceTree = "<group>"; };
+		3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InstrumentTableViewCell.xib; sourceTree = "<group>"; };
 		3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistProfileViewController.swift; sourceTree = "<group>"; };
 		3B486AF51DB931FB00A243C5 /* ArtistCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCell.xib; sourceTree = "<group>"; };
 		3B486AF71DB9335600A243C5 /* ArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
@@ -215,6 +219,8 @@
 				3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */,
 				3BB0FE641DF7888E0028D544 /* PictureCollectionViewCell.swift */,
 				3BB0FE651DF7888E0028D544 /* PictureCollectionViewCell.xib */,
+				3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */,
+				3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */,
 			);
 			name = ProfileNavigation;
 			sourceTree = "<group>";
@@ -513,6 +519,7 @@
 				3B4927811E479DA400A8D0B3 /* InviteCell.xib in Resources */,
 				3B16D5C41DE624E000DC19AC /* ArtistCardCell.xib in Resources */,
 				3BAD690F1DA4638300C2CFC0 /* TagCell.xib in Resources */,
+				3B19CB4A1E64B61100390DDA /* InstrumentTableViewCell.xib in Resources */,
 				3B72BCD71DF5E25A0084D4B5 /* VideoCollectionViewCell.xib in Resources */,
 				3B9641AF1DB573D800E35480 /* SessionCell.xib in Resources */,
 				3BE29F1B1D9B256A007A326B /* Assets.xcassets in Resources */,
@@ -713,6 +720,7 @@
 				3B72BCD61DF5E25A0084D4B5 /* VideoCollectionViewCell.swift in Sources */,
 				3BE29F141D9B256A007A326B /* AppDelegate.swift in Sources */,
 				3B6248DE1DD4F5CB00847676 /* UploadSessionPopup.swift in Sources */,
+				3B19CB491E64B61100390DDA /* InstrumentTableViewCell.swift in Sources */,
 				3BE29F4A1D9C4559007A326B /* TextFieldsEffects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

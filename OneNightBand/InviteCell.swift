@@ -28,7 +28,7 @@ class InviteCell: UICollectionViewCell, AcceptDeclineData  {
     @IBOutlet weak var sessionDescription: UITextView!
     
     var curCell: InviteCell?
-    
+    var sessionMedia = String()
     weak var acceptDeclineDelegate : AcceptDeclineDelegate?
     
     var indexPathRow = Int()

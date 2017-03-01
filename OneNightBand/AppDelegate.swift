@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseCore
 import FirebaseAuth
-
+//import UserNotifications
 //import Firebase
 
 import IQKeyboardManagerSwift
@@ -29,17 +29,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.darkGray
         UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.orange
         UIPageControl.appearance().backgroundColor = UIColor.black
-        
-        //UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        // Sets shadow (line below the bar) to a blank image
-        //UINavigationBar.appearance().shadowImage = UIImage()
-        // Sets the translucent background color
-        //UINavigationBar.appearance().backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
-        // Set translucent. (Default value is already true, so this can be removed if desired.)
-        //UINavigationBar.appearance().isTranslucent = true
-        
-        
-        // Override point for customization after application launch.
+        // iOS 10 support
+        /*if #available(iOS 10, *) {
+            UNUserNotificationCenter.current().requestAuthorization(options:[.badge, .alert, .sound]){ (granted, error) in }
+            application.registerForRemoteNotifications()
+        }
+            // iOS 9 support
+        else if #available(iOS 9, *) {
+            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+            // iOS 8 support
+        else if #available(iOS 8, *) {
+            UIApplication.shared.registerUserNotificationSettings(UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil))
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+            // iOS 7 support
+        else {  
+            application.registerForRemoteNotifications(matching: [.badge, .sound, .alert])
+        }
+        */
         return true
     }
     

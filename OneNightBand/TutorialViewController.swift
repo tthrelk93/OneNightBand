@@ -161,7 +161,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
             self.tags.append(tag)
         }
 
-        pageTexts = ["What Instrument(s) are you best with? Only select an instrument if you feel comfortable enough playing it with other musicians in a jam environment.","Add a little bio about your musical style and background so other musicians have a good feel of your playing style."]
+        pageTexts = ["What Instrument(s) are you best with? Only select an instrument if you feel comfortable playing it with other musicians in a jam environment.","Add a little bio about your musical style and background so other musicians have a good idea of your playing style."]
         
         self.pageViewController = self.storyboard?.instantiateViewController(withIdentifier: "UITutorialPageViewController") as! UIPageViewController
         self.pageViewController.dataSource = self

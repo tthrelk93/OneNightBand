@@ -13,7 +13,7 @@ import FirebaseAuth
 import FirebaseDatabase
 
 
-class ArtistProfileViewController: UIViewController, UINavigationControllerDelegate, UITextViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+class ArtistProfileViewController: UIViewController, UINavigationControllerDelegate, UITextViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var bioTextView: UITextView!
     
@@ -174,7 +174,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
         
         
     }
-    
+    var instrumentArray = [String]()
     var videoCollectEmpty: Bool?
     var currentCollect: String?
     var vidFromPhoneArray = [NSURL]()
@@ -232,6 +232,21 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
                     }
                 }
                 print(self.nsurlArray)
+                if self.nsurlArray.count == 0{
+                    // Put your code which should be executed with a delay here
+                    self.currentCollect = "youtube"
+                    
+                    self.tempLink = nil
+                    
+                    let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                    
+                    self.videoCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                    self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                    self.videoCollectionView.backgroundColor = UIColor.clear
+                    self.videoCollectionView.dataSource = self
+                    self.videoCollectionView.delegate = self
+
+                }
                 for vid in self.nsurlArray{
                     
                     // Put your code which should be executed with a delay here
@@ -254,8 +269,24 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
                 self.ref.child("users").child(self.artistUID!).observeSingleEvent(of: .value, with: { (snapshot) in
                     let value = snapshot.value as? NSDictionary
                     self.bioTextView.text = value?["bio"] as! String
+                    
+                    let instrumentDict = value?["instruments"] as! [String: Any]
+                    //var instrumentArray = [String]()
+                    for key in instrumentDict.keys{
+                        self.instrumentArray.append(key)
+                        
+                    }
+                    //print(instrumentArray)
+                    for instrument in self.instrumentArray{
+                        let cellNib = UINib(nibName: "InstrumentTableViewCell", bundle: nil)
+                        self.instrumentTableView.register(cellNib, forCellReuseIdentifier: "InstrumentCell")
+                        self.instrumentTableView.delegate = self
+                        self.instrumentTableView.dataSource = self
+                    }
+
+                    
                     self.navigationItem.title = (value?["name"] as! String)
-                })
+                
                 self.ref.child("users").child(self.artistUID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
                     if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                        // self.sessionsPlayed.text = String(snapshots.count)
@@ -275,6 +306,10 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
                         self.pictureCollectionView.dataSource = self
                         self.pictureCollectionView.delegate = self
                         
+                    }
+                    })
+                    DispatchQueue.main.async{
+                        self.instrumentTableView.reloadData()
                     }
                     
                 })
@@ -335,46 +370,10 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
         }
 
     }
+    @IBOutlet weak var instrumentTableView: UITableView!
         func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
-            /*if self.videoCollectEmpty == true{
-             //cell.layer.borderColor = UIColor.white.cgColor
-             //cell.layer.borderWidth = 2
-             cell.videoURL = nil
-             cell.isYoutube = true
-             cell.youtubePlayerView.isHidden = true
-             cell.player?.view.isHidden = true
-             //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
-             cell.removeVideoButton.isHidden = true
-             cell.noVideosLabel.isHidden = false
-             cell.layer.borderWidth = 2
-             cell.layer.borderColor = UIColor.white.cgColor
-             
-             
-             }else{
-             //cell.layer.borderColor = UIColor.clear.cgColor
-             //cell.layer.borderWidth = 0
-             if self.isYoutubeCell == true{
-             cell.isYoutube = true
-             cell.player?.view.isHidden = true
-             cell.youtubePlayerView.isHidden = false
-             cell.videoURL = self.youtubeArray[indexPath.row]
-             cell.youtubePlayerView.loadVideoURL(self.youtubeArray[indexPath.row] as URL)
-             cell.removeVideoButton.isHidden = true
-             cell.noVideosLabel.isHidden = true
-             }else{
-             cell.youtubePlayerView.isHidden = true
-             cell.isYoutube = false
-             
-             //cell.videoURL = self.vidArray[indexPath.row]
-             //cell.player?.setUrl(self.vidArray[indexPath.row] as URL)
-             //print(self.vidArray[indexPath.row])
-             // cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
-             cell.removeVideoButton.isHidden = true
-             cell.noVideosLabel.isHidden = true
-             
-             }
-             }*/
-            print("cC:\(self.currentCollect!)")
+           
+            
             if self.nsurlArray.count == 0{
                 cell.layer.borderColor = UIColor.white.cgColor
                 cell.layer.borderWidth = 2
@@ -397,7 +396,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
                 
                 
                 cell.videoURL =  self.nsurlArray[indexPath.row] as NSURL?
-                if(String(describing: cell.videoURL).contains("youtube")){
+                if(String(describing: cell.videoURL).contains("youtube") || String(describing: cell.videoURL).contains("youtu.be")) {
                     cell.youtubePlayerView.loadVideoURL(cell.videoURL as! URL)
                     cell.youtubePlayerView.isHidden = false
                     cell.player?.view.isHidden = true
@@ -441,6 +440,71 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
              }*/
             
         }
+    
+    
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        //print((self.thisSession.sessionArtists?.count)!)
+        return self.instrumentArray.count
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        //(tableView.cellForRow(at: indexPath) as ArtistCell).artistUID
+        //self.cellTouchedArtistUID = (tableView.cellForRow(at: indexPath) as! ArtistCell).artistUID
+        //performSegue(withIdentifier: "ArtistCellTouched", sender: self)
+    }
+    
+    
+    /*  var vidArray = [NSURL]()
+     var videoCollectEmpty: Bool?
+     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+     if self.vidArray.count != 0{
+     self.videoCollectEmpty = false
+     return self.vidArray.count
+     
+     }else{
+     self.videoCollectEmpty = true
+     return 1
+     }
+     }*/
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InstrumentCell", for: indexPath as IndexPath) as! InstrumentTableViewCell
+        cell.instrumentLabel.text = self.instrumentArray[indexPath.row]
+        //let tempArtist = Artist()
+        //let userID = FIRAuth.auth()?.currentUser?.uid
+        //var artistArray = [String]()
+        //var instrumentArray = [String]()
+        /*for value in thisSession.sessionArtists{
+         artistArray.append(value.key)
+         instrumentArray.append(value.value as! String)
+         }
+         
+         
+         ref.child("users").child(artistArray[indexPath.row]).observeSingleEvent(of: .value, with: { (snapshot) in
+         
+         
+         let dictionary = snapshot.value as? [String: AnyObject]
+         tempArtist.setValuesForKeys(dictionary!)
+         
+         /*var tempInstrument = ""
+         let userID = FIRAuth.auth()?.currentUser?.uid
+         for value in self.thisSession.sessionArtists{
+         if value.key == userID{
+         tempInstrument = value.value as! String
+         
+         }
+         }*/
+         cell.artistUID = tempArtist.artistUID!
+         
+         cell.artistNameLabel.text = tempArtist.name
+         cell.artistInstrumentLabel.text = "test"
+         cell.artistImageView.loadImageUsingCacheWithUrlString(tempArtist.profileImageUrl.first!)
+         cell.artistInstrumentLabel.text = instrumentArray[indexPath.row]*/
+        
+        return cell
+    }
+    
+
     
 
     

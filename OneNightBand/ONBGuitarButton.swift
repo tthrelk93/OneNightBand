@@ -38,7 +38,7 @@ class ONBGuitarButton: UIImageView, UIGestureRecognizerDelegate {
             }
 
             if UIScreen.main.bounds.width == 375{
-                _baseX = 157
+                _baseX = 160
             }
             if UIScreen.main.bounds.width == 414{
                 _baseX = 180
@@ -51,7 +51,7 @@ class ONBGuitarButton: UIImageView, UIGestureRecognizerDelegate {
             }
 
             if UIScreen.main.bounds.width == 375{
-                _baseX = 167
+                _baseX = 170
             }
             if UIScreen.main.bounds.width == 414{
                 _baseX = 193
@@ -64,7 +64,7 @@ class ONBGuitarButton: UIImageView, UIGestureRecognizerDelegate {
             }
 
             if UIScreen.main.bounds.width == 375{
-                _baseX = 180
+                _baseX = 183
             }
             if UIScreen.main.bounds.width == 414{
                 _baseX = 200
@@ -78,7 +78,7 @@ class ONBGuitarButton: UIImageView, UIGestureRecognizerDelegate {
             }
 
             if UIScreen.main.bounds.width == 375{
-                _baseX = 194
+                _baseX = 197
             }
             if UIScreen.main.bounds.width == 414{
                 _baseX = 210
@@ -91,7 +91,7 @@ class ONBGuitarButton: UIImageView, UIGestureRecognizerDelegate {
             }
 
             if UIScreen.main.bounds.width == 375{
-                _baseX = 210
+                _baseX = 213
             }
             if UIScreen.main.bounds.width == 414{
                 _baseX = 220
@@ -104,7 +104,7 @@ class ONBGuitarButton: UIImageView, UIGestureRecognizerDelegate {
             }
 
             if UIScreen.main.bounds.width == 375{
-                _baseX = 220
+                _baseX = 223
             }
             if UIScreen.main.bounds.width == 414{
                 _baseX = 230

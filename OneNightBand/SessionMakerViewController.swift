@@ -243,6 +243,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             cell.noVideosLabel.isHidden = false
             cell.layer.borderWidth = 2
             cell.layer.borderColor = UIColor.white.cgColor
+            cell.player?.view.isHidden = true
             
             
         }else{
@@ -253,7 +254,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             cell.isYoutube = false
             
             cell.videoURL = self.vidArray[indexPath.row]
-            
+            cell.player?.view.isHidden = false
             cell.player?.setUrl(self.vidArray[indexPath.row] as URL)
             cell.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
             //print(self.vidArray[indexPath.row])

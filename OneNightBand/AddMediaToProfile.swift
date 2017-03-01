@@ -11,6 +11,7 @@ import UIKit
 import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
+import SwiftOverlays
 //import Firebase
 
 protocol RemoveVideoDelegate : class
@@ -121,51 +122,63 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     
     //uploads appropriate media to database
     @IBAction func saveTouched(_ sender: AnyObject) {
-        if (recentlyAddedVidArray.count == 0 && currentYoutubeLink == nil && needToUpdatePics == false && needToRemove == false){
-           print("field empty")
+        if (vidFromPhoneCollectionView.visibleCells.count == 0 && currentYoutubeLink == nil && needToUpdatePics == false && needToRemove == false){
+            let alert = UIAlertController(title: "No new media", message: "It appears that you have not chosen any media to upload.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
             
         }else{
-            _ = Dictionary<String, Any>()
-            var values2 = Dictionary<String, Any>()
-            let recipient = self.ref.child("users").child(userID!).child("media")
+            SwiftOverlays.showBlockingWaitOverlayWithText("Updating Media")
             
-            //print("link array: \(self.youtubeLinkArray)")
-            
-            for link in youtubeLinkArray{
-                self.youtubeDataArray.append(String(describing: link))
-            }
+                _ = Dictionary<String, Any>()
+                var values2 = Dictionary<String, Any>()
+                let recipient = self.ref.child("users").child(userID!).child("media")
             
             
-            values2["youtube"] = self.youtubeDataArray
+                    for link in youtubeLinkArray{
+                        self.youtubeDataArray.append(String(describing: link))
+                    }
+                    values2["youtube"] = self.youtubeDataArray
             
-            for link in vidFromPhoneArray{
-                self.recentlyAddedVidArray.append(String(describing: link))
-            }
-            values2["vidsFromPhone"] = self.recentlyAddedVidArray
             
-            recipient.updateChildValues(values2, withCompletionBlock: {(err, ref) in
-                if err != nil {
-                    print(err!)
-                    return
-                }
-            })
-
-
-            if recentlyAddedVidArray.count != 0{
-                let videoName = NSUUID().uuidString
-                let storageRef = FIRStorage.storage().reference(withPath: "session_videos").child("\(videoName).mov")
-                let uploadMetadata = FIRStorageMetadata()
-                uploadMetadata.contentType = "video/quicktime"
-                for nsurl in recentlyAddedVidArray{
-                    _ = storageRef.putFile(NSURL(string: nsurl) as! URL, metadata: uploadMetadata){(metadata, error) in
-                        if(error != nil){
-                            print("got an error: \(error)")
+                if recentlyAddedPhoneVidArray.count != 0{
+                    let videoName = NSUUID().uuidString
+                    let storageRef = FIRStorage.storage().reference(withPath: "artist_videos").child("\(videoName).mov")
+                    let uploadMetadata = FIRStorageMetadata()
+                    uploadMetadata.contentType = "video/quicktime"
+                    for nsurl in recentlyAddedPhoneVidArray{
+                        _ = storageRef.putFile(nsurl as! URL, metadata: uploadMetadata){(metadata, error) in
+                            if(error != nil){
+                                print("got an error: \(error)")
+                            }
                         }
                     }
+                    for link in vidFromPhoneArray{
+                        self.recentlyAddedVidArray.append(String(describing: link))
+                    }
+
+                    values2["vidsFromPhone"] = self.recentlyAddedVidArray
                 }
+                else{
+                    for link in vidFromPhoneArray{
+                        self.recentlyAddedVidArray.append(String(describing: link))
+                    }
+                    values2["vidsFromPhone"] = self.recentlyAddedVidArray
             }
-            
-            
+
+        
+        
+                recipient.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                    if err != nil {
+                        print(err!)
+                        return
+                    }
+                })
+        }
+    
+
+
+    
             
             if self.needToUpdatePics == true{
                 print("profPicArray: \(self.profPicArray)")
@@ -200,7 +213,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         
 
                         
-                    }
+                    
                     
                 }
                 
@@ -216,13 +229,16 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             
         
              
-        
+        DispatchQueue.main.async{
        self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
+        }
 
         
     }
     
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        SwiftOverlays.removeAllBlockingOverlays()
+    }
     //**I'm removing the first element everytime rather than at the correct index path. Also might be adding to begginning but appending to array thus creating data inconsistency
     var needToUpdatePics = Bool()
     @IBOutlet weak var picCollectionView: UICollectionView!
@@ -258,24 +274,24 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     var needToRemove = Bool()
     internal func removeVideo(removalVid: NSURL, isYoutube: Bool) {
         print("inRemove")
-        if isYoutube == true{
-        self.currentCollectID = "youtube"
-        self.vidRemovalPressed = true
-        needToRemove = true
+        if String(describing: removalVid).contains("youtube") || String(describing: removalVid).contains("youtu.be"){
+            self.currentCollectID = "youtube"
+            self.vidRemovalPressed = true
+            needToRemove = true
         
-        for vid in 0...youtubeLinkArray.count-1{
-            if removalVid == youtubeLinkArray[vid]{
-                youtubeLinkArray.remove(at: vid)
-                DispatchQueue.main.async{
-                    self.youtubeCollectionView.deleteItems(at: [IndexPath(row: vid, section: 0)])
+            for vid in 0...youtubeLinkArray.count-1{
+                if removalVid == youtubeLinkArray[vid]{
+                    youtubeLinkArray.remove(at: vid)
+                    DispatchQueue.main.async{
+                        self.youtubeCollectionView.deleteItems(at: [IndexPath(row: vid, section: 0)])
+                    }
+                    break
+                
+                
+                
                 }
-                break
-                
-                
-                
+                }
             }
-            }
-        }
         else{
             
             self.currentCollectID = "vidFromPhone"
@@ -763,7 +779,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             }
         }
     }
-    
+    var recentlyAddedPhoneVidArray = [NSURL]()
     @IBOutlet weak var newImage: UIImageView!
     var isYoutubeCell: Bool?
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -812,8 +828,8 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             if let movieURL = info[UIImagePickerControllerMediaURL] as? NSURL{
                 movieURLFromPicker = movieURL
                 dismiss(animated: true, completion: nil)
-                self.recentlyAddedPhoneVid.append(String(describing: movieURL))
-                self.vidFromPhoneArray.append(movieURL)
+                //self.recentlyAddedPhoneVid.append(String(describing: movieURL))
+               // self.vidFromPhoneArray.append(movieURL)
                 //uploadMovieToFirebaseStorage(url: movieURL)
                 ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
                     let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
@@ -833,8 +849,9 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                                    // self.tempLink = self.currentYoutubeLink
                                     self.currentCollectID = "vidFromPhone"
                                     //self.isYoutubeCell = false
+                                    self.recentlyAddedPhoneVidArray.append(movieURL)
                                     self.vidFromPhoneArray.append(movieURL)
-                                    self.recentlyAddedVidArray.append(String(describing: movieURL))
+                                    //self.recentlyAddedVidArray.append(String(describing: movieURL))
                                     let insertionIndexPath = IndexPath(row: self.vidFromPhoneArray.count - 1, section: 0)
                                     
                                         
@@ -853,6 +870,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                                     self.currentCollectID = "vidFromPhone"
                                     //self.isYoutubeCell = false
                                     self.vidFromPhoneArray.append(movieURL)
+                                    self.recentlyAddedPhoneVidArray.append(movieURL)
                                     let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
                                     self.vidFromPhoneCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
                                     
@@ -873,6 +891,8 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         //self.YoutubeArray.append(snap.value as! String)
                        
                         self.currentCollectID = "vidFromPhone"
+                        self.vidFromPhoneArray.append(movieURL)
+                        self.recentlyAddedPhoneVidArray.append(movieURL)
                         let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
                         self.vidFromPhoneCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
                         

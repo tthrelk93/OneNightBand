@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseDatabase
+import SwiftOverlays
 //import Firebase
 
 
@@ -66,13 +67,16 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     override func viewDidAppear(_ animated: Bool) {
         //self.player = storyboard.view
         self.player = Player()
-        var currentItem = player?.playerItem
-        print(currentItem)
+        //var currentItem = player?.playerItem
+        //print(currentItem)
         
         //self.currentButton = currentButtonFunc()
         
         
         self.player?.view.frame = self.sessionImageView.frame
+        //self.player?.view.topAnchor.constraint(equalTo: se self.view.topAnchor).isActive = true
+        //self.player?.view.heightAnchor.constraint(equalToConstant: self.view.frame.height/3.14).isActive = true
+        //self.player?.view.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         //self.playerContainerView.viewController()?.addChildViewController(player!)
         //self.playerContainerView.viewController().
         //self.player?.delegate = self
@@ -112,24 +116,29 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(false)
+        SwiftOverlays.removeAllBlockingOverlays()
+        
+        if sessionArray.count != 0{
             for session in 0...sessionArray.count-1{
                 var tempDict = [String:Int]()
                 tempDict["views"] = viewArray[session]
                 ref.child("sessionFeed").child(sessFeedKeyArray[session]).updateChildValues(tempDict)
             }
+        }
     }
     
     func addNewSession(){
         performSegue(withIdentifier: "FeedToUpload", sender: self)
     }
     func backToNav(){
+        SwiftOverlays.showBlockingTextOverlay("Loading Your Profile")
         performSegue(withIdentifier: "BackToMainNav", sender: self)
     }
     var sessionsInDatabase = [Session]()
     var sessFeedKeyArray = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        guitarPickButton.setImage(UIImage(named: "s_solid_white-1"), for: .normal)
         self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
@@ -140,10 +149,10 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 }
             }
         })
-        
-        let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done , target: self, action: #selector(SessionFeedViewController.backToNav))
-        navigationItem.leftBarButtonItem = backButton
-        let uploadButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(SessionFeedViewController.addNewSession))
+        navigationItem.title = "Session Feed"
+        let profileButton = UIBarButtonItem(title: "profile", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SessionFeedViewController.backToNav)) // navigationItem.leftBarButtonItem
+        navigationItem.leftBarButtonItem = profileButton
+                let uploadButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(SessionFeedViewController.addNewSession))
         navigationItem.rightBarButtonItem = uploadButton
         
         
@@ -239,6 +248,17 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         })
     }
         //func goToSession()
+    @IBOutlet weak var guitarPickButton: UIButton!
+  
+    @IBAction func guitarPickPressed(_ sender: Any) {
+        if guitarPickButton.imageView?.image == UIImage(named: "s_solid_white-1.png"){
+            guitarPickButton.setImage(UIImage(named: "s_goldenrod-1.png"), for: .normal)
+        }else{
+            guitarPickButton.setImage(UIImage(named: "s_solid_white-1.png"), for: .normal)
+        }
+        
+    }
+    
     func displaySessionInfo(){
         
         
@@ -247,7 +267,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             self.player?.playerView.isHidden = false
             
         let tempLabel = (cButton.session?.sessionName)!
-        sessionNameLabel.text = "Session Name: \(tempLabel)"
+        sessionNameLabel.text = tempLabel
         
         sessionViewCountLabel.text = "Views: \(String(describing: cButton.sessionViews!))"
         
