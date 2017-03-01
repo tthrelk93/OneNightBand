@@ -89,17 +89,17 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="5Xq-fx-g6E">
-                                            <size key="itemSize" width="372" height="253"/>
+                                            <size key="itemSize" width="372" height="271"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PictureCollectionViewCell" id="Ndx-4W-fQt" customClass="PictureCollectionViewCell" customModule="OneNightBand" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="19" width="372" height="253"/>
+                                                <rect key="frame" x="0.0" y="10" width="372" height="271"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="372" height="253"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="372" height="271"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </view>
                                             </collectionViewCell>
@@ -132,13 +132,8 @@
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pAj-lD-hlr">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.26260544478527609" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0aE-ay-fKT">
-                                        <rect key="frame" x="6" y="414" width="185" height="160"/>
+                                        <rect key="frame" x="6" y="414" width="175" height="160"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -162,7 +157,6 @@
                         <outlet property="instrumentTableView" destination="Hnu-fJ-hZr" id="kEW-If-v6G"/>
                         <outlet property="profilePicCollectionView" destination="XCK-L8-j1b" id="8gc-pX-6CL"/>
                         <outlet property="sessionsPlayed" destination="9TR-xI-ql4" id="NYe-15-2as"/>
-                        <outlet property="shadeView" destination="pAj-lD-hlr" id="Lmp-fF-93q"/>
                         <outlet property="youtubeCollectionView" destination="Xmz-k3-nec" id="89S-ZW-mvt"/>
                         <segue destination="fre-14-aMf" kind="presentation" identifier="LogoutSegue" id="wZC-tv-E3r"/>
                         <segue destination="ACP-pX-8qS" kind="show" identifier="ProfileToSessionCollection" id="QhA-lX-h2O"/>
@@ -728,7 +722,7 @@
                                         <rect key="frame" x="20" y="77" width="334" height="247"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yLC-Yf-GU3">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yLC-Yf-GU3">
                                         <rect key="frame" x="324" y="6" width="43" height="38"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1122,7 +1116,7 @@
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pcj-2B-Aa8">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pcj-2B-Aa8">
                                         <rect key="frame" x="0.0" y="7" width="375" height="293"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1434,10 +1428,10 @@
         <image name="wood-grain-texture-xi" width="960" height="642"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="QhA-lX-h2O"/>
         <segue reference="k02-Kb-IMc"/>
         <segue reference="oym-9M-WfI"/>
         <segue reference="fbL-QW-wOg"/>
-        <segue reference="jZK-WR-Wa6"/>
+        <segue reference="QhA-lX-h2O"/>
+        <segue reference="w5U-3u-slB"/>
     </inferredMetricsTieBreakers>
 </document>

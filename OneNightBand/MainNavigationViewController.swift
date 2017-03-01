@@ -97,6 +97,14 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         super.viewDidLoad()
          //loadVidFromPhone()
         SwiftOverlays.showBlockingTextOverlay("Finalizing")
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+        layout.minimumInteritemSpacing = 20
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        profilePicCollectionView.collectionViewLayout = layout
+
     }
     
     var vidFromPhoneArray = [NSURL]()
@@ -112,7 +120,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.view.backgroundColor = UIColor.clear
-        self.shadeView.isHidden = true
+        //self.shadeView.isHidden = true
         self.view.alpha = 1.0
         createSessionButton.titleLabel?.textAlignment = .center
         createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
@@ -287,13 +295,13 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     var currentCollect: String?
     
     
-    @IBOutlet weak var shadeView: UIView!
+    //@IBOutlet weak var shadeView: UIView!
     
     
     func finishedShowing(viewController: UIViewController) {
         //if viewController.isBeingPresented && viewController.presentingViewController == self
         //{
-        self.shadeView.isHidden = true
+        //self.shadeView.isHidden = true
         self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
         
         self.dismiss(animated: true, completion: nil)
@@ -497,7 +505,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     func createSessionButtonSelected() {
         //self.view.backgroundColor = UIColor.black
         //self.view.alpha = 0.6
-        shadeView.isHidden = false
+        //shadeView.isHidden = false
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
@@ -676,5 +684,24 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         showMenu()
     
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        if currentCollect == "pic"{
+            
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            /*}else{
+                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.picArray.count)
+                let totalSpacingWidth = 10 * (self.picArray.count - 1)
+                
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }*/
+        } else{
+            return UIEdgeInsetsMake(0, collectionView.contentInset.left, 0, collectionView.contentInset.right)
+        }
+    }
+
+    
 }
 

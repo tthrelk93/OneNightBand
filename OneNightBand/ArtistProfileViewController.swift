@@ -35,7 +35,14 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
     
     override func viewDidLoad(){
         super.viewDidLoad()
-                
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+        layout.minimumInteritemSpacing = 20
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        pictureCollectionView.collectionViewLayout = layout
+
         self.bioTextView.delegate = self
         
         

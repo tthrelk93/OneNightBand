@@ -138,6 +138,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     var sessFeedKeyArray = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.guitarPickButton.isHidden = true
         guitarPickButton.setImage(UIImage(named: "s_solid_white-1"), for: .normal)
         self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -150,7 +151,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             }
         })
         navigationItem.title = "Session Feed"
-        let profileButton = UIBarButtonItem(title: "profile", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SessionFeedViewController.backToNav)) // navigationItem.leftBarButtonItem
+        let profileButton = UIBarButtonItem(title: "Profile", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SessionFeedViewController.backToNav)) // navigationItem.leftBarButtonItem
         navigationItem.leftBarButtonItem = profileButton
                 let uploadButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(SessionFeedViewController.addNewSession))
         navigationItem.rightBarButtonItem = uploadButton
