@@ -17,15 +17,15 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0</string>
+	<string>2.0.1</string>
 	<key>CFBundleVersion</key>
-	<string>2.0</string>
+	<string>2.0.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string></string>
+	<string>One Night Band is a tool for musicians to find other musicians in their area to meet up with and form a band (in a way like Tinder for musicians). I need to know users locations in order to calculate the distances between musicians. the app user only sees a distance rather than the other user&apos;s actually locations.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Need location to find other musicians in your area</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to select user photo.</string>
 	<key>UILaunchStoryboardName</key>
@@ -49,5 +49,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 </dict>
 </plist>

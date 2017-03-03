@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseDatabase
 import SwiftOverlays
+import YNDropDownMenu
 //import Firebase
 
 
@@ -39,7 +40,7 @@ extension FeedDismissalDelegate where Self: UIViewController
 
 
 
-class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,UINavigationControllerDelegate,  FeedDismissalDelegate {
+class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,UINavigationControllerDelegate, FeedDismissalDelegate, UITableViewDelegate, UITableViewDataSource{
     
     @IBOutlet weak var sessionImageView: UIImageView!
     @IBOutlet weak var sessionViewCountLabel: UILabel!
@@ -60,6 +61,8 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     @IBOutlet weak var playerContainerView: PlayerView!
     
     
+    @IBOutlet weak var artistTableView: UITableView!
+    @IBOutlet weak var sessInfoView: UIView!
     //var ref = FIRDatabase.database().reference()
     var currentVideoURL: URL?
     let kFretY = 383
@@ -134,11 +137,27 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         SwiftOverlays.showBlockingTextOverlay("Loading Your Profile")
         performSegue(withIdentifier: "BackToMainNav", sender: self)
     }
+    @IBOutlet weak var sessionViewsLabel2: UILabel!
+    @IBOutlet weak var sessionNameLabel2: UILabel!
+    var dropMenu: YNDropDownMenu?
     var sessionsInDatabase = [Session]()
     var sessFeedKeyArray = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.guitarPickButton.isHidden = true
+       // self.sessInfoView.isHidden = true
+        dropMenu = YNDropDownMenu(frame:sizeView.frame, dropDownViews: [sessInfoView], dropDownViewTitles: ["Session Details"])
+        dropMenu?.labelFontSize = 30.0
+       //dropMenu.setLabelFontWhen(normal: UIFont.systemFont(ofSize: 20), selected: UIFont.boldSystemFont(ofSize: 20), disabled: UIFont.systemFont(ofSize: 20))
+        dropMenu?.autoresizesSubviews = true
+        dropMenu?.clipsToBounds = true
+       // dropMenu.changeMenuTitleAt(index: 0, title: "hello")
+        dropMenu?.setImageWhen(normal: UIImage(named: "dropNoSelect"), selected: UIImage(named: "dropSelect"), disabled: UIImage(named: "dropNoSelect"))
+       dropMenu?.backgroundBlurEnabled = false
+        dropMenu?.backgroundColor = UIColor.clear
+        self.view.addSubview(dropMenu!)
+        //self.view.bringSubview(toFront: dropMenu!)
+        //self.addSubview(view)
+        //self.guitarPickButton.isHidden = true
         guitarPickButton.setImage(UIImage(named: "s_solid_white-1"), for: .normal)
         self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -227,11 +246,23 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     
     
     func prepareForSegue(segue: UIStoryboardSegue, sender _: AnyObject?) {
-        if let vc = segue.destination as? FeedDismissable
-        {
-            vc.feedDismissalDelegate = self
+        if segue.identifier == "FeedToUpload"{
+            if let vc = segue.destination as? FeedDismissable
+            {
+                vc.feedDismissalDelegate = self
+            }
         }
+        if segue.identifier == "FeedToArtistProf"{
+            if let vc = segue.destination as? ArtistProfileViewController{
+                vc.artistUID = cellTouchedArtistUID
+            }
+        }
+
     }
+    
+    
+   
+
     
     
     func scrollToPin(sender: UITapGestureRecognizer){
@@ -259,19 +290,93 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         }
         
     }
+    var sessionArtists = [Artist]()
+    public func tableView(_
+        : UITableView, numberOfRowsInSection section: Int) -> Int{
+        //print((self.thisSession.sessionArtists?.count)!)
+        
+        return artistDict.keys.count
+    }
+    var cellTouchedArtistUID = String()
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+        //(tableView.cellForRow(at: indexPath) as ArtistCell).artistUID
+        self.cellTouchedArtistUID = (tableView.cellForRow(at: indexPath) as! ArtistCell).artistUID
+        performSegue(withIdentifier: "FeedToArtistProf", sender: self)
+    }
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistCell", for: indexPath as IndexPath) as! ArtistCell
+        let tempArtist = Artist()
+        //let userID = FIRAuth.auth()?.currentUser?.uid
+        var tempArtistArray = [String]()
+        var tempInstrumentArray = [String]()
+        for (key, value) in artistDict{
+            tempArtistArray.append(key)
+            tempInstrumentArray.append(value)
+        }
+        
+        ref.child("users").child(tempArtistArray[indexPath.row]).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            
+            let dictionary = snapshot.value as? [String: AnyObject]
+            tempArtist.setValuesForKeys(dictionary!)
+            
+            /*var tempInstrument = ""
+             let userID = FIRAuth.auth()?.currentUser?.uid
+             for value in self.thisSession.sessionArtists{
+             if value.key == userID{
+             tempInstrument = value.value as! String
+             
+             }
+             }*/
+            cell.artistUID = tempArtist.artistUID!
+            
+            cell.artistNameLabel.text = tempArtist.name
+            cell.artistInstrumentLabel.text = "test"
+            cell.artistImageView.loadImageUsingCacheWithUrlString(tempArtist.profileImageUrl.first!)
+            cell.artistInstrumentLabel.text = tempInstrumentArray[indexPath.row]
+            
+        })
+        return cell
+    }
+    
+    @IBOutlet weak var sizeView: UIView!
+
+    
+    var artistDict = [String: String]()
+    
     
     func displaySessionInfo(){
         
-        
+        artistDict.removeAll()
         let cButton = currentButtonFunc()
         if cButton.isDisplayed == true{
             self.player?.playerView.isHidden = false
+            //sessInfoView.isHidden = false
+            //dropMenu?.dropDownViewTitles = [(cButton.session?.sessionName!)!]
+            dropMenu?.backgroundColor = UIColor.clear
+            //dropMenu?.bringSubview(toFront: sessInfoView)
+            //dropMenu.view
+            //dropMenu?.dropDownViewTitles.append(cButton.sessionName)
+            //changeMenu(title: cButton.sessionName, at: 0)
             
         let tempLabel = (cButton.session?.sessionName)!
         sessionNameLabel.text = tempLabel
         
         sessionViewCountLabel.text = "Views: \(String(describing: cButton.sessionViews!))"
-        
+            sessionNameLabel2.text = tempLabel
+            sessionViewsLabel2.text = "Views: \(String(describing: cButton.sessionViews!))"
+            for (key, value) in (cButton.session?.sessionArtists)!{
+                self.artistDict[key] = value as? String
+            }
+            for _ in artistDict.keys{
+                let cellNib = UINib(nibName: "ArtistCell", bundle: nil)
+                self.artistTableView.register(cellNib, forCellReuseIdentifier: "ArtistCell")
+                self.artistTableView.delegate = self
+                self.artistTableView.dataSource = self
+            }
+            
+            
+            
         let url = NSURL(string: (cButton.session?.sessionMedia.first!)!)
             
           //  let item = AVPlayerItem(asset: asset)
@@ -281,7 +386,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         //self.player?.playerView = self.playerContainerView
         if (cButton.center.y) >= self.sessionInfoView.bounds.maxY{
             self.player?.playFromBeginning()
-            
+            //self.sessInfoView.isHidden = false
             swiftTimer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(SessionFeedViewController.updateCounter), userInfo: nil, repeats: true)
                 //print("ct \(player?.currentTime)")
            
@@ -291,12 +396,19 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             //cButton.setIsDiplayedButton(isDisplayedButton: false)
         }
         }else{
+            //self.sessInfoView.isHidden = true
             self.player?.stop()
             self.player?.playerView.isHidden = true
             sessionNameLabel.text = " "
             
             sessionViewCountLabel.text = " "
         }
+        DispatchQueue.main.async{
+            self.artistTableView.reloadData()
+            
+            
+        }
+
     }
     var swiftTimer = Timer()
     //problem is caused by current button moving before update count occurs
@@ -430,5 +542,17 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         // Pass the selected object to the new view controller.
     }
     */
+    /*class DropDownView: YNDropDownView {
+        // override method to call open & close
+        override func dropDownViewOpened() {
+            print("dropDownViewOpened")
+        }
+        
+        override func dropDownViewClosed() {
+            print("dropDownViewClosed")
+        }
+    }*/
+
 
 }
+
