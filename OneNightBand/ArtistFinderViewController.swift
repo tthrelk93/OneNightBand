@@ -33,7 +33,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
     var instrumentPicked: String!
     var distancePicked: String!
     var profileArtistUID: String?
-    var distanceMenuText = ["5","25", "50", "75", "100", "125","150", "175","500", "2000"]
+    var distanceMenuText = ["25", "50", "75", "100", "125","150", "175","500", "2000"]
     var menuText = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp"]
        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? ArtistProfileViewController
@@ -289,7 +289,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                         self.distanceInMeters = self.coordinateUser1?.distance(from: self.coordinateUser2!) // result is in meters
                         
                         let distanceInMiles = Double(round(10*(self.distanceInMeters! * 0.000621371))/10)
-                        cell.distanceLabel.text = String(distanceInMiles) + " miles"
+                        cell.distanceLabel.text = ""//String(distanceInMiles) + " miles"
 
                         /*if((distanceInMeters! as Double) <= 1609){
                          // under 1 mile

@@ -373,7 +373,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                 self.present(alert, animated: true, completion: nil)
                 return
         }
-        SwiftOverlays.showBlockingWaitOverlayWithText("Loading Session Feed")
+        
         FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: {
             (user: FIRUser?, error) in
             
@@ -385,7 +385,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                 return
             }
             else{
-                
+                SwiftOverlays.showBlockingWaitOverlayWithText("Loading Session Feed")
                 print("Successful Login")
                 self.performSegue(withIdentifier: "LoginSegue", sender: self)
             }

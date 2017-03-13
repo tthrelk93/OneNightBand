@@ -16,7 +16,7 @@ import DropDown
 
 class TutorialViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITextViewDelegate{
     
-    let TAGS = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp"]
+    let TAGS = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp", "rapper", "DJ"]
     var sizingCell: TagCell?
     var tags = [Tag]()
     var pageTexts = [String]()
@@ -24,6 +24,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
     var currentIndex = 0
     var selectedCount = 0
     let dropDown = DropDown()
+    let dropDown2 = DropDown()
     
     
     @IBOutlet weak var backButton: UIButton!
@@ -135,15 +136,19 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         
         dropDown.selectionBackgroundColor = UIColor.orange.withAlphaComponent(0.4)
         dropDown.anchorView = self.view//collectionView.cellForItem(at: indexPath)
-        dropDown.dataSource = ["1","2","3","4","5"]
+        dropDown.dataSource = ["beginner","intermediate","advanced","expert"]
         dropDown.selectionAction = {[unowned self] (index: Int, item: String) in
-            self.tagsAndSkill[self.TAGS[self.mostRecentTagTouched.row]] = index + 1
+            self.dropDownLabel.isHidden = false
+            
+            self.lvlArray.append(index)
+            self.tagsAndSkill[self.TAGS[self.mostRecentTagTouched.row]] = self.lvlArray
             self.dropDown.selectRow(at: index)
             //self.dropDown.selectRow(at: 2)
-            self.dropDown.hide()
+            //self.dropDown.hide()
+            self.set_years_playing()
         }
         dropDown.direction = .top
-        dropDown.selectRow(at: 2)
+        //dropDown.selectRow(at: 1)
         dropDown.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         dropDown.textColor = UIColor.white.withAlphaComponent(0.8)
         
@@ -161,7 +166,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
             self.tags.append(tag)
         }
 
-        pageTexts = ["What Instrument(s) are you best with? Only select an instrument if you feel comfortable playing it with other musicians in a jam environment.","Add a little bio about your musical style and background so other musicians have a good idea of your playing style."]
+        pageTexts = ["What Instrument(s) are you best with? Only select an instrument if you feel comfortable playing it with other musicians in a jam environment.","Add a little bio about your musical style, influences, and background so that other musicians have a good idea of your playing style."]
         
         self.pageViewController = self.storyboard?.instantiateViewController(withIdentifier: "UITutorialPageViewController") as! UIPageViewController
         self.pageViewController.dataSource = self
@@ -188,7 +193,28 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         
         
     }
-    
+    @IBOutlet weak var dropDownLabel: UILabel!
+    var lvlArray = [Int]()
+    func set_years_playing(){
+        dropDownLabel.text = "Select the number of years have you been playing this instrument"
+        dropDown2.selectionBackgroundColor = UIColor.orange.withAlphaComponent(0.4)
+        dropDown2.anchorView = self.view//collectionView.cellForItem(at: indexPath)
+        dropDown2.dataSource = ["1","2","3","4","5+","10+"]
+        dropDown2.selectionAction = {[unowned self] (index: Int, item: String) in
+            self.lvlArray.append(index)
+            self.tagsAndSkill[self.TAGS[self.mostRecentTagTouched.row]] = self.lvlArray
+            self.dropDownLabel.isHidden = true
+            //self.dropDown2.selectRow(at: index)
+            //self.dropDown.selectRow(at: 2)
+            //self.dropDown.hide()
+        }
+        dropDown2.direction = .top
+        //dropDown2.selectRow(at: 1)
+        dropDown2.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        dropDown2.textColor = UIColor.white.withAlphaComponent(0.8)
+        dropDown2.show()
+
+    }
     func textViewDidBeginEditing(_ textView: UITextView) {
         if editBioTextView.textColor == UIColor.orange {
             editBioTextView.text = nil
@@ -232,9 +258,12 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         return self.sizingCell!.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
     }
     
-    var tagsAndSkill = [String: Int]()
+    var tagsAndSkill = [String: [Int]]()
     //var instrumentDict = [String: Any]()
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        lvlArray.removeAll()
+        self.dropDownLabel.text = "Select Playing Level"
+        dropDownLabel.isHidden = false
         //let dropDown = Drop
         self.mostRecentTagTouched = indexPath
         if(tags[indexPath.row].selected == true){
@@ -329,7 +358,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
     
     @IBAction func startExploringButtonPressed(_ sender: AnyObject) {
         
-        
+        print(tagsAndSkill)
         var tagArray = [String]()
         for tag in tags{
             if(tag.selected == true){

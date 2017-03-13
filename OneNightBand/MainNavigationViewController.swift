@@ -96,6 +96,12 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     override func viewDidLoad(){
         super.viewDidLoad()
          //loadVidFromPhone()
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.view.backgroundColor = UIColor.clear
+        
         SwiftOverlays.showBlockingTextOverlay("Finalizing")
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
@@ -104,13 +110,14 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         profilePicCollectionView.collectionViewLayout = layout
+        
 
     }
     
     var vidFromPhoneArray = [NSURL]()
     var viewDidAppearBool = false
     var isYoutubeCell: Bool?
-    var skillArray = [Int]()
+    var skillArray = [String]()
    // let group = DispatchGroup()
     //let backgroundQ = DispatchQueue.global(qos: .default)
     var nsurlDict = [NSURL: String]()
@@ -217,12 +224,13 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 //var instrumentArray = [String]()
                 for (key, value) in instrumentDict{
                     self.instrumentArray.append(key)
-                    self.skillArray.append(value as! Int)
+                    self.skillArray.append(self.playingLevelArray[(value as! [Int])[0]])
+                    self.yearsArray.append(self.playingYearsArray[(value as! [Int])[1]])
                     
                 }
                 
                 //print(instrumentArray)
-                for instrument in self.instrumentArray{
+                for _ in self.instrumentArray{
                     let cellNib = UINib(nibName: "InstrumentTableViewCell", bundle: nil)
                     self.instrumentTableView.register(cellNib, forCellReuseIdentifier: "InstrumentCell")
                     self.instrumentTableView.delegate = self
@@ -285,8 +293,9 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
   
     
-    
-    
+    var yearsArray = [String]()
+    var playingYearsArray = ["1","2","3","4","5+","10+"]
+    var playingLevelArray = ["beginner", "intermediate", "advanced", "expert"]
     var tempLink: NSURL?
      //let userID = FIRAuth.auth()?.currentUser?.uid
     @IBOutlet weak var youtubeCollectionView: UICollectionView!
@@ -445,53 +454,13 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         //performSegue(withIdentifier: "ArtistCellTouched", sender: self)
     }
     
-    
-  /*  var vidArray = [NSURL]()
-    var videoCollectEmpty: Bool?
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if self.vidArray.count != 0{
-            self.videoCollectEmpty = false
-            return self.vidArray.count
-            
-        }else{
-            self.videoCollectEmpty = true
-            return 1
-        }
-    }*/
+
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "InstrumentCell", for: indexPath as IndexPath) as! InstrumentTableViewCell
             cell.instrumentLabel.text = self.instrumentArray[indexPath.row]
-        cell.skillLabel.text = String(describing: self.skillArray[indexPath.row])
-        //let tempArtist = Artist()
-        //let userID = FIRAuth.auth()?.currentUser?.uid
-        //var artistArray = [String]()
-        //var instrumentArray = [String]()
-        /*for value in thisSession.sessionArtists{
-            artistArray.append(value.key)
-            instrumentArray.append(value.value as! String)
-        }
-        
-        
-        ref.child("users").child(artistArray[indexPath.row]).observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            
-            let dictionary = snapshot.value as? [String: AnyObject]
-            tempArtist.setValuesForKeys(dictionary!)
-            
-            /*var tempInstrument = ""
-             let userID = FIRAuth.auth()?.currentUser?.uid
-             for value in self.thisSession.sessionArtists{
-             if value.key == userID{
-             tempInstrument = value.value as! String
-             
-             }
-             }*/
-            cell.artistUID = tempArtist.artistUID!
-            
-            cell.artistNameLabel.text = tempArtist.name
-            cell.artistInstrumentLabel.text = "test"
-            cell.artistImageView.loadImageUsingCacheWithUrlString(tempArtist.profileImageUrl.first!)
-            cell.artistInstrumentLabel.text = instrumentArray[indexPath.row]*/
+        cell.skillLabel.text =  self.skillArray[indexPath.row]
+        cell.yearsLabel.text = self.yearsArray[indexPath.row]
+       
             
         return cell
     }
@@ -619,7 +588,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         _ = createSessionButton
             .setButtons(generateButtons())
             .setDelay(0.05)
-            .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y + 65.0)))
+            .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y)))
             .presentInView(view)
             }
 

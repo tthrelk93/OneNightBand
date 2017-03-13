@@ -47,7 +47,7 @@ class ArtistProfileViewController: UIViewController, UINavigationControllerDeleg
         
         
         _ = FIRAuth.auth()?.currentUser?.uid
-        ref.child("users").child(artistUID!).observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.child("users").child(self.artistUID!).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
             //print(snapshot.value as? NSDictionary)
             let value = snapshot.value as? NSDictionary

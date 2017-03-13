@@ -14,8 +14,11 @@ class InstrumentTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         self.removeInstrument.isHidden = true
+        //instrumentLabel.layer.borderColor = UIColor.white.cgColor
+        //instrumentLabel.layer.borderWidth = 1.0
     }
 
+    @IBOutlet weak var yearsLabel: UILabel!
     @IBOutlet weak var skillLabel: UILabel!
     @IBAction func removeInstrumentTouched(_ sender: Any) {
     }

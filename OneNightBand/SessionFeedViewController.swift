@@ -245,7 +245,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     
     
     
-    func prepareForSegue(segue: UIStoryboardSegue, sender _: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         if segue.identifier == "FeedToUpload"{
             if let vc = segue.destination as? FeedDismissable
             {
@@ -254,7 +254,8 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         }
         if segue.identifier == "FeedToArtistProf"{
             if let vc = segue.destination as? ArtistProfileViewController{
-                vc.artistUID = cellTouchedArtistUID
+                //print(self.cellTouchedArtistUID)
+                vc.artistUID = self.cellTouchedArtistUID
             }
         }
 
@@ -301,6 +302,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         //(tableView.cellForRow(at: indexPath) as ArtistCell).artistUID
         self.cellTouchedArtistUID = (tableView.cellForRow(at: indexPath) as! ArtistCell).artistUID
+        print(self.cellTouchedArtistUID)
         performSegue(withIdentifier: "FeedToArtistProf", sender: self)
     }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
@@ -349,7 +351,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         
         artistDict.removeAll()
         let cButton = currentButtonFunc()
-        if cButton.isDisplayed == true{
+        //if cButton.isDisplayed == true{
             self.player?.playerView.isHidden = false
             //sessInfoView.isHidden = false
             //dropMenu?.dropDownViewTitles = [(cButton.session?.sessionName!)!]
@@ -359,50 +361,50 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             //dropMenu?.dropDownViewTitles.append(cButton.sessionName)
             //changeMenu(title: cButton.sessionName, at: 0)
             
-        let tempLabel = (cButton.session?.sessionName)!
-        sessionNameLabel.text = tempLabel
+            let tempLabel = (cButton.session?.sessionName)!
+            sessionNameLabel.text = tempLabel
         
-        sessionViewCountLabel.text = "Views: \(String(describing: cButton.sessionViews!))"
-            sessionNameLabel2.text = tempLabel
-            sessionViewsLabel2.text = "Views: \(String(describing: cButton.sessionViews!))"
-            for (key, value) in (cButton.session?.sessionArtists)!{
-                self.artistDict[key] = value as? String
-            }
-            for _ in artistDict.keys{
-                let cellNib = UINib(nibName: "ArtistCell", bundle: nil)
-                self.artistTableView.register(cellNib, forCellReuseIdentifier: "ArtistCell")
-                self.artistTableView.delegate = self
-                self.artistTableView.dataSource = self
-            }
+            sessionViewCountLabel.text = "Views: \(String(describing: cButton.sessionViews!))"
+                sessionNameLabel2.text = tempLabel
+                sessionViewsLabel2.text = "Views: \(String(describing: cButton.sessionViews!))"
+                for (key, value) in (cButton.session?.sessionArtists)!{
+                    self.artistDict[key] = value as? String
+                }
             
+                for _ in artistDict.keys{
+                    let cellNib = UINib(nibName: "ArtistCell", bundle: nil)
+                    self.artistTableView.register(cellNib, forCellReuseIdentifier: "ArtistCell")
+                    self.artistTableView.delegate = self
+                    self.artistTableView.dataSource = self
+                }
             
-            
-        let url = NSURL(string: (cButton.session?.sessionMedia.first!)!)
-            
-          //  let item = AVPlayerItem(asset: asset)
-        //let videoUrl = self.currentVideoURL
-        self.player?.setUrl(url as! URL)
+            let url = NSURL(string: (cButton.session?.sessionMedia.first!)!)
+        
+            self.player?.setUrl(url as! URL)
         self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
+            //self.player?.fillMode = "resizeAspectFill"
         //self.player?.playerView = self.playerContainerView
-        if (cButton.center.y) >= self.sessionInfoView.bounds.maxY{
-            self.player?.playFromBeginning()
+            //if cButton.center.y >= self.sessionViewsLabel2.center.y/*self.sessionInfoView.bounds.maxY*/{
+                self.player?.playFromBeginning()
+               // currentButtonFunc().setIsDiplayedButton(isDisplayedButton: true)
             //self.sessInfoView.isHidden = false
-            swiftTimer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(SessionFeedViewController.updateCounter), userInfo: nil, repeats: true)
+                swiftTimer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(SessionFeedViewController.updateCounter), userInfo: nil, repeats: true)
                 //print("ct \(player?.currentTime)")
            
-        }else{
+            //}else{
+                //currentButtonFunc().setIsDiplayedButton(isDisplayedButton: false)
             
-            self.player?.stop()
+               // self.player?.stop()
             //cButton.setIsDiplayedButton(isDisplayedButton: false)
-        }
-        }else{
+           // }
+        /*}else{
             //self.sessInfoView.isHidden = true
             self.player?.stop()
             self.player?.playerView.isHidden = true
             sessionNameLabel.text = " "
             
             sessionViewCountLabel.text = " "
-        }
+        }*/
         DispatchQueue.main.async{
             self.artistTableView.reloadData()
             
@@ -430,6 +432,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         //countingLabel.text = String(SwiftCounter++)
     }
     
+    @IBOutlet weak var displayLine: UIView!
     
     func currentButtonFunc()->ONBGuitarButton{
         
@@ -441,33 +444,20 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 
                 }
             }
-            if (currentButton != nil) && currentButton != closest as? ONBGuitarButton{
+            self.currentButton = (closest as! ONBGuitarButton)
+            /*if (currentButton != nil) && currentButton != closest as? ONBGuitarButton{
                 currentButton?.setIsDiplayedButton(isDisplayedButton: false)
-            }
-        
-            if(closest as! ONBGuitarButton).center.y >= self.sessionInfoView.bounds.maxY{
+                self.player?.stop()
+            }*/
+            print((closest as! ONBGuitarButton).center.y)
+            print(self.displayLine.bounds.maxY)
+            if(closest as! ONBGuitarButton).center.y >= self.displayLine.center.y - 50 {
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
             }else{
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
                 self.player?.stop()
             }
-        /*if (closest as! ONBGuitarButton).center.y >= self.sessionInfoView.bounds.maxY{
-            (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
-            
-        }else{
-            (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
-        }*/
        
-                //self.currentButton?.setIsDiplayedButton(isDisplayedButton: false) tempButton.setIsDiplayedButton(isDisplayedButton: true)
-        //tempButton.setIsDiplayedButton(isDisplayedButton: false)
-        /*if (tempButton.center.y >= self.sessionInfoView.bounds.maxY){
-            tempButton.setIsDiplayedButton(isDisplayedButton: true)
-            
-        }else{
-            tempButton.setIsDiplayedButton(isDisplayedButton: false)
-        }*/
-
-            self.currentButton = (closest as! ONBGuitarButton)
             return (closest as! ONBGuitarButton)
             
         }else{
@@ -486,7 +476,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         firstTouch.y /= 15
     }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        self.player?.stop()
         let t = touches.first
         var nextTouch = t?.location(in: self.view)
         nextTouch?.y /= 15
@@ -494,6 +484,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         for i in viewPins{
             (i as! ONBGuitarButton).offsetYPosition(offset: (nextTouch?.y)! - firstTouch.y)
             scrollOffset += (nextTouch?.y)! - firstTouch.y
+            //(i as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
             
             
                 
@@ -522,8 +513,19 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         touchesBeganBool = false
+        for i in viewPins{
+            //(i as! ONBGuitarButton).offsetYPosition(offset: (nextTouch?.y)! - firstTouch.y)
+            //scrollOffset += (nextTouch?.y)! - firstTouch.y
+            (i as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
+            
+            
+            
+        }
+
         if currentButtonFunc().isDisplayed == true{
             displaySessionInfo()
+        }else{
+            player?.stop()
         }
     }
 
