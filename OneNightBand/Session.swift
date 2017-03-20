@@ -19,6 +19,8 @@ class Session: NSObject{
     var sessionMedia = [String]()
     var sessFeedKeys = [String]()
     var views = Int()
+    var bandID: String?
+    var mp3s = [String]()
    
     
     

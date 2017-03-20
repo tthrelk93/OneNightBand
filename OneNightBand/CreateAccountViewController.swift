@@ -441,7 +441,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                         if let profileImageUrl = metadata?.downloadURL()?.absoluteString {
                         
                             var values = Dictionary<String, Any>()
-                            
+                            values["artistsBands"] = ""
                             values["activeSessions"] = ""
                             values["name"] = name
                             values["email"] = email

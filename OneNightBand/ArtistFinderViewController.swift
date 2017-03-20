@@ -29,7 +29,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
     var artistArray = [Artist]()
     var ref = FIRDatabase.database().reference()
     var thisSession: String!
-    var thisSessionObject: Session!
+    var thisSessionObject: Band!
     var instrumentPicked: String!
     var distancePicked: String!
     var profileArtistUID: String?
@@ -92,6 +92,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                     
                     
                     for artist in self.artistArray{
+                        self.instrumentArray.removeAll()
                         if(artist.artistUID != FIRAuth.auth()?.currentUser?.uid){
                                 if(artistsAlreadyInSession.contains(artist.artistUID!) == false){
                                         
@@ -257,7 +258,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         cell.artistUID = artistAfterDist[indexPath.row].artistUID
         cell.invitedSessionID = self.thisSession
         cell.buttonName = self.instrumentPicked
-        cell.sessionDate = self.thisSessionObject.sessionDate
+        //cell.sessionDate = self.thisSessionObject.sessionDate
         
         self.ref.child("users").child(artistAfterDist[indexPath.row].artistUID!).child("location").observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -289,7 +290,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                         self.distanceInMeters = self.coordinateUser1?.distance(from: self.coordinateUser2!) // result is in meters
                         
                         let distanceInMiles = Double(round(10*(self.distanceInMeters! * 0.000621371))/10)
-                        cell.distanceLabel.text = ""//String(distanceInMiles) + " miles"
+                        
 
                         /*if((distanceInMeters! as Double) <= 1609){
                          // under 1 mile
@@ -306,13 +307,17 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
                     if snap.key == self.instrumentPicked{
-                        cell.reputationLabel.text = "skill lvl: \(snap.value as! Int)"
+                        cell.reputationLabel.text = "Lvl: \(self.playingLevelArray[(snap.value as! [Int])[0]])"
+                        cell.distanceLabel.text = "Years: \(self.playingYearsArray[(snap.value as! [Int])[1]])"
                     }
                 }
                 
             }
         })
     }
+    var yearsArray = [String]()
+    var playingYearsArray = ["1","2","3","4","5+","10+"]
+    var playingLevelArray = ["beginner", "intermediate", "advanced", "expert"]
 
     public func numberOfComponents(in pickerView: UIPickerView) -> Int{
         return 1

@@ -93,9 +93,13 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     var picArray = [UIImage]()
     let userID = FIRAuth.auth()?.currentUser?.uid
     
+    @IBOutlet weak var inviteCountAlert: UILabel!
+    var inviteCount: Int?
+    
     override func viewDidLoad(){
         super.viewDidLoad()
          //loadVidFromPhone()
+        
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -123,6 +127,27 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     var nsurlDict = [NSURL: String]()
     override func viewDidAppear(_ animated: Bool) {
         SwiftOverlays.removeAllBlockingOverlays()
+        inviteCount = 0
+        self.ref.child("users").child(self.userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                //fill datasources for collectionViews
+                for snap in snapshots{
+                    if snap.key == "invites"{
+                        for _ in (snap.value as! [String: Any]){
+                            self.inviteCount! += 1
+                        }
+                    }
+                }
+                if self.inviteCount! > 0{
+                    self.inviteCountAlert.text = String(describing: self.inviteCount!)
+                    self.inviteCountAlert.isHidden = false
+                }else{
+                    self.inviteCountAlert.isHidden = true
+                }
+            }
+        })
+
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -472,18 +497,18 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var sessionsPlayed: UILabel!
     
     func createSessionButtonSelected() {
-        //self.view.backgroundColor = UIColor.black
+        /*//self.view.backgroundColor = UIColor.black
         //self.view.alpha = 0.6
         //shadeView.isHidden = false
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
         self.view.addSubview(popOverVC.view)
-        popOverVC.didMove(toParentViewController: self)
+        popOverVC.didMove(toParentViewController: self)*/
         
             }
     func currentSessionsButtonSelected(){
-        performSegue(withIdentifier: "ProfileToSessionCollection", sender: self)
+        performSegue(withIdentifier: "MainToBands", sender: self)
        
     }
     func sessionInvitesButtonSelected(){
@@ -492,8 +517,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     func sessionFeedButtonSelected(){
         performSegue(withIdentifier: "ProfileToSessionFeed", sender: self)
     }
-
-    var menuText = ["Session\n Invites", "My\n Sessions", "Create\n Session", "Session\n Feed"]
+    var inviteButtonLocation: CGRect?
+    var menuText = ["Messages/\n Invites", "My\n Bands", "My\n Bands", "Session\n Feed"]
     func generateButtons() -> [ALRadialMenuButton] {
         
         var buttons = [ALRadialMenuButton]()
@@ -517,6 +542,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 button.layer.masksToBounds = false
                 button.layer.cornerRadius = button.frame.height/2
                 button.clipsToBounds = true
+                
    
                 buttons.append(button)
 
@@ -585,11 +611,23 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     }
     
     func showMenu() {
+        let buttons = generateButtons()
         _ = createSessionButton
-            .setButtons(generateButtons())
+            .setButtons(buttons)
             .setDelay(0.05)
             .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y)))
             .presentInView(view)
+        for button in buttons{
+            if button.name == "Session Invites"{
+                inviteCountAlert.frame = CGRect(x: button.center.x, y: button.center.y, width: inviteCountAlert.frame.width, height: inviteCountAlert.frame.width)
+                if inviteCount! > 0{
+                    inviteCountAlert.isHidden = false
+                } else{
+                    inviteCountAlert.isHidden = true
+                }
+            }
+        }
+        
             }
 
 

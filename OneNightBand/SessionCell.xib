@@ -30,15 +30,24 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hbI-Ad-dO6">
+                        <rect key="frame" x="0.0" y="0.0" width="184" height="165"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <size key="customSize" width="184" height="164"/>
             <connections>
+                <outlet property="emptyLabel" destination="hbI-Ad-dO6" id="poC-3V-sMZ"/>
                 <outlet property="sessionCellImageView" destination="V6J-6q-poh" id="Ti2-Py-y8h"/>
                 <outlet property="sessionCellLabel" destination="7Q3-qd-TM0" id="KJj-32-Srk"/>
             </connections>
-            <point key="canvasLocation" x="142" y="104"/>
+            <point key="canvasLocation" x="174" y="95"/>
         </collectionViewCell>
     </objects>
 </document>

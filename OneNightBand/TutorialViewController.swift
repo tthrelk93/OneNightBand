@@ -263,13 +263,15 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         lvlArray.removeAll()
         self.dropDownLabel.text = "Select Playing Level"
-        dropDownLabel.isHidden = false
+        
         //let dropDown = Drop
         self.mostRecentTagTouched = indexPath
         if(tags[indexPath.row].selected == true){
+            dropDownLabel.isHidden = true
             selectedCount -= 1
             tagsAndSkill.removeValue(forKey: TAGS[indexPath.row])
         }else{
+            dropDownLabel.isHidden = false
             selectedCount += 1
             dropDown.show()
 

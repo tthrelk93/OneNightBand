@@ -62,6 +62,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     @IBAction func chooseVidFromPhoneSelected(_ sender: AnyObject) {
         currentPicker = "vid"
         picker.mediaTypes = ["public.movie"]
+        
         present(picker, animated: true, completion: nil)
     }
     
@@ -825,6 +826,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             
         
         }else{
+            
             if let movieURL = info[UIImagePickerControllerMediaURL] as? NSURL{
                 movieURLFromPicker = movieURL
                 dismiss(animated: true, completion: nil)

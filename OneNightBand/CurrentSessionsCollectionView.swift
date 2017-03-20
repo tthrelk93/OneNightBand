@@ -15,6 +15,32 @@ import FirebaseStorage
 
 class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource {
 
+    @IBAction func createSessionPressed(_ sender: Any) {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
+        self.addChildViewController(popOverVC)
+        popOverVC.view.frame = self.view.frame
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+
+    }
+    
+    @IBOutlet weak var createSessionButton: UIButton!
+    
+    func finishedShowing(viewController: UIViewController) {
+        //if viewController.isBeingPresented && viewController.presentingViewController == self
+        //{
+        //self.shadeView.isHidden = true
+        self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
+        
+        self.dismiss(animated: true, completion: nil)
+        return
+        //}
+        
+        // self.navigationController?.popViewController(animated: true)
+    }
+    
+
+    
     var currentButton: String? // make array for sessions from each button
     var activeBool = false
     var pastBool = false
@@ -140,7 +166,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
         sessionFeedArray.removeAll()
         sessionIDArray.removeAll()
         allSessions.removeAll()
-        navigationItem.title = "My Sessions"
+        navigationItem.title = "Our Sessions"
         sessionCollectionView.isHidden = true
         upcomingSessionsCollectionView.isHidden = true
         pastSessionsCollectionView.isHidden = true
@@ -225,7 +251,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                     }
                 }
                
-                    
+                
                 
                     DispatchQueue.main.async {
                     for session in self.activeSessionsArray{

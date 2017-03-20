@@ -13,7 +13,7 @@ class Artist: NSObject{
     var activeSessions: NSDictionary?
     var name: String?
     var email: String?
-    var instruments = [String:Int]()
+    var instruments = [String:Any]()
     var invites = [String:Any]()
     var password: String?
     var artistUID: String?
@@ -21,5 +21,8 @@ class Artist: NSObject{
     var profileImageUrl = [String]()
     var location = [String:Any]()
     var media = [String:Any]()
+    var artistsBands: NSDictionary?
+    
+    
     
 }

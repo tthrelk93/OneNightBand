@@ -348,7 +348,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     
     
     func displaySessionInfo(){
-        
+         
         artistDict.removeAll()
         let cButton = currentButtonFunc()
         //if cButton.isDisplayed == true{

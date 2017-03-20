@@ -17,6 +17,7 @@ class SessionCell: UICollectionViewCell {
     //var delegate: LoadProperSessionProtocol!
    
     
+    @IBOutlet weak var emptyLabel: UILabel!
     @IBOutlet weak var sessionCellLabel: UILabel!
     @IBOutlet weak var sessionCellImageView: UIImageView!
     var sessionId: String?
@@ -25,6 +26,12 @@ class SessionCell: UICollectionViewCell {
         //self.backgroundColor = UIColor.clear
         //self.sessionCellLabel?.textColor = UIColor.white
         //self.layer.cornerRadius = 4
+        /*print(sessionCellLabel.text)
+        if sessionCellLabel.text == nil{
+            emptyLabel.isHidden = false
+        }else{
+            emptyLabel.isHidden = true
+        }*/
     }
    
     @IBAction func cellTouched(_ sender: AnyObject) {

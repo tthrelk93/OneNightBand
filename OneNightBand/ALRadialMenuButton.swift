@@ -31,6 +31,8 @@ public class ALRadialMenuButton: UIButton {
     public var home: String?
     public var homeScreenSize: Double?
     public var name: String?
+    //var inviteLabel: UILabel?
+    var newCenter: CGPoint?
     var delegate: PerformSegueInRootProtocol!
     var artistDelegate: PerformSegueInArtistFinder!
     //var invitesDelegate: PerformSegueInArtistFinder!

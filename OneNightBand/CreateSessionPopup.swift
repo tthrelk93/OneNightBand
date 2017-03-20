@@ -78,6 +78,20 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         }
         
     }
+    var bandObject: Band?
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+        if segue.identifier == "CreateSessionToSessionMaker"{
+            if let vc = segue.destination as? SessionMakerViewController
+            {
+                vc.sessionID = bandID
+                
+                
+            }
+        }
+        
+    }
+
+    
     
     let picker = UIImagePickerController()
     func handleSelectSessionImageView() {
@@ -145,7 +159,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         
             
     }
-    
+    var bandID: String?
     
     /*public func textViewDidBeginEditing(_ textView: UITextView){
         
@@ -188,6 +202,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                 if (finished)
                 {
                     self.view.removeFromSuperview()
+                    self.view.superview?.reloadInputViews()
                 }
         });
     }
@@ -196,8 +211,10 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         dismissalDelegate?.finishedShowing(viewController: self)
         removeAnimate()
     }
+    //let newSess = Session()
+    var tempArray = [String]()
     @IBAction func finalizeTouched(_ sender: AnyObject) {
-        if(sessionImageView.image != nil && sessionNameTextField.text != "" && sessionBioTextView.text != "tap to add a little info about the type of session you are trying to create."){
+        if(sessionImageView.image != nil && sessionNameTextField.text != "" && sessionBioTextView.text != "tap to add a little info about the session you are creating (Songs played, location, etc...)."){
             SwiftOverlays.showBlockingWaitOverlayWithText("Loading Your Sessions")
             let imageName = NSUUID().uuidString
             let storageRef = FIRStorage.storage().reference().child("session_images").child("\(imageName).jpg")
@@ -210,7 +227,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                     }
                     //let tempURL = URL.init(fileURLWithPath: "temp")
                     if let sessionImageUrl = metadata?.downloadURL()?.absoluteString {
-                        var tempArray = [String]()
+                        
                         var tempArray2 = [String]()
                         var values = Dictionary<String, Any>()
                         tempArray2.append((FIRAuth.auth()?.currentUser?.uid)! as String)
@@ -221,6 +238,11 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         values["sessionMedia"] = [""]
                         values["messages"] = [String: Any]()
                         values["views"] = 0
+                        values["bandID"] = self.bandID
+                        values["sessFeedKeys"] = [""]
+                        values["mp3s"] = [""]
+                        
+                        
                         let dateformatter = DateFormatter()
                         
                         dateformatter.dateStyle = DateFormatter.Style.short
@@ -236,7 +258,13 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         
                         let sessReferenceAnyObject = sessReference.key
                         values["sessionUID"] = sessReferenceAnyObject
-                        tempArray.append(sessReferenceAnyObject)
+                        
+                        
+                        
+                        //self.newSess.setValuesForKeys(values)
+
+                        
+                        self.tempArray.append(sessReferenceAnyObject)
                         //print(sessReference.key)
                         //sessReference.childByAutoId()
                         sessReference.updateChildValues(values, withCompletionBlock: {(err, ref) in
@@ -248,16 +276,19 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         let user = FIRAuth.auth()?.currentUser?.uid
                         //var sessionVals = Dictionary
                         //let userSessRef = ref.child("users").child(user).child("activeSessions")
-                        self.ref.child("users").child(user!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
+                        self.ref.child("bands").child(self.bandID!).child("bandSessions").observeSingleEvent(of: .value, with: { (snapshot) in
                             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                                 for snap in snapshots{
-                                    tempArray.append(snap.value! as! String)
+                                    self.tempArray.append(snap.value! as! String)
                                 }
                             }
+                            
+                            ///add newest session to bandSessions
+                            
                             var tempDict = [String : Any]()
-                            tempDict["activeSessions"] = tempArray
-                            let userRef = ref.child("users").child(user!)
-                            userRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
+                            tempDict["bandSessions"] = self.tempArray
+                            let bandRef = ref.child("bands").child(self.bandID!)
+                            bandRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
                                 if err != nil {
                                     print(err as Any)
                                     return
@@ -268,7 +299,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                             self.removeAnimate()
                             //this is ridiculously stupid way to reload currentSession data. find someway to fix
                             //self.performSegue(withIdentifier: "FinalizeSessionToProfile", sender: self)
-                            self.performSegue(withIdentifier: "CreateSessionPopupToCurrentSession", sender: self)
+                            //self.performSegue(withIdentifier: "CreateSessionToSessionMaker", sender: self)
                         })
                     }
                 })
@@ -283,7 +314,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         }
             }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         SwiftOverlays.removeAllBlockingOverlays()
     }
     
