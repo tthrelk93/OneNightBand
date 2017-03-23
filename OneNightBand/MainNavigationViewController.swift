@@ -40,14 +40,17 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var instrumentTableView: UITableView!
 
     //func view
-    
-    func prepareForSegue(segue: UIStoryboardSegue, sender _: AnyObject?) {
-            if let vc = segue.destination as? Dismissable
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ProfToAddMedia"{
+            if let vc = segue.destination as? AddMediaToSession
             {
-                vc.dismissalDelegate = self
+                vc.senderView = "main"
             }
+        }
+
     }
-    @IBOutlet weak var profilePicCollectionView: UICollectionView!
+    
+        @IBOutlet weak var profilePicCollectionView: UICollectionView!
    
    
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -384,7 +387,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView != self.profilePicCollectionView{
-        if (self.youtubeCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtube") == false {
+        if (self.youtubeCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtube") == false && (self.youtubeCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtu.be") == false {
             if (self.youtubeCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playbackState == .playing {
                 (self.youtubeCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.stop()
                 
@@ -668,7 +671,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     return
                 }
             })
- as Any     
+     
         }else{
             //need to sign them out
             return
@@ -684,7 +687,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         createSessionButton.setTitle("", for: .normal)
         UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 10, options: [], animations: {
             let bounds = self.createSessionButton.frame
-            self.createSessionButton.bounds = CGRect(x: bounds.origin.x - 30, y: bounds.origin.y, width: bounds.size.width - bounds.size.width, height: bounds.size.height - bounds.size.height)
+            self.createSessionButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: bounds.size.width - bounds.size.width, height: bounds.size.height - bounds.size.height)
             }, completion: nil)
         
     

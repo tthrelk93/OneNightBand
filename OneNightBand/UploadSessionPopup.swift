@@ -25,6 +25,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     @IBOutlet weak var addMediaButton: UIButton!
     @IBOutlet weak var feedPopupView: UIView!
     @IBOutlet weak var cancelButton: UIButton!
+    
     @IBOutlet weak var sessionCollectionView: UICollectionView!
     
     var sessionArray = [Session]()
@@ -36,6 +37,16 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     var sizingCell: SessionCell?
     var selectedCellCount = 0
  
+    @IBOutlet weak var yourBandsCollect: UICollectionView!
+    @IBOutlet weak var currentUserButton: UIButton!
+    @IBOutlet weak var currentUserNameLabel: UILabel!
+    @IBAction func currentUserButtonPressed(_ sender: Any) {
+    }
+       @IBOutlet weak var selectSessionLabel: UILabel!
+    
+    @IBOutlet weak var selectVideoLabel: UILabel!
+    
+    @IBOutlet weak var selectVideoFromSessionCollect: UICollectionView!
        func backToFeed(){
         //let vc = SessionFeedViewController()
         //present(vc, animated: true, completion: nil)
@@ -44,9 +55,144 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     override func viewWillDisappear(_ animated: Bool) {
         SwiftOverlays.removeAllBlockingOverlays()
     }
+    var bandArray = [String]()
+    var bandObjectArray = [Band]()
+    var bandSessionIDArray = [String]()
+    var bandSessionObjectArray = [Session]()
+    var bandMedia = [NSURL]()
+    var userMediaArray = [String]()
+    var userMediaArrayNSURL = [NSURL]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.yourBandsCollect.isHidden = false
+        self.selectSessionLabel.isHidden = true
+        self.selectVideoLabel.isHidden = true
+        self.sessionCollectionView.isHidden = true
+        self.selectVideoFromSessionCollect.isHidden = true
+        ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshots{
+                    if snap.key == "profileImageURL"{
+                        self.currentUserButton.imageView?.loadImageUsingCacheWithUrlString((snap.value as! [String]).first!)
+                    }
+                    if snap.key == "name"{
+                        self.currentUserNameLabel.text = snap.value as! String
+                    }
+                    if snap.key == "media"{
+                        let mediaSnaps = snap.children.allObjects as? [FIRDataSnapshot]
+                        for m_snap in mediaSnaps!{
+                            //fill youtubeArray
+                            if m_snap.key == "youtube"{
+                                for y_snap in m_snap.value as! [String]
+                                {
+                                    
+                                    self.userMediaArrayNSURL.append(NSURL(string: y_snap)!)
+                                    //self.nsurlArray.append(NSURL(string: y_snap)!)
+                                    //self.nsurlDict[NSURL(string: y_snap)!] = "y"
+                                }
+                            }
+                                //fill vidsFromPhone array
+                            else{
+                                for v_snap in m_snap.value as! [String]
+                                {
+                                    self.userMediaArrayNSURL.append(NSURL(string: v_snap)!)
+                                    //self.nsurlArray.append(NSURL(string: v_snap)!)
+                                    //self.nsurlDict[NSURL(string: v_snap)!] = "v"
+                                }
+                            }
+                        }
+                        //fill prof pic array
+                    }
+                    if snap.key == "artistsBands"{
+                        for id in (snap.value as! [String]){
+                            self.bandArray.append(id)
+                        }
+                    }
+                }
+            }
+            
+
         
+        self.ref.child("bands").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshots{
+                    let tempDict = snap.value as! [String:Any]
+                    let tempBand = Band()
+                    if self.bandArray.contains(snap.key){
+                        tempBand.setValuesForKeys(tempDict)
+                        self.bandObjectArray.append(tempBand)
+                    }
+                }
+            }
+           /* for band in self.bandObjectArray{
+                for sess in band.bandSessions{
+                    self.bandSessionIDArray.append(sess)
+                }
+            }*/
+            DispatchQueue.main.async{
+                for _ in self.bandArray{
+                    self.currentCollect = "band"
+                    
+                    //self.curPastArrayIndex = self.pastSessionArray.index(of: session)!
+                    
+                    let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                    self.yourBandsCollect.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                    self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                    self.yourBandsCollect.backgroundColor = UIColor.clear
+                    self.yourBandsCollect.dataSource = self
+                    self.yourBandsCollect.delegate = self
+                }
+            }
+
+        })
+        })
+       
+                /*ref.child("sessions").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshots{
+                    let tempDict = snap.value as! [String:Any]
+                    let tempBand = Session()
+                    if self.bandSessionIDArray.contains(snap.key){
+                        tempBand.setValuesForKeys(tempDict)
+                        self.bandSessionObjectArray.append(tempBand)
+                        /*let sessionSnaps = snap.children.allObjects as? [FIRDataSnapshot]
+                        for sessSnap in sessionSnaps!{
+                            if sessSnap.key == "sessionMedia"{
+                                let mediaSnaps = sessSnap.children.allObjects as? [FIRDataSnapshot]
+                        
+                                for m_snap in mediaSnaps!{
+                                    //fill youtubeArray
+                                    if m_snap.key == "youtube"{
+                                        for y_snap in m_snap.value as! [String]
+                                        {
+                                    
+                                            self.bandMedia.append(NSURL(string: y_snap)!)
+                                            //self.nsurlArray.append(NSURL(string: y_snap)!)
+                                            //self.nsurlDict[NSURL(string: y_snap)!] = "y"
+                                        }
+                                    }
+                                        //fill vidsFromPhone array
+                                    else{
+                                        for v_snap in m_snap.value as! [String]
+                                        {
+                                            self.userMediaArrayNSURL.append(NSURL(string: v_snap)!)
+                                            //self.nsurlArray.append(NSURL(string: v_snap)!)
+                                            //self.nsurlDict[NSURL(string: v_snap)!] = "v"
+                                        }
+                                    }
+                                }
+                        //fill prof pic array
+                            }
+
+                        }*/
+                    }
+                    
+                    
+                }
+            }
+        })*/
+
+
         navigationController?.navigationBar.barTintColor = UIColor.black.withAlphaComponent(0.60)
         //let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(UploadSessionPopup.backToFeed))
         
@@ -61,11 +207,12 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         navigationItem.leftBarButtonItem = cancelButton
         
     }
-    
+    var currentCollect: String?
+    let userID = FIRAuth.auth()?.currentUser?.uid
     func loadPastAndCurrentSessions(){
-        let userID = FIRAuth.auth()?.currentUser?.uid
+        
         //if(self.pastSessionsDidLoad == false){
-        ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
+        /*ref.child("users").child(userID!).child("activeSessions").observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
@@ -121,61 +268,390 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             
 
             
-        })
+        })*/
 
     }
     
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+     if collectionView == yourBandsCollect{
+        return bandArray.count
+     }
+        if collectionView == sessionCollectionView{
+            return bandSessionObjectArray.count
+        }
+            else{
+                return bandMedia.count
+            }
+        
      
-        return sessionArray.count
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SessionCell", for: indexPath as IndexPath) as! SessionCell
-        self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
-        return cell
+        if collectionView == yourBandsCollect || collectionView == sessionCollectionView{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SessionCell", for:  indexPath as IndexPath) as! SessionCell
+            self.configureCell(cell, collectionView, forIndexPath: indexPath as NSIndexPath)
+            return cell
+        }
+        else{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for:  indexPath as IndexPath) as! VideoCollectionViewCell
+            self.configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
+            return cell
+            
+        }
     }
     
     
+    
+    
+    //**
+    //DidSelect
+    //**
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        var cell = collectionView.cellForItem(at: indexPath)
-        cell?.layer.borderWidth = 2.0
-        cell?.layer.borderColor = UIColor.orange.cgColor
-        self.selectedSession = sessionArray[indexPath.row]
-        cell?.isSelected = true
-        imagePickerController.sourceType = .photoLibrary
-        
-        imagePickerController.mediaTypes = ["public.movie"]
-        imagePickerController.delegate = self
-        
-        
-        present(imagePickerController, animated: true, completion: nil)
-        /*collectionView.deselectItem(at: indexPath as IndexPath, animated: false)
-        collectionView.cellForItem(at: indexPath)?.isSelected = !(collectionView.cellForItem(at: indexPath)?.isSelected)!
-        collectionView.reloadData()*/
-        //collectionView.cellForItem(at: indexPath)?.isSelected
-        
-        
-    }
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath){
-        let cell = collectionView.cellForItem(at: indexPath)
-        cell?.layer.borderColor = UIColor.clear.cgColor
-        cell?.isSelected = false
-    }
+        //collectionView.des
+        if collectionView == yourBandsCollect{
+            self.currentCollect = "band"
+        }
+        if collectionView == sessionCollectionView{
+            self.currentCollect = "session"
+        }
+        if collectionView == selectVideoFromSessionCollect{
+            self.currentCollect = "media"
+        }
+        if collectionView == yourBandsCollect{
+           
+            
+            var bandCell = collectionView.cellForItem(at: indexPath) as! SessionCell
+           self.selectVideoLabel.isHidden = true
+            if bandCell.cellSelected == false{
+                bandSessionObjectArray.removeAll()
+                bandSessionIDArray.removeAll()
+                bandCell.cellSelected = true
+                for cell in collectionView.visibleCells{
+                    if cell != bandCell {
+                        //collectionView.deselectItem(at: collectionView.indexPath(for: cell)! , animated: true)
+                        (cell as! SessionCell).cellSelected = false
+                        (cell as! SessionCell).isSelected = false
+                    }
+                }
+                    bandCell.layer.borderWidth = 2.0
+                    bandCell.layer.borderColor = UIColor.orange.cgColor
+                    //self.selectedSessionMediaArray.append(self.mostRecentSessionSelected)
+                    bandCell.isSelected = true
 
+                    self.sessionCollectionView.isHidden = false
+                self.selectSessionLabel.isHidden = false
+                    self.mostRecentBandSelected = bandObjectArray[indexPath.row]
+                    for sess in self.mostRecentBandSelected.bandSessions{
+                        self.bandSessionIDArray.append(sess)
+                    }
+                    ref.child("sessions").observeSingleEvent(of: .value, with: { (snapshot) in
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            print("inside ref")
+                            for snap in snapshots{
+                                let tempDict = snap.value as! [String:Any]
+                                let tempSess = Session()
+                                if self.bandSessionIDArray.contains(snap.key){
+                                    tempSess.setValuesForKeys(tempDict)
+                                    self.bandSessionObjectArray.append(tempSess)
+                                        }
+                
+                
+                            }
+                        }
+                        DispatchQueue.main.async{
+                            for _ in self.bandSessionObjectArray{
+                                self.currentCollect = "session"
+                        
+                                //self.curPastArrayIndex = self.pastSessionArray.index(of: session)!
+                        
+                                let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                                self.sessionCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                                self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                                self.sessionCollectionView.backgroundColor = UIColor.clear
+                                self.sessionCollectionView.dataSource = self
+                                self.sessionCollectionView.delegate = self
+                            }
+                            collectionView.deselectItem(at: indexPath as IndexPath, animated: false)
+                            self.yourBandsCollect.reloadData()
+                            self.sessionCollectionView.reloadData()
+                            self.selectVideoFromSessionCollect.reloadData()
+                        }
+                    })
+            }
+            else{
+                bandCell.cellSelected = false
+                self.sessionCollectionView.isHidden = true
+                self.selectSessionLabel.isHidden = true
+                self.bandSessionObjectArray.removeAll()
+                self.bandSessionIDArray.removeAll()
+                
+                self.selectVideoFromSessionCollect.isHidden = true
+                self.selectVideoLabel.isHidden = true
+                self.bandMedia.removeAll()
+                self.selectedSessionMediaArray.removeAll()
+                //let cell = collectionView.cellForItem(at: indexPath) as! SessionCell
+                bandCell.layer.borderColor = UIColor.clear.cgColor
+                bandCell.isSelected = false
+               
+
+            }
+           
+            
+        
+        
+        
+
+            }
+        
+        if collectionView == sessionCollectionView{
+            self.selectVideoLabel.isHidden = false
+            let sessCell = collectionView.cellForItem(at: indexPath) as! SessionCell
+            if sessCell.cellSelected == false{
+                sessCell.cellSelected = true
+                bandMedia.removeAll()
     
-    func configureCell(_ cell: SessionCell, forIndexPath indexPath: NSIndexPath) {
-        
-        cell.sessionCellImageView.loadImageUsingCacheWithUrlString(sessionArray[indexPath.row].sessionPictureURL!)
-        cell.sessionCellLabel.text = sessionArray[indexPath.row].sessionName
-        cell.sessionCellLabel.textColor = UIColor.white
-        //cell.layer.borderWidth = cell.isSelected ? 2 : 0
-        //cell.layer.borderColor = cell.isSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+            sessCell.layer.borderWidth = 2.0
+            sessCell.layer.borderColor = UIColor.orange.cgColor
+            //self.selectedSessionMediaArray.append(self.mostRecentSessionSelected)
+            sessCell.isSelected = true
+            
+            for cell in collectionView.visibleCells{
+                if cell != sessCell {
+                    //collectionView.deselectItem(at: collectionView.indexPath(for: cell)! , animated: true)
+                    (cell as! SessionCell).cellSelected = false
+                    (cell as! SessionCell).isSelected = false
+                }
+            }
 
-        cell.sessionId = sessionArray[indexPath.row].sessionUID
+            self.selectVideoFromSessionCollect.isHidden = false
+            self.mostRecentSessionSelected = bandSessionObjectArray[indexPath.row]
+            ref.child("sessions").observeSingleEvent(of: .value, with: { (snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    for snap in snapshots{
+                        if ((snap.value as! [String:Any])["bandID"] as! String) == self.mostRecentBandSelected.bandID{
+                            let sessionSnaps = snap.children.allObjects as? [FIRDataSnapshot]
+                            for sessSnap in sessionSnaps!{
+                                if sessSnap.key == "sessionMedia"{
+                                    let mediaSnaps = sessSnap.children.allObjects as? [FIRDataSnapshot]
+ 
+                                    for m_snap in mediaSnaps!{
+                                        //fill youtubeArray
+                                        if m_snap.key == "youtube"{
+                                            for y_snap in m_snap.value as! [String]
+                                            {
+ 
+                                                self.bandMedia.append(NSURL(string: y_snap)!)
+                                                //self.nsurlArray.append(NSURL(string: y_snap)!)
+                                                //self.nsurlDict[NSURL(string: y_snap)!] = "y"
+                                            }
+                                        }
+                                            //fill vidsFromPhone array
+                                        else{
+                                            for v_snap in m_snap.value as! [String]
+                                            {
+                                                self.bandMedia.append(NSURL(string: v_snap)!)
+                                                //self.nsurlArray.append(NSURL(string: v_snap)!)
+                                                //self.nsurlDict[NSURL(string: v_snap)!] = "v"
+                                            }
+                                        }
+                                    }
+                                    //fill prof pic array
+                                }
+ 
+                            }
+                        }
+                    }
+                }
+                DispatchQueue.main.async{
+                    for _ in self.bandMedia{
+                        self.currentCollect = "media"
+                        
+                        //self.curPastArrayIndex = self.pastSessionArray.index(of: session)!
+                        
+                        let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                        self.selectVideoFromSessionCollect.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                        self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                        self.selectVideoFromSessionCollect.backgroundColor = UIColor.clear
+                        self.selectVideoFromSessionCollect.dataSource = self
+                        self.selectVideoFromSessionCollect.delegate = self
+                        
+                    }
+                    collectionView.deselectItem(at: indexPath as IndexPath, animated: false)
+                    //collectionView.visibleCells[indexPath.row] as Session = !collectionView.visibleCells[indexPath.row].selected
+                    //self.yourBandsCollect.reloadData()
+                    self.sessionCollectionView.reloadData()
+                    self.selectVideoFromSessionCollect.reloadData()
+                    
+                }
+
+            })
+            }
+            else{
+                sessCell.cellSelected = false
+                self.selectVideoFromSessionCollect.isHidden = true
+                self.bandMedia.removeAll()
+                selectedSessionMediaArray.removeAll()
+                //let cell = collectionView.cellForItem(at: indexPath) as! SessionCell
+                sessCell.layer.borderColor = UIColor.clear.cgColor
+                sessCell.isSelected = false
+               /* DispatchQueue.main.async{
+                    //self.yourBandsCollect.reloadData()
+                    //self.sessionCollectionView.reloadData()
+                    self.selectVideoFromSessionCollect.reloadData()
+                }*/
+            }
+    
+            
+        }
+        if collectionView == selectVideoFromSessionCollect{
+ 
+ 
+            var cell = collectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
+            if cell.cellSelected == false{
+                cell.cellSelected = true
+    
+                cell.layer.borderWidth = 2.0
+                cell.layer.borderColor = UIColor.orange.cgColor
+                self.selectedSessionMediaArray.append(bandMedia[indexPath.row])
+                cell.isSelected = true
+                cell.playPauseButton.isEnabled = false
+            }else{
+                cell.cellSelected = false
+                let cell = collectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
+                cell.layer.borderColor = UIColor.clear.cgColor
+                cell.isSelected = false
+                //could cause problems
+                
+                self.selectedSessionMediaArray.remove(at: indexPath.row)
+            }
+    
+            
+        
+        }
+        
+    
+    //collectionView.reloadData()
+        
+        
+    }
+    
+    var selectedSessionMediaArray = [NSURL]()
+    var sizingCell2 = VideoCollectionViewCell()
+    var mostRecentSessionSelected = Session()
+    var mostRecentBandSelected = Band()
+    
+    
+    /*public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath){
+        print("deselcet")
+        if collectionView == self.yourBandsCollect{
+            self.sessionCollectionView.isHidden = true
+            self.bandSessionObjectArray.removeAll()
+            self.bandSessionIDArray.removeAll()
+            
+            self.selectVideoFromSessionCollect.isHidden = true
+            self.bandMedia.removeAll()
+            self.selectedSessionMediaArray.removeAll()
+            let cell = collectionView.cellForItem(at: indexPath) as! SessionCell
+            cell.layer.borderColor = UIColor.clear.cgColor
+            cell.isSelected = false
+
+            
+        }
+        if collectionView == self.sessionCollectionView{
+            self.selectVideoFromSessionCollect.isHidden = true
+            self.bandMedia.removeAll()
+            selectedSessionMediaArray.removeAll()
+            let cell = collectionView.cellForItem(at: indexPath) as! SessionCell
+            cell.layer.borderColor = UIColor.clear.cgColor
+            cell.isSelected = false
+
+        }
+        else{
+        let cell = collectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
+        cell.layer.borderColor = UIColor.clear.cgColor
+        cell.isSelected = false
+        //could cause problems
+            
+        self.selectedSessionMediaArray.remove(at: indexPath.row)
+        }
+    }*/
+
+    func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
+        if bandMedia.count == 0{
+            cell.layer.borderColor = UIColor.white.cgColor
+            cell.layer.borderWidth = 2
+            cell.removeVideoButton.isHidden = true
+            cell.videoURL = nil
+            cell.player?.view.isHidden = true
+            cell.youtubePlayerView.isHidden = true
+            //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.removeVideoButton.isHidden = true
+            cell.noVideosLabel.isHidden = false
+        }else {
+            
+            cell.layer.borderColor = UIColor.clear.cgColor
+            cell.layer.borderWidth = 0
+            
+            //cell.youtubePlayerView.isHidden = true
+            cell.removeVideoButton.isHidden = true
+            cell.noVideosLabel.isHidden = true
+            
+            
+            
+            cell.videoURL =  self.bandMedia[indexPath.row] as NSURL?
+            if(String(describing: cell.videoURL).contains("youtube") || String(describing: cell.videoURL).contains("youtu.be")){
+                cell.youtubePlayerView.loadVideoURL(cell.videoURL as! URL)
+                cell.youtubePlayerView.isHidden = false
+                cell.player?.view.isHidden = true
+                cell.isYoutube = true
+            }else{
+                cell.player?.setUrl(cell.videoURL as! URL)
+                cell.player?.view.isHidden = false
+                cell.youtubePlayerView.isHidden = true
+                cell.isYoutube = false
+            }
+            //print(self.vidArray[indexPath.row])
+            //cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
+            //self.group.leave()
+        }
+        
+
+    }
+    func configureCell(_ cell: SessionCell,_ collectionView: UICollectionView, forIndexPath indexPath: NSIndexPath) {
+        //print(self.currentCollect)
+        if collectionView == self.yourBandsCollect{
+            print(bandObjectArray[indexPath.row].bandPictureURL[0])
+            //print(bandObjectArray)
+            cell.sessionCellImageView.loadImageUsingCacheWithUrlString(bandObjectArray[indexPath.row].bandPictureURL[0])
+            cell.sessionCellLabel.text = bandObjectArray[indexPath.row].bandName
+            cell.sessionCellLabel.textColor = UIColor.white
+            cell.layer.borderWidth = cell.cellSelected ? 2 : 0
+            cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+            
+            cell.sessionId = bandArray[indexPath.row]
+
+        }
+        if collectionView == self.sessionCollectionView{
+        cell.sessionCellImageView.loadImageUsingCacheWithUrlString(bandSessionObjectArray[indexPath.row].sessionPictureURL[0])
+        cell.sessionCellLabel.text = bandSessionObjectArray[indexPath.row].sessionName
+        cell.sessionCellLabel.textColor = UIColor.white
+        cell.layer.borderWidth = cell.cellSelected ? 2 : 0
+        cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+
+        cell.sessionId = bandSessionIDArray[indexPath.row]
+        }
+        if collectionView == self.selectVideoFromSessionCollect{
+            cell.sessionCellImageView.loadImageUsingCacheWithUrlString(bandSessionObjectArray[indexPath.row].sessionPictureURL[0])
+            cell.sessionCellLabel.text = bandSessionObjectArray[indexPath.row].sessionName
+            cell.sessionCellLabel.textColor = UIColor.white
+            cell.layer.borderWidth = cell.cellSelected ? 2 : 0
+            cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+            
+            cell.sessionId = bandSessionIDArray[indexPath.row]
+        }
         
         }
 

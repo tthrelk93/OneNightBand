@@ -429,7 +429,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
             }
 
           if(indexPath.row < upcomingSessionArray.count){
-            cell.sessionCellImageView.loadImageUsingCacheWithUrlString(upcomingSessionArray[indexPath.row].sessionPictureURL!)
+            cell.sessionCellImageView.loadImageUsingCacheWithUrlString((upcomingSessionArray[indexPath.row] as Session).sessionPictureURL[0])
             print(self.upcomingSessionArray[indexPath.row].sessionUID as Any)
             cell.sessionCellLabel.text = upcomingSessionArray[indexPath.row].sessionName
             cell.sessionCellLabel.textColor = UIColor.white
@@ -444,7 +444,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                 cell.sessionCellLabel.textColor = UIColor.white
             }
             if(indexPath.row < pastSessionArray.count){
-                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(pastSessionArray[indexPath.row].sessionPictureURL!)
+                cell.sessionCellImageView.loadImageUsingCacheWithUrlString((pastSessionArray[indexPath.row] as Session).sessionPictureURL[0])
                 cell.sessionCellLabel.text = pastSessionArray[indexPath.row].sessionName
                 cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = sessionIDArray[indexPath.row]
@@ -459,7 +459,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
 
             if(indexPath.row < sessionFeedArray.count){
                 print(indexPath.row)
-                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(sessionFeedArray[indexPath.row].sessionPictureURL!)
+                cell.sessionCellImageView.loadImageUsingCacheWithUrlString((sessionFeedArray[indexPath.row] as Session).sessionPictureURL[0])
                 cell.sessionCellLabel.text = sessionFeedArray[indexPath.row].sessionName
                 cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = sessionIDArray[indexPath.row]
@@ -472,7 +472,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                 cell.sessionCellLabel.textColor = UIColor.white
             }
             if(indexPath.row < activeSessionsArray.count){
-            cell.sessionCellImageView.loadImageUsingCacheWithUrlString(activeSessionsArray[indexPath.row].sessionPictureURL!)
+            cell.sessionCellImageView.loadImageUsingCacheWithUrlString((activeSessionsArray[indexPath.row].sessionPictureURL[0]))
             cell.sessionCellLabel.text = activeSessionsArray[indexPath.row].sessionName
             cell.sessionCellLabel.textColor = UIColor.white
             cell.sessionId = sessionIDArray[indexPath.row]
@@ -485,7 +485,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                 cell.sessionCellLabel.textColor = UIColor.white
             }
             if(indexPath.row < allSessions.count){
-                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(allSessions[indexPath.row].sessionPictureURL!)
+                cell.sessionCellImageView.loadImageUsingCacheWithUrlString((allSessions[indexPath.row] as Session).sessionPictureURL[0])
                 cell.sessionCellLabel.text = allSessions[indexPath.row].sessionName
                 cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = sessionIDArray[indexPath.row]

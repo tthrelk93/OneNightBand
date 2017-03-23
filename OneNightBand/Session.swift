@@ -12,11 +12,11 @@ class Session: NSObject{
     var sessionArtists = [String: Any]()
     var sessionBio: String?
     var sessionName: String?
-    var sessionPictureURL: String?
+    var sessionPictureURL = [String]()
     var sessionUID: String?
     var sessionDate: String?
     var messages = [String: Any]()
-    var sessionMedia = [String]()
+    var sessionMedia = [String: Any]()
     var sessFeedKeys = [String]()
     var views = Int()
     var bandID: String?

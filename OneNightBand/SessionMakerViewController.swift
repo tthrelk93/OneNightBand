@@ -35,6 +35,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     
     var sessionID: String?
     
+    
     @IBAction func addSessionTouched(_ sender: Any) {
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
         popOverVC.bandID = self.thisBand.bandID
@@ -81,7 +82,21 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 vc.artistUID = cellTouchedArtistUID
             }
         }
+        if segue.identifier == "SessionToMP3"{
+            if let vc = segue.destination as? MP3PlayerViewController{
+                vc.BandID = self.sessionID!
+                print(self.sessionID!)
+                print(self.selectedCell?.sessionId)
+                vc.sessionID = self.selectedCell?.sessionId
+                vc.navigationController?.isNavigationBarHidden = false
+                vc.navigationItem.hidesBackButton = false
+                 
+            }
+
+        }
+        
     }
+    
     var yearsArray = [String]()
     var playingYearsArray = ["1","2","3","4","5+","10+"]
     var playingLevelArray = ["beginner", "intermediate", "advanced", "expert"]
@@ -126,6 +141,9 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     override func viewDidLoad(){
         
         super.viewDidLoad()
+        navigationController?.isNavigationBarHidden = false
+        navigationController?.navigationBar.isHidden = false
+        
         
         sessionPicker.delegate = self
         sessionPicker.dataSource = self
@@ -189,7 +207,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                             }
                             self.sessionID = self.thisBand.bandID
                             self.sessionInfoTextView?.text = tempBand.bandBio!
-                            self.sessionImageView?.loadImageUsingCacheWithUrlString(tempBand.bandPictureURL!)
+                            self.sessionImageView?.loadImageUsingCacheWithUrlString(tempBand.bandPictureURL[0])
                             self.navigationItem.title = tempBand.bandName
                             //print(self.thisSession.sessionBio)
                             let cellNib = UINib(nibName: "ArtistCell", bundle: nil)
@@ -262,8 +280,8 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         
         let userID = FIRAuth.auth()?.currentUser?.uid
         self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                for snap in snapshots{
+            if let snapshotsss = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshotsss{
                     let dictionary = snap.value as? [String: Any]
                     let tempSess = Session()
                     tempSess.setValuesForKeys(dictionary!)
@@ -277,6 +295,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                         self.bandSessions.append((ssnap.value! as! String))
                     }
                 }
+                self.bandSessions.reverse()
                 
                 self.ref.child("sessionFeed").observeSingleEvent(of: .value, with: { (snapshot) in
                     if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -570,16 +589,20 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     }
     
     
-    
+    var selectedCell: SessionCell?
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
        // self.bandTypeView.isHidden = true
-        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MP3PlayerVC") as! MP3PlayerViewController
+        /*let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MP3PlayerVC") as! MP3PlayerViewController
         popOverVC.sessionID = (collectionView.cellForItem(at: indexPath) as! SessionCell).sessionId
         //popOverVC.sessionNameLabel.text = (collectionView.cellForItem(at: indexPath) as! SessionCell).sessionCellLabel.text
         self.addChildViewController(popOverVC)
         popOverVC.view.frame = self.view.frame
         self.view.addSubview(popOverVC.view)
-        popOverVC.didMove(toParentViewController: self)
+        popOverVC.didMove(toParentViewController: self)*/
+        self.selectedCell = collectionView.cellForItem(at: indexPath) as! SessionCell
+        print("selectedCellName: \(self.selectedCell?.sessionCellLabel.text)")
+        print("selectedCellID: \(self.selectedCell?.sessionId)")
+        self.performSegue(withIdentifier: "SessionToMP3", sender: self)
         //self.dropDownDone = true
         //self.createNewBandButton.isHidden = false
 
@@ -626,7 +649,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             if(indexPath.row < upcomingSessionArray.count){
                 cell.emptyLabel.isHidden = true
                 cell.layer.borderColor = UIColor.clear.cgColor
-                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(upcomingSessionArray[indexPath.row].sessionPictureURL!)
+                cell.sessionCellImageView.loadImageUsingCacheWithUrlString((upcomingSessionArray[indexPath.row] as Session).sessionPictureURL[0])
                 //print(self.upcomingSessionArray[indexPath.row].sessionUID as Any)
                 cell.sessionCellLabel.text = upcomingSessionArray[indexPath.row].sessionName
                 cell.sessionCellLabel.textColor = UIColor.white
@@ -652,7 +675,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 cell.sessionCellLabel.isHidden = false
                 if(indexPath.row < pastSessionArray.count){
                     
-                    cell.sessionCellImageView.loadImageUsingCacheWithUrlString(pastSessionArray[indexPath.row].sessionPictureURL!)
+                    cell.sessionCellImageView.loadImageUsingCacheWithUrlString((pastSessionArray[indexPath.row] as Session).sessionPictureURL[0])
                     cell.sessionCellLabel.text = pastSessionArray[indexPath.row].sessionName
                     cell.sessionCellLabel.textColor = UIColor.white
                     cell.sessionId = bandSessions[indexPath.row]
@@ -680,7 +703,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             
             if(indexPath.row < sessionFeedArray.count){
                 print(indexPath.row)
-                                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(sessionFeedArray[indexPath.row].sessionPictureURL!)
+                                cell.sessionCellImageView.loadImageUsingCacheWithUrlString((sessionFeedArray[indexPath.row] as Session).sessionPictureURL[0])
                 cell.sessionCellLabel.text = sessionFeedArray[indexPath.row].sessionName
                 cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = bandSessions[indexPath.row]
@@ -706,7 +729,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             }
             if(indexPath.row < activeSessionsArray.count){
                 
-                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(activeSessionsArray[indexPath.row].sessionPictureURL!)
+                cell.sessionCellImageView.loadImageUsingCacheWithUrlString((activeSessionsArray[indexPath.row] as Session).sessionPictureURL[0])
                 cell.sessionCellLabel.text = activeSessionsArray[indexPath.row].sessionName
                 cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = bandSessions[indexPath.row]
@@ -729,7 +752,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 cell.sessionCellLabel.isHidden = false
             }
             if(indexPath.row < allSessions.count){
-                cell.sessionCellImageView.loadImageUsingCacheWithUrlString(allSessions[indexPath.row].sessionPictureURL!)
+                cell.sessionCellImageView.loadImageUsingCacheWithUrlString((allSessions[indexPath.row] as Session).sessionPictureURL[0])
                 cell.sessionCellLabel.text = allSessions[indexPath.row].sessionName
                 cell.sessionCellLabel.textColor = UIColor.white
                 cell.sessionId = bandSessions[indexPath.row]
@@ -803,12 +826,12 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         //{
         //self.shadeView.isHidden = true
         self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
-        self.allSessionsCollect.reloadData()
+        /*self.allSessionsCollect.reloadData()
         self.currentSessionsCollect.reloadData()
         self.pastSessionsCollect.reloadData()
         self.upcomingSessionsCollect.reloadData()
         self.sessionsOnFeedCollect.reloadData()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)*/
         return
         //}
         

@@ -20,6 +20,7 @@ class SessionCell: UICollectionViewCell {
     @IBOutlet weak var emptyLabel: UILabel!
     @IBOutlet weak var sessionCellLabel: UILabel!
     @IBOutlet weak var sessionCellImageView: UIImageView!
+    var cellSelected = false
     var sessionId: String?
     
     override func awakeFromNib() {

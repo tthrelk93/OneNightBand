@@ -125,7 +125,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
     }
 
     
-    
+    var sessionPics = [String]()
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finalizeSessionButton: UIButton!
@@ -227,6 +227,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                     }
                     //let tempURL = URL.init(fileURLWithPath: "temp")
                     if let sessionImageUrl = metadata?.downloadURL()?.absoluteString {
+                        self.sessionPics.append(sessionImageUrl)
                         
                         var tempArray2 = [String]()
                         var values = Dictionary<String, Any>()
@@ -234,8 +235,8 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         values["sessionName"] =  self.sessionNameTextField.text
                         values["sessionArtists"] = [(FIRAuth.auth()?.currentUser?.uid)!:"Session Founder"]
                         values["sessionBio"] = self.sessionBioTextView.text
-                        values["sessionPictureURL"] = sessionImageUrl
-                        values["sessionMedia"] = [""]
+                        values["sessionPictureURL"] = self.sessionPics
+                        values["sessionMedia"] = [String: Any]()
                         values["messages"] = [String: Any]()
                         values["views"] = 0
                         values["bandID"] = self.bandID
@@ -336,6 +337,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
             sessionImageViewButton.setBackgroundImage(selectedImage, for: .normal)
             //profileImageViewButton.set
             sessionImageView.image = selectedImage
+            //sessionPics.append(selectedImage)
             
         }
         

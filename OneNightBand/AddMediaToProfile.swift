@@ -37,7 +37,8 @@ protocol RemovePicData : class
 
 class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, RemoveVideoDelegate, RemovePicDelegate{
     
-    
+    var bandID: String?
+    var sessionID: String?
     var curIndexPath = [IndexPath]()
     var curCount = Int()
     
@@ -48,7 +49,16 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     
 
 
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SaveMediaToSession"{
+        if let vc = segue.destination as? MP3PlayerViewController{
+            vc.sessionID = self.sessionID
+            vc.BandID = self.bandID
+            
+            }
+        }
+            
+    }
     
     @IBAction func addPicTouched(_ sender: AnyObject) {
         currentPicker = "photo"
@@ -65,52 +75,93 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
         
         present(picker, animated: true, completion: nil)
     }
-    
+    var senderView = String()
     @IBOutlet weak var vidFromPhoneCollectionView: UICollectionView!
     @IBOutlet weak var youtubeCollectionView: UICollectionView!
     var tempArray1 = [String]()
     var tempArray = [String]()
     var lastIndexPath: IndexPath?
     @IBOutlet weak var shadeView: UIView!
+    
+    
     @IBAction func addYoutubeVideoButtonPressed(_ sender: AnyObject) {
-        
-        if youtubeLinkField == nil{
-            print("youtube field empty")
-        }else{
-            self.currentYoutubeLink = NSURL(string: self.youtubeLinkField.text!)
-        ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
-            let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+        if senderView == "main"{
+            if youtubeLinkField == nil{
+                print("youtube field empty")
+            }else{
+                self.currentYoutubeLink = NSURL(string: self.youtubeLinkField.text!)
+                ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
             
-            for snap in snapshots{
-                self.tempArray1.append(snap.key)
-            }
+                    for snap in snapshots{
+                        self.tempArray1.append(snap.key)
+                    }
             
-                for snap in snapshots{
-                    if snap.key == "media"{
-                        let mediaKids = snap.children.allObjects as! [FIRDataSnapshot]
+                    for snap in snapshots{
+                        if snap.key == "media"{
+                            let mediaKids = snap.children.allObjects as! [FIRDataSnapshot]
                         
-                        for mediaKid in mediaKids{
-                            self.tempArray.append(mediaKid.key )
+                            for mediaKid in mediaKids{
+                                self.tempArray.append(mediaKid.key )
+                            }
                         }
                     }
-            }
-        })
-                            self.tempLink = self.currentYoutubeLink
-                            self.currentCollectID = "youtube"
-                                youtubeLinkArray.append(self.currentYoutubeLink)
-                                print(youtubeLinkArray)
-                                let insertionIndexPath = IndexPath(row: self.youtubeLinkArray.count - 1, section: 0)
-                                DispatchQueue.main.async{
-
-
-                            self.youtubeCollectionView.insertItems(at: [insertionIndexPath])
+                })
+                
+                self.tempLink = self.currentYoutubeLink
+                self.currentCollectID = "youtube"
+                youtubeLinkArray.append(self.currentYoutubeLink)
+                print(youtubeLinkArray)
+                let insertionIndexPath = IndexPath(row: self.youtubeLinkArray.count - 1, section: 0)
+                DispatchQueue.main.async{
+                    self.youtubeCollectionView.insertItems(at: [insertionIndexPath])
                             
+                }
             }
+            self.youtubeLinkField.text = ""
+            
+        } else{
+            if youtubeLinkField == nil{
+                print("youtube field empty")
+            }else{
+                self.currentYoutubeLink = NSURL(string: self.youtubeLinkField.text!)
+                ref.child("sessions").child(self.sessionID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+                    
+                    for snap in snapshots{
+                        self.tempArray1.append(snap.key)
+                    }
+                    
+                    for snap in snapshots{
+                        if snap.key == "sessionMedia"{
+                            let mediaKids = snap.children.allObjects as! [FIRDataSnapshot]
+                            
+                            for mediaKid in mediaKids{
+                                self.tempArray.append(mediaKid.key )
+                            }
+                        }
+                    }
+                })
+                
+                self.tempLink = self.currentYoutubeLink
+                self.currentCollectID = "youtube"
+                youtubeLinkArray.append(self.currentYoutubeLink)
+                print(youtubeLinkArray)
+                let insertionIndexPath = IndexPath(row: self.youtubeLinkArray.count - 1, section: 0)
+                DispatchQueue.main.async{
+                    self.youtubeCollectionView.insertItems(at: [insertionIndexPath])
+                    
+                }
+            }
+            self.youtubeLinkField.text = ""
+
         }
-        self.youtubeLinkField.text = ""
 
     
-    }
+        }
+    
+    
+    
     var mediaArray: [[String:Any]]?
     let userID = FIRAuth.auth()?.currentUser?.uid
     //var newestYoutubeVid: String?
@@ -123,49 +174,50 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     
     //uploads appropriate media to database
     @IBAction func saveTouched(_ sender: AnyObject) {
-        if (vidFromPhoneCollectionView.visibleCells.count == 0 && currentYoutubeLink == nil && needToUpdatePics == false && needToRemove == false){
-            let alert = UIAlertController(title: "No new media", message: "It appears that you have not chosen any media to upload.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+        if senderView == "main"{
+            if (vidFromPhoneCollectionView.visibleCells.count == 0 && currentYoutubeLink == nil && needToUpdatePics == false && needToRemove == false){
+                let alert = UIAlertController(title: "No new media", message: "It appears that you have not chosen any media to upload.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             
-        }else{
-            SwiftOverlays.showBlockingWaitOverlayWithText("Updating Media")
+            }else{
+                SwiftOverlays.showBlockingWaitOverlayWithText("Updating Media")
             
-                _ = Dictionary<String, Any>()
-                var values2 = Dictionary<String, Any>()
-                let recipient = self.ref.child("users").child(userID!).child("media")
-            
-            
-                    for link in youtubeLinkArray{
-                        self.youtubeDataArray.append(String(describing: link))
-                    }
-                    values2["youtube"] = self.youtubeDataArray
+                    _ = Dictionary<String, Any>()
+                    var values2 = Dictionary<String, Any>()
+                    let recipient = self.ref.child("users").child(userID!).child("media")
             
             
-                if recentlyAddedPhoneVidArray.count != 0{
-                    let videoName = NSUUID().uuidString
-                    let storageRef = FIRStorage.storage().reference(withPath: "artist_videos").child("\(videoName).mov")
-                    let uploadMetadata = FIRStorageMetadata()
-                    uploadMetadata.contentType = "video/quicktime"
-                    for nsurl in recentlyAddedPhoneVidArray{
-                        _ = storageRef.putFile(nsurl as! URL, metadata: uploadMetadata){(metadata, error) in
-                            if(error != nil){
-                                print("got an error: \(error)")
+                        for link in youtubeLinkArray{
+                            self.youtubeDataArray.append(String(describing: link))
+                        }
+                        values2["youtube"] = self.youtubeDataArray
+                
+            
+                    if recentlyAddedPhoneVidArray.count != 0{
+                        let videoName = NSUUID().uuidString
+                        let storageRef = FIRStorage.storage().reference(withPath: "artist_videos").child("\(videoName).mov")
+                        let uploadMetadata = FIRStorageMetadata()
+                        uploadMetadata.contentType = "video/quicktime"
+                        for nsurl in recentlyAddedPhoneVidArray{
+                            _ = storageRef.putFile(nsurl as URL, metadata: uploadMetadata){(metadata, error) in
+                                if(error != nil){
+                                    print("got an error: \(error)")
+                                }
                             }
                         }
-                    }
-                    for link in vidFromPhoneArray{
-                        self.recentlyAddedVidArray.append(String(describing: link))
-                    }
+                        for link in vidFromPhoneArray{
+                            self.recentlyAddedVidArray.append(String(describing: link))
+                        }
 
-                    values2["vidsFromPhone"] = self.recentlyAddedVidArray
-                }
-                else{
-                    for link in vidFromPhoneArray{
-                        self.recentlyAddedVidArray.append(String(describing: link))
+                        values2["vidsFromPhone"] = self.recentlyAddedVidArray
                     }
-                    values2["vidsFromPhone"] = self.recentlyAddedVidArray
-            }
+                    else{
+                        for link in vidFromPhoneArray{
+                            self.recentlyAddedVidArray.append(String(describing: link))
+                        }
+                        values2["vidsFromPhone"] = self.recentlyAddedVidArray
+                }
 
         
         
@@ -207,31 +259,111 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                             return
                         }
                     })
-                            
-                            
-                            
                         })
-                        
-
-                        
-                    
-                    
                 }
-                
-
-        
             }
            
         }
-        
-        
-
-
-            
-        
-             
         DispatchQueue.main.async{
        self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
+        }
+        
+        }
+        //else senderView == session
+        else{
+            if (vidFromPhoneCollectionView.visibleCells.count == 0 && currentYoutubeLink == nil && needToUpdatePics == false && needToRemove == false){
+                let alert = UIAlertController(title: "No new media", message: "It appears that you have not chosen any media to upload.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                
+            }else{
+                SwiftOverlays.showBlockingWaitOverlayWithText("Updating Media")
+                
+                _ = Dictionary<String, Any>()
+                var values2 = Dictionary<String, Any>()
+                let recipient = self.ref.child("sessions").child(self.sessionID!).child("sessionMedia")
+                
+                
+                for link in youtubeLinkArray{
+                    self.youtubeDataArray.append(String(describing: link))
+                }
+                values2["youtube"] = self.youtubeDataArray
+                
+                
+                if recentlyAddedPhoneVidArray.count != 0{
+                    let videoName = NSUUID().uuidString
+                    let storageRef = FIRStorage.storage().reference(withPath: "session_videos").child("\(videoName).mov")
+                    let uploadMetadata = FIRStorageMetadata()
+                    uploadMetadata.contentType = "video/quicktime"
+                    for nsurl in recentlyAddedPhoneVidArray{
+                        _ = storageRef.putFile(nsurl as! URL, metadata: uploadMetadata){(metadata, error) in
+                            if(error != nil){
+                                print("got an error: \(error)")
+                            }
+                        }
+                    }
+                    for link in vidFromPhoneArray{
+                        self.recentlyAddedVidArray.append(String(describing: link))
+                    }
+                    
+                    values2["vidsFromPhone"] = self.recentlyAddedVidArray
+                }
+                else{
+                    for link in vidFromPhoneArray{
+                        self.recentlyAddedVidArray.append(String(describing: link))
+                    }
+                    values2["vidsFromPhone"] = self.recentlyAddedVidArray
+                }
+                
+                
+                
+                recipient.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                    if err != nil {
+                        print(err!)
+                        return
+                    }
+                })
+            }
+            
+            
+            
+            
+            
+            if self.needToUpdatePics == true{
+                print("profPicArray: \(self.profPicArray)")
+                var count = 0
+                for pic in profPicArray{
+                    
+                    let imageName = NSUUID().uuidString
+                    let storageRef = FIRStorage.storage().reference().child("session_images").child("\(imageName).jpg")
+                    if let uploadData = UIImageJPEGRepresentation(pic, 0.1) {
+                        storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
+                            if error != nil {
+                                print(error!)
+                                return
+                            }
+                            self.picArray.append((metadata?.downloadURL()?.absoluteString)!)
+                            
+                            
+                            
+                            var values3 = Dictionary<String, Any>()
+                            print(self.picArray)
+                            values3["sessionPictureURL"] = self.picArray
+                            self.ref.child("sessions").child(self.sessionID!).updateChildValues(values3, withCompletionBlock: {(err, ref) in
+                                if err != nil {
+                                    print(err!)
+                                    return
+                                }
+                            })
+                        })
+                    }
+                }
+                
+            }
+            DispatchQueue.main.async{
+                self.performSegue(withIdentifier: "SaveMediaToSession", sender: self)
+            }
+ 
         }
 
         
@@ -269,7 +401,11 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     }
     
     @IBAction func cancelPressed(_ sender: Any) {
+        if senderView == "main"{
         self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
+        }else{
+            performSegue(withIdentifier: "SaveMediaToSession", sender: self)
+        }
     }
 
     var needToRemove = Bool()
@@ -338,7 +474,10 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     var recentlyAddedPhoneVid = [String]()
     var profPicArray = [UIImage]()
     var viewDidAppearBool = false
+    //var sessionID = String()
     override func viewDidAppear(_ animated: Bool) {
+        if senderView == "main"{
+        
         self.vidRemovalPressed = false
         if viewDidAppearBool == false{
             recentlyAddedVidArray.removeAll()
@@ -474,6 +613,145 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             
         })
             self.viewDidAppearBool = true
+        }
+        }else{
+            self.vidRemovalPressed = false
+            if viewDidAppearBool == false{
+                recentlyAddedVidArray.removeAll()
+                youtubeDataArray.removeAll()
+                needToRemove = false
+                needToRemovePic = false
+                imagePicker.delegate = self
+                picker.delegate = self
+                curCount = 0
+                
+                ref.child("sessions").child(sessionID!).child("sessionMedia").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
+                    if self.youtubeLinkArray.count == 0{
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            
+                            
+                            for snap in snapshots{
+                                
+                                self.youtubeLinkArray.append(NSURL(string: snap.value as! String)!)
+                                
+                                
+                            }
+                            if self.youtubeLinkArray.count == 0{
+                                self.currentCollectID = "youtube"
+                                self.videoCollectEmpty = true
+                                let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                                self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                                
+                                self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                                self.youtubeCollectionView.backgroundColor = UIColor.clear
+                                self.youtubeCollectionView.dataSource = self
+                                self.youtubeCollectionView.delegate = self
+                                
+                            }else{
+                                
+                                self.videoCollectEmpty = false
+                                for snap in snapshots{
+                                    self.currentCollectID = "youtube"
+                                    self.tempLink = NSURL(string: (snap.value as? String)!)
+                                    
+                                    //self.YoutubeArray.append(snap.value as! String)
+                                    
+                                    let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                                    self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                                    
+                                    self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                                    self.youtubeCollectionView.backgroundColor = UIColor.clear
+                                    self.youtubeCollectionView.dataSource = self
+                                    self.youtubeCollectionView.delegate = self
+                                    self.curCount += 1
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
+                    
+                    self.ref.child("session").child(self.sessionID!).child("sessionMedia").child("vidsFromPhone").observeSingleEvent(of: .value, with: { (snapshot) in
+                        if self.vidFromPhoneArray.count == 0{
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                
+                                
+                                for snap in snapshots{
+                                    
+                                    self.vidFromPhoneArray.append(NSURL(string: (snap.value as? String)!)!)
+                                    
+                                }
+                                if self.vidFromPhoneArray.count == 0{
+                                    self.videoCollectEmpty = true
+                                }else{
+                                    
+                                    self.videoCollectEmpty = false
+                                    for snap in snapshots{
+                                        self.currentCollectID = "vidFromPhone"
+                                        self.tempLink = NSURL(string: (snap.value as? String)!)
+                                        print(self.tempLink)
+                                        //self.YoutubeArray.append(snap.value as! String)
+                                        
+                                        let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                                        self.vidFromPhoneCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                                        
+                                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                                        self.vidFromPhoneCollectionView.backgroundColor = UIColor.clear
+                                        self.vidFromPhoneCollectionView.dataSource = self
+                                        self.vidFromPhoneCollectionView.delegate = self
+                                        
+                                        
+                                    }
+                                }
+                                
+                            }
+                        }
+                        
+                        
+                        
+                        self.ref.child("sessions").child(self.sessionID!).child("sessionPictureURL").observeSingleEvent(of: .value, with: { (snapshot) in
+                            if self.profPicArray.count == 0{
+                                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                    
+                                    
+                                    for snap in snapshots{
+                                        
+                                        if let url = NSURL(string: snap.value as! String){
+                                            if let data = NSData(contentsOf: url as URL){
+                                                self.profPicArray.append(UIImage(data: data as Data)!)
+                                                
+                                            }
+                                            
+                                        }
+                                    }
+                                    print("pArray: \(self.profPicArray)")
+                                    
+                                    //self.videoCollectEmpty = false
+                                    for snap in snapshots{
+                                        self.currentCollectID = "picsFromPhone"
+                                        self.tempLink = NSURL(string: (snap.value as? String)!)
+                                        
+                                        //self.YoutubeArray.append(snap.value as! String)
+                                        
+                                        let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                                        self.picCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                                        
+                                        self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                                        self.picCollectionView.backgroundColor = UIColor.clear
+                                        self.picCollectionView.dataSource = self
+                                        self.picCollectionView.delegate = self
+                                        
+                                    }
+                                }
+                            }
+                        })
+                    })
+                    
+                    
+                })
+                self.viewDidAppearBool = true
+
+        }
         }
         
         
@@ -826,7 +1104,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             
         
         }else{
-            
+            if senderView == "main"{
             if let movieURL = info[UIImagePickerControllerMediaURL] as? NSURL{
                 movieURLFromPicker = movieURL
                 dismiss(animated: true, completion: nil)
@@ -855,20 +1133,9 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                                     self.vidFromPhoneArray.append(movieURL)
                                     //self.recentlyAddedVidArray.append(String(describing: movieURL))
                                     let insertionIndexPath = IndexPath(row: self.vidFromPhoneArray.count - 1, section: 0)
-                                    
-                                        
-                                        
                                         self.vidFromPhoneCollectionView.insertItems(at: [insertionIndexPath])
                                         break
-                                        
-                                    
-
-                                    
                                 }else{
-                                    //self.youtubeLinkArray.append(NSURL(string: self.youtubeLinkField.text!)!)
-                                    //self.tempLink = NSURL(string: self.youtubeLinkField.text!)
-                                    
-                                    //self.YoutubeArray.append(snap.value as! String)
                                     self.currentCollectID = "vidFromPhone"
                                     //self.isYoutubeCell = false
                                     self.vidFromPhoneArray.append(movieURL)
@@ -887,11 +1154,6 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         }
                     }//else if it doesnt contain media
                     else{
-                        //self.youtubeLinkArray.append(NSURL(string: self.youtubeLinkField.text!)!)
-                        //self.tempLink = NSURL(string: self.youtubeLinkField.text!)
-                        
-                        //self.YoutubeArray.append(snap.value as! String)
-                       
                         self.currentCollectID = "vidFromPhone"
                         self.vidFromPhoneArray.append(movieURL)
                         self.recentlyAddedPhoneVidArray.append(movieURL)
@@ -906,23 +1168,78 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                         
                     }
                 })
-                
-              
-                /*DispatchQueue.main.async {
-                    self.vidFromPhoneCollectionView.reloadData()
-                    
-                }*/
-                
-                
-               // self.youtubeLinkField.text = ""
-                
-         
+                }
+            }
+            else{
+                if let movieURL = info[UIImagePickerControllerMediaURL] as? NSURL{
+                    movieURLFromPicker = movieURL
+                    dismiss(animated: true, completion: nil)
+                    //self.recentlyAddedPhoneVid.append(String(describing: movieURL))
+                    // self.vidFromPhoneArray.append(movieURL)
+                    //uploadMovieToFirebaseStorage(url: movieURL)
+                    ref.child("sessions").child(self.sessionID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                        let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+                        var tempArray1 = [String]()
+                        for snap in snapshots{
+                            tempArray1.append(snap.key)
+                        }
+                        if tempArray1.contains("sessionMedia"){
+                            for snap in snapshots{
+                                if snap.key == "sessionMedia"{
+                                    let mediaKids = snap.children.allObjects as! [FIRDataSnapshot]
+                                    var tempArray = [String]()
+                                    for mediaKid in mediaKids{
+                                        tempArray.append(mediaKid.key)
+                                    }
+                                    if tempArray.contains("vidsFromPhone"){
+                                        // self.tempLink = self.currentYoutubeLink
+                                        self.currentCollectID = "vidFromPhone"
+                                        //self.isYoutubeCell = false
+                                        self.recentlyAddedPhoneVidArray.append(movieURL)
+                                        self.vidFromPhoneArray.append(movieURL)
+                                        //self.recentlyAddedVidArray.append(String(describing: movieURL))
+                                        let insertionIndexPath = IndexPath(row: self.vidFromPhoneArray.count - 1, section: 0)
+                                        self.vidFromPhoneCollectionView.insertItems(at: [insertionIndexPath])
+                                        break
+                                    }else{
+                                        self.currentCollectID = "vidFromPhone"
+                                        //self.isYoutubeCell = false
+                                        self.vidFromPhoneArray.append(movieURL)
+                                        self.recentlyAddedPhoneVidArray.append(movieURL)
+                                        let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                                        self.vidFromPhoneCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                                        
+                                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                                        self.vidFromPhoneCollectionView.backgroundColor = UIColor.clear
+                                        self.vidFromPhoneCollectionView.dataSource = self
+                                        self.vidFromPhoneCollectionView.delegate = self
+                                        
+                                        break
+                                    }
+                                }
+                            }
+                        }//else if it doesnt contain media
+                        else{
+                            self.currentCollectID = "vidFromPhone"
+                            self.vidFromPhoneArray.append(movieURL)
+                            self.recentlyAddedPhoneVidArray.append(movieURL)
+                            let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                            self.vidFromPhoneCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                            
+                            self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                            self.vidFromPhoneCollectionView.backgroundColor = UIColor.clear
+                            self.vidFromPhoneCollectionView.dataSource = self
+                            self.vidFromPhoneCollectionView.delegate = self
+                            self.curCount += 1
+                            
+                        }
+                    })
+                }
 
+                }
             }
 
-        }
-    
-    
+        
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         print("canceled picker")

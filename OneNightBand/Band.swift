@@ -15,7 +15,7 @@ class Band: NSObject{
     var bandMembers = [String: Any]()
     var fanPicks = Int()
     var bandName: String?
-    var bandPictureURL: String?
+    var bandPictureURL = [String]()
     var bandMedia = [String]()
     var bandBio: String?
     var messages = [String: Any]()

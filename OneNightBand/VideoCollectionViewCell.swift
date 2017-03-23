@@ -41,6 +41,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
             }
         }
     }
+    var cellSelected = false
     var videoIndex: Int?
     var videoURL: NSURL?
     var indexPath: IndexPath?

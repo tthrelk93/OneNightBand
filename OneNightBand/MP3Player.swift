@@ -13,13 +13,16 @@ import AVFoundation
 class MP3Player: NSObject, AVAudioPlayerDelegate {
     var player:AVAudioPlayer?
     var currentTrackIndex = 0
-    var tracks:[String] = [String]()
+    //var tracks:[String] = [String]()
     var urls = [URL]()
     
-    override init(){
-        tracks = FileReader.readFiles()
+    init(urlArray: [URL]){
+        //tracks = FileReader.readFiles()
+        self.urls = urlArray
         super.init()
-        queueTrack();
+        if self.urls.count > 0{
+            queueTrack();
+        }
     }
     
     func queueTrack(){
@@ -28,8 +31,9 @@ class MP3Player: NSObject, AVAudioPlayerDelegate {
         }
         
         //var error:NSError?
-        let url = NSURL.fileURL(withPath: String(describing: urls[currentTrackIndex]))
-        
+        let url = NSURL(fileURLWithPath: String(describing: urls[currentTrackIndex]))
+ //NSURL.fileURL(withPath: String(describing: urls[currentTrackIndex]))
+       // NSURL(fileURLWithPath: String(describing: urls[currentTrackIndex]))
         /*player =   try AVAudioPlayer(contentsOf: url)
        if let hasError = error {
             //SHOW ALERT OR SOMETHING
@@ -43,7 +47,7 @@ class MP3Player: NSObject, AVAudioPlayerDelegate {
             player?.delegate = self
             player?.prepareToPlay()
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SetTrackNameText"), object: nil)
-            self.player = try AVAudioPlayer(contentsOf: url)
+            self.player = try AVAudioPlayer(contentsOf: url as URL)
             
         } catch let error as NSError {
             //self.player = nil
@@ -81,7 +85,7 @@ class MP3Player: NSObject, AVAudioPlayerDelegate {
         }
         
         currentTrackIndex += 1
-        if currentTrackIndex >= tracks.count {
+        if currentTrackIndex >= urls.count {
             currentTrackIndex = 0
         }
         queueTrack()
@@ -97,7 +101,7 @@ class MP3Player: NSObject, AVAudioPlayerDelegate {
         }
         currentTrackIndex -= 1
         if currentTrackIndex < 0 {
-            currentTrackIndex = tracks.count - 1
+            currentTrackIndex = urls.count - 1
         }
         
         queueTrack()
@@ -106,7 +110,7 @@ class MP3Player: NSObject, AVAudioPlayerDelegate {
         }
     }
     func getCurrentTrackName() -> String {
-        let trackName = tracks[currentTrackIndex].stringByDeletingLastPathComponent
+        let trackName = String(describing: urls[currentTrackIndex]).stringByDeletingLastPathComponent
         return (trackName)
     }
     func getCurrentTimeAsString() -> String {

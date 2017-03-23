@@ -38,7 +38,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                         values["bandName"] =  self.bandNameTextField.text
                         values["bandMembers"] = [(FIRAuth.auth()?.currentUser?.uid)!:"-"]
                         values["bandBio"] = self.bandBioTextView.text
-                        values["bandPictureURL"] = bandImageUrl
+                        values["bandPictureURL"] = [bandImageUrl]
                         values["bandMedia"] = [""]
                         values["messages"] = [String: Any]()
                         values["fanPicks"] = 0

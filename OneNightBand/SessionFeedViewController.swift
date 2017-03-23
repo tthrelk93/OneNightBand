@@ -67,16 +67,21 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     var currentVideoURL: URL?
     let kFretY = 383
     
+    @IBAction func picVidSwitched(_ sender: Any) {
+    }
+    @IBOutlet weak var picVidSegment: UISegmentedControl!
+    @IBOutlet weak var picCollect: UICollectionView!
+    @IBOutlet weak var videoCollect: UICollectionView!
     override func viewDidAppear(_ animated: Bool) {
         //self.player = storyboard.view
-        self.player = Player()
+       //888888 self.player = Player()
         //var currentItem = player?.playerItem
         //print(currentItem)
         
         //self.currentButton = currentButtonFunc()
         
         
-        self.player?.view.frame = self.sessionImageView.frame
+        //self.player?.view.frame = self.sessionImageView.frame
         //self.player?.view.topAnchor.constraint(equalTo: se self.view.topAnchor).isActive = true
         //self.player?.view.heightAnchor.constraint(equalToConstant: self.view.frame.height/3.14).isActive = true
         //self.player?.view.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
@@ -110,10 +115,10 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         
         self.sessionInfoView.autoresizesSubviews = true
         
-        self.addChildViewController(self.player!)
+        /*888self.addChildViewController(self.player!)
         sessionInfoView.addSubview((self.player?.view)!)
        
-        NotificationCenter.default.addObserver(self, selector:#selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.playerItem)
+        NotificationCenter.default.addObserver(self, selector:#selector(self.playerDidFinishPlaying(note:)),name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player?.playerItem)*/
         
         }
     
@@ -159,7 +164,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         //self.addSubview(view)
         //self.guitarPickButton.isHidden = true
         guitarPickButton.setImage(UIImage(named: "s_solid_white-1"), for: .normal)
-        self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
+        /*self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
                     let tempSess = Session()
@@ -168,7 +173,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                     self.sessionsInDatabase.append(tempSess)
                 }
             }
-        })
+        })*/
         navigationItem.title = "Session Feed"
         let profileButton = UIBarButtonItem(title: "Profile", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SessionFeedViewController.backToNav)) // navigationItem.leftBarButtonItem
         navigationItem.leftBarButtonItem = profileButton
@@ -352,7 +357,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         artistDict.removeAll()
         let cButton = currentButtonFunc()
         //if cButton.isDisplayed == true{
-            self.player?.playerView.isHidden = false
+            //8888self.player?.playerView.isHidden = false
             //sessInfoView.isHidden = false
             //dropMenu?.dropDownViewTitles = [(cButton.session?.sessionName!)!]
             dropMenu?.backgroundColor = UIColor.clear
@@ -377,15 +382,16 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                     self.artistTableView.delegate = self
                     self.artistTableView.dataSource = self
                 }
-            
-            let url = NSURL(string: (cButton.session?.sessionMedia.first!)!)
+            //need to fix this to play proper video
         
-            self.player?.setUrl(url as! URL)
+            let url = NSURL(string: ((cButton.session?.sessionMedia["youtube"] as! [String]).first)!)
+        
+            //888888self.player?.setUrl(url as! URL)
         self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
             //self.player?.fillMode = "resizeAspectFill"
         //self.player?.playerView = self.playerContainerView
             //if cButton.center.y >= self.sessionViewsLabel2.center.y/*self.sessionInfoView.bounds.maxY*/{
-                self.player?.playFromBeginning()
+                //8888888self.player?.playFromBeginning()
                // currentButtonFunc().setIsDiplayedButton(isDisplayedButton: true)
             //self.sessInfoView.isHidden = false
                 swiftTimer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(SessionFeedViewController.updateCounter), userInfo: nil, repeats: true)
@@ -455,7 +461,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
             }else{
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
-                self.player?.stop()
+                //88888self.player?.stop()
             }
        
             return (closest as! ONBGuitarButton)
@@ -476,7 +482,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         firstTouch.y /= 15
     }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.player?.stop()
+        //88888self.player?.stop()
         let t = touches.first
         var nextTouch = t?.location(in: self.view)
         nextTouch?.y /= 15
@@ -525,7 +531,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         if currentButtonFunc().isDisplayed == true{
             displaySessionInfo()
         }else{
-            player?.stop()
+            //88888player?.stop()
         }
     }
 
