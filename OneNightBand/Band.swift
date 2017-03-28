@@ -19,6 +19,7 @@ class Band: NSObject{
     var bandMedia = [String]()
     var bandBio: String?
     var messages = [String: Any]()
+    var sessionsOnFeed  = [String]()
     
     
     //var sessionDate: String?

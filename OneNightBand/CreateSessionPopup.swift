@@ -240,7 +240,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         values["messages"] = [String: Any]()
                         values["views"] = 0
                         values["bandID"] = self.bandID
-                        values["sessFeedKeys"] = [""]
+                        values["sessFeedMedia"] = [""]
                         values["mp3s"] = [""]
                         
                         

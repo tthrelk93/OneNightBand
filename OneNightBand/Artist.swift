@@ -22,6 +22,7 @@ class Artist: NSObject{
     var location = [String:Any]()
     var media = [String:Any]()
     var artistsBands: NSDictionary?
+    var soloSessKeysOnFeed = [String]()
     
     
     

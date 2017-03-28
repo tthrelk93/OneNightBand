@@ -40,7 +40,7 @@ extension FeedDismissalDelegate where Self: UIViewController
 
 
 
-class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,UINavigationControllerDelegate, FeedDismissalDelegate, UITableViewDelegate, UITableViewDataSource{
+class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,UINavigationControllerDelegate, FeedDismissalDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate{
     
     @IBOutlet weak var sessionImageView: UIImageView!
     @IBOutlet weak var sessionViewCountLabel: UILabel!
@@ -49,7 +49,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     @IBOutlet weak var backgroundGuitarImage: UIImageView!
     
     
-    var sessionArray = [Session]()
+    var sessionArray = [SessionFeedSess]()
     var ref = FIRDatabase.database().reference()
     var firstTouch = CGPoint()
     var viewPins: NSMutableArray!
@@ -68,11 +68,19 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     let kFretY = 383
     
     @IBAction func picVidSwitched(_ sender: Any) {
+        if picVidSegment.selectedSegmentIndex == 0{
+            picCollect.isHidden = false
+            videoCollect.isHidden = true
+        }else{
+            picCollect.isHidden = true
+            videoCollect.isHidden = false
+        }
     }
     @IBOutlet weak var picVidSegment: UISegmentedControl!
     @IBOutlet weak var picCollect: UICollectionView!
     @IBOutlet weak var videoCollect: UICollectionView!
     override func viewDidAppear(_ animated: Bool) {
+        
         //self.player = storyboard.view
        //888888 self.player = Player()
         //var currentItem = player?.playerItem
@@ -149,31 +157,38 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     var sessFeedKeyArray = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        picVidSegment.isHidden = true
+        
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        //layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+        layout.minimumInteritemSpacing = 20
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        //picCollect.collectionViewLayout = layout
+        //videoCollect.collectionViewLayout = layout
+        
        // self.sessInfoView.isHidden = true
         dropMenu = YNDropDownMenu(frame:sizeView.frame, dropDownViews: [sessInfoView], dropDownViewTitles: ["Session Details"])
         dropMenu?.labelFontSize = 30.0
-       //dropMenu.setLabelFontWhen(normal: UIFont.systemFont(ofSize: 20), selected: UIFont.boldSystemFont(ofSize: 20), disabled: UIFont.systemFont(ofSize: 20))
+        dropMenu?.setLabelColorWhen(normal: .orange, selected: UIColor.orange.withAlphaComponent(0.5) , disabled: UIColor.gray)
+        //dropMenu?.colo
+        dropMenu?.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        
+       
         dropMenu?.autoresizesSubviews = true
         dropMenu?.clipsToBounds = true
        // dropMenu.changeMenuTitleAt(index: 0, title: "hello")
         dropMenu?.setImageWhen(normal: UIImage(named: "dropNoSelect"), selected: UIImage(named: "dropSelect"), disabled: UIImage(named: "dropNoSelect"))
        dropMenu?.backgroundBlurEnabled = false
         dropMenu?.backgroundColor = UIColor.clear
+        
         self.view.addSubview(dropMenu!)
-        //self.view.bringSubview(toFront: dropMenu!)
-        //self.addSubview(view)
-        //self.guitarPickButton.isHidden = true
+        dropMenu?.isHidden = true
+        
         guitarPickButton.setImage(UIImage(named: "s_solid_white-1"), for: .normal)
-        /*self.ref.child("sessions").observeSingleEvent(of: .value, with: {(snapshot) in
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                for snap in snapshots{
-                    let tempSess = Session()
-                    let dictionary = snap.value as? [String: AnyObject]
-                    tempSess.setValuesForKeys(dictionary!)
-                    self.sessionsInDatabase.append(tempSess)
-                }
-            }
-        })*/
+        
         navigationItem.title = "Session Feed"
         let profileButton = UIBarButtonItem(title: "Profile", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SessionFeedViewController.backToNav)) // navigationItem.leftBarButtonItem
         navigationItem.leftBarButtonItem = profileButton
@@ -187,16 +202,26 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 
                 for snap in snapshots{
-                    let tempSess = Session()
+                    
+                    let tempSess = SessionFeedSess()
                     let dictionary = snap.value as? [String: AnyObject]
+                    if dictionary?["soloSessBool"] as! String == "false"{
                     
                  
-                    tempSess.setValuesForKeys(dictionary!)
-                    self.viewArray.append(tempSess.views)
-                    self.sessionArray.append(tempSess)
-                    self.sessFeedKeyArray.append(snap.key as String)
+                        tempSess.setValuesForKeys(dictionary!)
+                        self.viewArray.append(tempSess.views)
+                        self.sessionArray.append(tempSess)
+                        self.sessFeedKeyArray.append(snap.key as String)
                         }
+                    else{
+                        tempSess.setValuesForKeys(dictionary!)
+                        self.soloViewArray.append(tempSess.views)
+                        self.soloSessionArray.append(tempSess)
+                        self.soloSessFeedKeyArray.append(snap.key as String)
                     }
+                    }
+                }
+                
             }
         
             
@@ -245,6 +270,9 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
 
         // Do any additional setup after loading the view.
     }
+    var soloViewArray = [Int]()
+    var soloSessionArray = [SessionFeedSess]()
+    var soloSessFeedKeyArray = [String]()
     
     var viewArray = [Int]()
     
@@ -353,7 +381,13 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     
     
     func displaySessionInfo(){
-         
+         picVidSegment.isHidden = false
+        videoCollect.isHidden = true
+        picCollect.isHidden = false
+        sessionNameLabel2.isHidden = false
+        sessionViewsLabel2.isHidden = false
+        dropMenu?.isHidden = false
+        dropMenu?.setLabelColorWhen(normal: UIColor.orange, selected: UIColor.orange.withAlphaComponent(0.6), disabled: UIColor.gray)
         artistDict.removeAll()
         let cButton = currentButtonFunc()
         //if cButton.isDisplayed == true{
@@ -383,18 +417,69 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
                     self.artistTableView.dataSource = self
                 }
             //need to fix this to play proper video
+        for sess in self.sessionArray{
+            if sess.sessionID == (cButton.session?.sessionID)! {
+                if sess.sessionMedia.count != 0{
+                    for vid in sess.sessionMedia{
+                        bandMedia.append(NSURL(string: vid)!)
+                    }
+                
+                var tempPicArray = cButton.session?.sessionPictureURL
+                for pic in tempPicArray!{
+                    if let url = NSURL(string: pic){
+                        if let data = NSData(contentsOf: url as URL){
+                            self.picArray.append(UIImage(data: data as Data)!)
+                        }
+                    }
+                }
+                }
+
+                
+            }
+        }
+        DispatchQueue.main.async{
+            for _ in self.bandMedia{
+                
+                
+                //self.curPastArrayIndex = self.pastSessionArray.index(of: session)!
+                
+                let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                self.videoCollect.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                self.videoCollect.backgroundColor = UIColor.clear
+                self.videoCollect.dataSource = self
+                self.videoCollect.delegate = self
+                
+            }
+            for _ in self.picArray{
+                let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                self.picCollect.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                
+                self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                self.picCollect.backgroundColor = UIColor.clear
+                self.picCollect.dataSource = self
+                self.picCollect.delegate = self
+                
+            }
+
+        }
         
-            let url = NSURL(string: ((cButton.session?.sessionMedia["youtube"] as! [String]).first)!)
+        
+            //let url = NSURL(string: ((cButton.session?.sessionMedia["youtube"] as! [String]).first)!)
         
             //888888self.player?.setUrl(url as! URL)
-        self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
+        //self.player?.fillMode = "AVLayerVideoGravityResizeAspectFill"
             //self.player?.fillMode = "resizeAspectFill"
         //self.player?.playerView = self.playerContainerView
             //if cButton.center.y >= self.sessionViewsLabel2.center.y/*self.sessionInfoView.bounds.maxY*/{
                 //8888888self.player?.playFromBeginning()
                // currentButtonFunc().setIsDiplayedButton(isDisplayedButton: true)
             //self.sessInfoView.isHidden = false
+        
+        
+        //when Cell begins playing
                 swiftTimer = Timer.scheduledTimer(timeInterval: 1, target:self, selector: #selector(SessionFeedViewController.updateCounter), userInfo: nil, repeats: true)
+        
                 //print("ct \(player?.currentTime)")
            
             //}else{
@@ -418,6 +503,9 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         }
 
     }
+    var sizingCell = PictureCollectionViewCell()
+    var sizingCell2 = VideoCollectionViewCell()
+        var bandMedia = [NSURL]()
     var swiftTimer = Timer()
     //problem is caused by current button moving before update count occurs
     func playerDidFinishPlaying(note: NSNotification){
@@ -483,6 +571,13 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         //88888self.player?.stop()
+        picVidSegment.isHidden = true
+        picCollect.isHidden = true
+        videoCollect.isHidden = true
+        sessionNameLabel2.isHidden = true
+        sessionViewsLabel2.isHidden = true
+        dropMenu?.isHidden = true
+        
         let t = touches.first
         var nextTouch = t?.location(in: self.view)
         nextTouch?.y /= 15
@@ -529,6 +624,7 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         }
 
         if currentButtonFunc().isDisplayed == true{
+            picCollect.isHidden = false
             displaySessionInfo()
         }else{
             //88888player?.stop()
@@ -539,6 +635,142 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    var picArray = [UIImage]()
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        if collectionView == self.picCollect{
+            return self.picArray.count
+        }else{
+            if self.bandMedia.count == 0{
+                return 1
+            }else{
+                return self.bandMedia.count
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        //print("cell4Item: \(self.currentCollect)")
+        if collectionView != self.picCollect{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
+            self.configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
+            cell.indexPath = indexPath
+            
+            //self.curIndexPath.append(indexPath)
+            
+            return cell
+        }else{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PictureCollectionViewCell", for: indexPath as IndexPath) as! PictureCollectionViewCell
+            self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
+            
+            
+            //self.curIndexPath.append(indexPath)
+            
+            return cell
+        }
+    }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if collectionView != self.picCollect{
+            if (self.videoCollect.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtube") == false && (self.videoCollect.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtu.be") == false {
+                if (self.videoCollect.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playbackState == .playing {
+                    (self.videoCollect.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.stop()
+                    
+                }else{
+                    (self.videoCollect.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playFromBeginning()
+                }
+                
+            }
+        }
+        
+        
+        
+    }
+    func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
+        
+        
+        if self.bandMedia.count == 0{
+            cell.layer.borderColor = UIColor.white.cgColor
+            cell.layer.borderWidth = 2
+            cell.removeVideoButton.isHidden = true
+            cell.videoURL = nil
+            cell.player?.view.isHidden = true
+            cell.youtubePlayerView.isHidden = true
+            //cell.youtubePlayerView.loadVideoURL(videoURL: self.youtubeArray[indexPath.row])
+            cell.removeVideoButton.isHidden = true
+            cell.noVideosLabel.isHidden = false
+        }else {
+            
+            cell.layer.borderColor = UIColor.clear.cgColor
+            cell.layer.borderWidth = 0
+            
+            //cell.youtubePlayerView.isHidden = true
+            cell.removeVideoButton.isHidden = true
+            cell.noVideosLabel.isHidden = true
+            
+            
+            
+            cell.videoURL =  self.bandMedia[indexPath.row] as NSURL?
+            if(String(describing: cell.videoURL).contains("youtube") || String(describing: cell.videoURL).contains("youtu.be")){
+                cell.youtubePlayerView.loadVideoURL(cell.videoURL as! URL)
+                cell.youtubePlayerView.isHidden = false
+                cell.player?.view.isHidden = true
+                cell.isYoutube = true
+            }else{
+                cell.player?.setUrl(cell.videoURL as! URL)
+                cell.player?.view.isHidden = false
+                cell.youtubePlayerView.isHidden = true
+                cell.isYoutube = false
+            }
+            //print(self.vidArray[indexPath.row])
+            //cell.youtubePlayerView.loadVideoURL(self.vidArray[indexPath.row] as URL)
+            //self.group.leave()
+        }
+        
+        
+        
+    }
+    func configureCell(_ cell: PictureCollectionViewCell, forIndexPath indexPath: NSIndexPath) {
+        
+        cell.picImageView.image = self.picArray[indexPath.row]
+        cell.deleteButton.isHidden = true
+        /* switch UIScreen.main.bounds.width{
+         case 320:
+         
+         cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width:320, height:267)
+         
+         case 375:
+         cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:375,height:267)
+         
+         
+         case 414:
+         cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
+         
+         default:
+         cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
+         
+         
+         
+         }*/
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        
+            
+            return UIEdgeInsetsMake(0, 0, 0, 0)
+            /*}else{
+             let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.picArray.count)
+             let totalSpacingWidth = 10 * (self.picArray.count - 1)
+             
+             let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+             let rightInset = leftInset
+             return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+             }*/
+            }
+
+
     
 
     /*

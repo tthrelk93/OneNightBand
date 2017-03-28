@@ -88,10 +88,11 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
 
-    
-    @IBAction func backPressed(_ sender: Any) {
-        self.performSegue(withIdentifier: "MP3ToBand", sender: self)
+    func handleBack(){
+        //self.performSegue(withIdentifier: "MP3ToBand", sender: self)
+        self.navigationController?.popViewController(animated: true)
     }
+    
     @IBOutlet weak var sessionBio: UITextView!
     @IBOutlet weak var sessionVidCollect: UICollectionView!
     @IBOutlet weak var sessionImagesCollect: UICollectionView!
@@ -103,6 +104,10 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
     var picArray = [UIImage]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back" , style: .plain, target: self, action: #selector(handleBack))
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
+
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)

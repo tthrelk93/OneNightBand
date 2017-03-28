@@ -265,7 +265,8 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
            
         }
         DispatchQueue.main.async{
-       self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
+            self.handleCancel()
+       //self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
         }
         
         }
@@ -361,7 +362,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                 
             }
             DispatchQueue.main.async{
-                self.performSegue(withIdentifier: "SaveMediaToSession", sender: self)
+                 self.handleCancel()
             }
  
         }
@@ -400,18 +401,22 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
         
     }
     
-    @IBAction func cancelPressed(_ sender: Any) {
+    func handleCancel(){
+        /*
         if senderView == "main"{
-        self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
+            self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
         }else{
             performSegue(withIdentifier: "SaveMediaToSession", sender: self)
-        }
-    }
+        }*/
+        self.removeAnimate()
 
+    }
+    
+   
     var needToRemove = Bool()
     internal func removeVideo(removalVid: NSURL, isYoutube: Bool) {
         print("inRemove")
-        if String(describing: removalVid).contains("youtube") || String(describing: removalVid).contains("youtu.be"){
+        if String(describing: removalVid).contains("yout") || String(describing: removalVid).contains("youtu.be"){
             self.currentCollectID = "youtube"
             self.vidRemovalPressed = true
             needToRemove = true
@@ -768,155 +773,12 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
     
 
     
-    /*override func viewDidLoad(){
+    override func viewDidLoad(){
         super.viewDidLoad()
-        recentlyAddedVidArray.removeAll()
-        youtubeDataArray.removeAll()
-        needToRemove = false
-        needToRemovePic = false
-        imagePicker.delegate = self
-        picker.delegate = self
-        curCount = 0
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel" , style: .plain, target: self, action: #selector(handleCancel))
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
         
-        ref.child("users").child(userID!).child("media").child("youtube").observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                self.currentCollectID = "youtube"
-                
-                for snap in snapshots{
-                    
-                    self.youtubeLinkArray.append(NSURL(string: snap.value as! String)!)
-                    
-
-                }
-                if self.youtubeLinkArray.count == 0{
-                    self.videoCollectEmpty = true
-                    let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
-                    self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
-                    
-                    self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                    self.youtubeCollectionView.backgroundColor = UIColor.clear
-                    self.youtubeCollectionView.dataSource = self
-                    self.youtubeCollectionView.delegate = self
-                    
-                }else{
-                    self.videoCollectEmpty = false
-                    for snap in snapshots{
-                        self.tempLink = NSURL(string: (snap.value as? String)!)
-                        
-                        //self.YoutubeArray.append(snap.value as! String)
-                        
-                        let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
-                        self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
-                        
-                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                        self.youtubeCollectionView.backgroundColor = UIColor.clear
-                        self.youtubeCollectionView.dataSource = self
-                        self.youtubeCollectionView.delegate = self
-                        self.curCount += 1
-
-                    }
-                }
-
-                
-
-                
-            }
-            
-        
-        self.ref.child("users").child(self.userID!).child("media").child("vidsFromPhone").observeSingleEvent(of: .value, with: { (snapshot) in
-            
-            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                
-                
-                for snap in snapshots{
-                    
-                    self.vidFromPhoneArray.append(NSURL(string: (snap.value as? String)!)!)
-
-                }
-                if self.vidFromPhoneArray.count == 0{
-                    self.videoCollectEmpty = true
-                    
-                    /*let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
-                    self.vidFromPhoneCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
-                    
-                    self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                    self.vidFromPhoneCollectionView.backgroundColor = UIColor.clear
-                    self.vidFromPhoneCollectionView.dataSource = self
-                    self.vidFromPhoneCollectionView.delegate = self*/
-                    
-                }else{
-                    self.currentCollectID = "vidFromPhone"
-                    self.videoCollectEmpty = false
-                    for snap in snapshots{
-                        self.tempLink = NSURL(string: (snap.value as? String)!)
-                        
-                        //self.YoutubeArray.append(snap.value as! String)
-                        
-                        let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
-                        self.vidFromPhoneCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
-                        
-                        self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                        self.vidFromPhoneCollectionView.backgroundColor = UIColor.clear
-                        self.vidFromPhoneCollectionView.dataSource = self
-                        self.vidFromPhoneCollectionView.delegate = self
-                        self.curCount += 1
-                        
-                    }
-                }
-                
-                
-                
-                
-            }
-        })
-            self.ref.child("users").child(self.userID!).child("profileImageUrl").observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                    
-                    
-                    for snap in snapshots{
-                        
-                        if let url = NSURL(string: snap.value as! String){
-                            if let data = NSData(contentsOf: url as URL){
-                                self.profPicArray.append(UIImage(data: data as Data)!)
-                                
-                            }
-                            
-                        }
-                    }
-                    self.currentCollectID = "picsFromPhone"
-                    self.videoCollectEmpty = false
-                    for snap in snapshots{
-                        self.tempLink = NSURL(string: (snap.value as? String)!)
-                        
-                        //self.YoutubeArray.append(snap.value as! String)
-                        
-                        let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
-                        self.picCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
-                        
-                        self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
-                        self.picCollectionView.backgroundColor = UIColor.clear
-                        self.picCollectionView.dataSource = self
-                        self.picCollectionView.delegate = self
-                        
-                    }
-                }
-                
-            })
-
-            
-        })
-        
-
-
-        
-        
-        
-       
-
-        
-    }*/
+    }
     
     
     
@@ -938,7 +800,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
             }, completion:{(finished : Bool)  in
                 if (finished)
                 {
-                    self.view.removeFromSuperview()
+                    self.navigationController?.popViewController(animated: false)
                 }
         });
     }

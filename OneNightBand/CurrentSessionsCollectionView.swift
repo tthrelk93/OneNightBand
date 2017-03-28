@@ -179,7 +179,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                     let dictionary = snap.value as? [String: Any]
                     let tempSess = Session()
                     tempSess.setValuesForKeys(dictionary!)
-                    self.allSessionsDict[tempSess.sessionUID!] = tempSess
+                    self.allSessionsDict[tempSess.sessionUID] = tempSess
                 }
             }
 
@@ -200,9 +200,9 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                                 let dictionary = snap.value as? [String: Any]
                                 let tempSess = Session()
                                 tempSess.setValuesForKeys(dictionary!)
-                                if self.sessionIDArray.contains(tempSess.sessionUID!) {
+                                if self.sessionIDArray.contains(tempSess.sessionUID) {
                                     
-                                    self.sessionFeedArray.append(self.allSessionsDict[tempSess.sessionUID!]!)
+                                    self.sessionFeedArray.append(self.allSessionsDict[tempSess.sessionUID]!)
                                     
                                 }
                             }
@@ -327,7 +327,7 @@ class CurrentSessionCollectionView: UIViewController, UICollectionViewDelegate, 
                     }*/
                 print(self.sessionFeedArray)
                 for session in self.sessionFeedArray{
-                    if self.sessionIDArray.contains(session.sessionUID!){
+                    if self.sessionIDArray.contains(session.sessionUID){
                         self.currentButton = "feed"
                         self.curFeedArrayIndex = self.sessionFeedArray.index(of: session)!
                         let cellNib = UINib(nibName: "SessionCell", bundle: nil)

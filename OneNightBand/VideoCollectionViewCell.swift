@@ -22,6 +22,7 @@ class VideoCollectionViewCell: UICollectionViewCell, RemoveVideoData {
         
     }
     
+    @IBOutlet weak var touchBlockingView: UIView!
     
     @IBOutlet weak var noVideosLabel: UILabel!
     

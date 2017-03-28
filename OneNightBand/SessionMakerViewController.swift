@@ -85,7 +85,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         if segue.identifier == "SessionToMP3"{
             if let vc = segue.destination as? MP3PlayerViewController{
                 vc.BandID = self.sessionID!
-                print(self.sessionID!)
+                print("sesssssss: \(self.sessionID!)")
                 print(self.selectedCell?.sessionId)
                 vc.sessionID = self.selectedCell?.sessionId
                 vc.navigationController?.isNavigationBarHidden = false
@@ -285,7 +285,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                     let dictionary = snap.value as? [String: Any]
                     let tempSess = Session()
                     tempSess.setValuesForKeys(dictionary!)
-                    self.allSessionsDict[tempSess.sessionUID!] = tempSess
+                    self.allSessionsDict[tempSess.sessionUID] = tempSess
                 }
             }
             
@@ -307,9 +307,9 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                                     let dictionary = snap.value as? [String: Any]
                                     let tempSess = Session()
                                     tempSess.setValuesForKeys(dictionary!)
-                                    if self.sessionIDArray.contains(tempSess.sessionUID!) {
+                                    if self.sessionIDArray.contains(tempSess.sessionUID) {
                                         
-                                        self.sessionFeedArray.append(self.allSessionsDict[tempSess.sessionUID!]!)
+                                        self.sessionFeedArray.append(self.allSessionsDict[tempSess.sessionUID]!)
                                         
                                     }
                                 }
@@ -490,7 +490,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                         }else{
 
                         for session in self.sessionFeedArray{
-                            if self.sessionIDArray.contains(session.sessionUID!){
+                            if self.sessionIDArray.contains(session.sessionUID){
                                 self.currentButton = "feed"
                                 self.curFeedArrayIndex = self.sessionFeedArray.index(of: session)!
                                 let cellNib = UINib(nibName: "SessionCell", bundle: nil)
@@ -644,6 +644,8 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 cell.layer.borderColor = UIColor.white.cgColor
                 cell.layer.borderWidth = 2
                 cell.emptyLabel.textColor = UIColor.white
+                cell.sessionCellImageView.isHidden = true
+                cell.sessionCellLabel.isHidden = true
             }
             
             if(indexPath.row < upcomingSessionArray.count){

@@ -37,6 +37,7 @@
 		3B9641A91DB544F900E35480 /* CurrentSessionsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9641A81DB544F900E35480 /* CurrentSessionsCollectionView.swift */; };
 		3B9641AB1DB54B6000E35480 /* SessionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9641AA1DB54B6000E35480 /* SessionCell.swift */; };
 		3B9641AF1DB573D800E35480 /* SessionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B9641AE1DB573D800E35480 /* SessionCell.xib */; };
+		3BA97CE11E85B2AF001167FC /* SessionFeedSess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA97CE01E85B2AF001167FC /* SessionFeedSess.swift */; };
 		3BAD690A1DA4636500C2CFC0 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAD69091DA4636500C2CFC0 /* Tag.swift */; };
 		3BAD690E1DA4638300C2CFC0 /* TagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAD690B1DA4638300C2CFC0 /* TagCell.swift */; };
 		3BAD690F1DA4638300C2CFC0 /* TagCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3BAD690C1DA4638300C2CFC0 /* TagCell.xib */; };
@@ -134,6 +135,7 @@
 		3B9641A81DB544F900E35480 /* CurrentSessionsCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentSessionsCollectionView.swift; sourceTree = "<group>"; };
 		3B9641AA1DB54B6000E35480 /* SessionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCell.swift; sourceTree = "<group>"; };
 		3B9641AE1DB573D800E35480 /* SessionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SessionCell.xib; sourceTree = "<group>"; };
+		3BA97CE01E85B2AF001167FC /* SessionFeedSess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionFeedSess.swift; sourceTree = "<group>"; };
 		3BAD69091DA4636500C2CFC0 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		3BAD690B1DA4638300C2CFC0 /* TagCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCell.swift; sourceTree = "<group>"; };
 		3BAD690C1DA4638300C2CFC0 /* TagCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TagCell.xib; sourceTree = "<group>"; };
@@ -425,6 +427,7 @@
 				3BFE84E11DB1674300E105F2 /* Session.swift */,
 				3BFF119A1DC0389A000E574D /* Invite.swift */,
 				3B8796521E79D095009CA4C8 /* Band.swift */,
+				3BA97CE01E85B2AF001167FC /* SessionFeedSess.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -805,6 +808,7 @@
 				3B4DAD301E8064BA008FB825 /* songCell.swift in Sources */,
 				3BAD690A1DA4636500C2CFC0 /* Tag.swift in Sources */,
 				3B93D4DD1DC006F4009FAC53 /* SessionInvitesViewController.swift in Sources */,
+				3BA97CE11E85B2AF001167FC /* SessionFeedSess.swift in Sources */,
 				3BD3236B1DAED8F1003ECA54 /* UIViewExtension.swift in Sources */,
 				3BFD58FD1DF0DC3300C85225 /* AddMediaToProfile.swift in Sources */,
 				3B1062921DAD7B5600D818ED /* ALRadialMenu.swift in Sources */,

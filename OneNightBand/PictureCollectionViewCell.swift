@@ -23,7 +23,7 @@ class PictureCollectionViewCell: UICollectionViewCell, UIImagePickerControllerDe
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var picImageView: UIImageView!
     var picData = UIImage()
-    
+    var cellSelected = false
     @IBAction func deletePressed(_ sender: Any) {
         print("remove Pressed: \(self.picData)")
         removePicDelegate?.removePic(removalPic: picData)
