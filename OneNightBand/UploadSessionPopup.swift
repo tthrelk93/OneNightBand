@@ -45,6 +45,9 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         /*self.sessionCollectionView.isHidden = true
         self.selectVideoFromSessionCollect = true*/
         self.uploadBandToFeed.isHidden = false
+        self.soloImageView.isHidden = false
+        self.currentUserNameLabel.isHidden = false
+       
 
     }
     @IBOutlet weak var uploadBandToFeed: UIButton!
@@ -64,6 +67,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         self.sessionCollectionView.isHidden = true
         self.selectVideoFromSessionCollect.isHidden = true
         self.uploadBandToFeed.isHidden = true
+        self.soloImageView.isHidden = true
+        self.currentUserNameLabel.isHidden = true
         
         
     }
@@ -704,15 +709,15 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     }
  
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if soloSessTextView.textColor == UIColor.orange {
-            soloSessTextView.text = ""
-            soloSessTextView.textColor = UIColor.white
+        if textView.textColor == UIColor.orange {
+            textView.text = ""
+            textView.textColor = UIColor.white
         }
     }
     func textViewDidEndEditing(_ textView: UITextView) {
-        if soloSessTextView.text.isEmpty {
-            soloSessTextView.text = "Tap here to give your fans a little background on this Session."
-            soloSessTextView.textColor = UIColor.orange
+        if textView.text == "" {
+            textView.text = "Tap here to give your fans a little background on this Session."
+            textView.textColor = UIColor.orange
         }
        
         
@@ -912,7 +917,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                         var values = Dictionary<String, Any>()
                         var values2 = Dictionary<String, Any>()
                         var values3 = Dictionary<String, Any>()
-                        
+                        values["bandID"] = self.mostRecentBandSelected.bandID
+            values["bandName"] = self.mostRecentBandSelected.bandName
                         values["sessionName"] = self.mostRecentSessionSelected.sessionName
                         values["sessionArtists"] = self.mostRecentBandSelected.bandMembers
                         values["sessionBio"] = self.mostRecentSessionSelected.sessionBio
@@ -997,7 +1003,9 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             values["sessionBio"] = self.soloSessTextView.text
             values["sessionDate"] = ""
             values["sessionID"] = ""
-            
+            values["bandID"] = self.userID
+            values["bandName"] = self.currentUserNameLabel.text
+
             var tempArray = [String]()
             for pic in selectedSoloPicArray{
                 tempArray.append(String(describing: pic))

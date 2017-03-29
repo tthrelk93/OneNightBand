@@ -40,7 +40,8 @@ extension FeedDismissalDelegate where Self: UIViewController
 
 
 
-class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,UINavigationControllerDelegate, FeedDismissalDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate{
+class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,UINavigationControllerDelegate, FeedDismissalDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate, UITextViewDelegate{
+    @IBOutlet weak var sessionBioTextView: UITextView!
     
     @IBOutlet weak var sessionImageView: UIImageView!
     @IBOutlet weak var sessionViewCountLabel: UILabel!
@@ -67,15 +68,66 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     var currentVideoURL: URL?
     let kFretY = 383
     
+    @IBOutlet weak var sessionArtistsLabel: UILabel!
+    @IBAction func bandNameButtonPressed(_ sender: Any) {
+    }
+    @IBOutlet weak var sessionLabel: UILabel!
+    @IBOutlet weak var bandNameButton: UIButton!
+    @IBOutlet weak var bandLabel: UILabel!
     @IBAction func picVidSwitched(_ sender: Any) {
         if picVidSegment.selectedSegmentIndex == 0{
             picCollect.isHidden = false
             videoCollect.isHidden = true
-        }else{
+            self.sessionViewsLabel2.isHidden = false
+            self.sessionNameLabel2.isHidden = false
+            
+            self.sessionNameLabel.isHidden = true
+            self.sessionLabel.isHidden = true
+            self.bandLabel.isHidden = true
+            self.bandNameButton.isHidden = true
+            self.sessionBioTextView.isHidden = true
+            self.artistTableView.isHidden = true
+            self.sessionArtistsLabel.isHidden = true
+            self.bioLabel.isHidden = true
+            self.sessionPicksLabel.isHidden = true
+
+
+        } else if picVidSegment.selectedSegmentIndex == 1{
             picCollect.isHidden = true
             videoCollect.isHidden = false
+            self.sessionViewsLabel2.isHidden = false
+            self.sessionNameLabel2.isHidden = false
+            
+            self.sessionNameLabel.isHidden = true
+            self.sessionLabel.isHidden = true
+            self.bandLabel.isHidden = true
+            self.bandNameButton.isHidden = true
+            self.sessionBioTextView.isHidden = true
+            self.artistTableView.isHidden = true
+            self.sessionArtistsLabel.isHidden = true
+            self.bioLabel.isHidden = true
+            self.sessionPicksLabel.isHidden = true
+
+        }else{
+            picCollect.isHidden = true
+            videoCollect.isHidden = true
+            self.sessionViewsLabel2.isHidden = true
+            self.sessionNameLabel2.isHidden = true
+            
+            self.sessionNameLabel.isHidden = false
+            self.sessionLabel.isHidden = false
+            self.bandLabel.isHidden = false
+            self.bandNameButton.isHidden = false
+            self.sessionBioTextView.isHidden = false
+            self.artistTableView.isHidden = false
+            self.sessionArtistsLabel.isHidden = false
+            self.bioLabel.isHidden = false
+            self.sessionPicksLabel.isHidden = false
+            
         }
     }
+    @IBOutlet weak var bioLabel: UILabel!
+    @IBOutlet weak var sessionPicksLabel: UILabel!
     @IBOutlet weak var picVidSegment: UISegmentedControl!
     @IBOutlet weak var picCollect: UICollectionView!
     @IBOutlet weak var videoCollect: UICollectionView!
@@ -158,6 +210,16 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     override func viewDidLoad() {
         super.viewDidLoad()
         picVidSegment.isHidden = true
+        self.sessionNameLabel.isHidden = true
+        self.sessionLabel.isHidden = true
+        self.bandLabel.isHidden = true
+        self.bandNameButton.isHidden = true
+        self.sessionBioTextView.isHidden = true
+        self.artistTableView.isHidden = true
+        self.sessionArtistsLabel.isHidden = true
+        self.bioLabel.isHidden = true
+        self.sessionPicksLabel.isHidden = true
+
         
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -402,8 +464,13 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             
             let tempLabel = (cButton.session?.sessionName)!
             sessionNameLabel.text = tempLabel
+        bandNameButton.titleLabel?.text = cButton.session?.bandName
+        sessionBioTextView.text = cButton.session?.sessionBio
+        sessionBioTextView.isEditable = false
         
-            sessionViewCountLabel.text = "Views: \(String(describing: cButton.sessionViews!))"
+        
+        
+            //sessionViewCountLabel.text = "Views: \(String(describing: cButton.sessionViews!))"
                 sessionNameLabel2.text = tempLabel
                 sessionViewsLabel2.text = "Views: \(String(describing: cButton.sessionViews!))"
                 for (key, value) in (cButton.session?.sessionArtists)!{

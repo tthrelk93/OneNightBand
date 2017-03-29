@@ -29,6 +29,7 @@
 		3B69E7111DA3042C00D97BE2 /* MainNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */; };
 		3B72BCD61DF5E25A0084D4B5 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */; };
 		3B72BCD71DF5E25A0084D4B5 /* VideoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */; };
+		3B72F5371E8C29E8006013EC /* ONB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72F5361E8C29E8006013EC /* ONB.swift */; };
 		3B87964D1E786820009CA4C8 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B87964C1E786820009CA4C8 /* UserNotifications.framework */; };
 		3B87964F1E79B510009CA4C8 /* MyBandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */; };
 		3B8796511E79C224009CA4C8 /* CreateBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */; };
@@ -127,6 +128,7 @@
 		3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigationViewController.swift; sourceTree = "<group>"; };
 		3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoCollectionViewCell.xib; sourceTree = "<group>"; };
+		3B72F5361E8C29E8006013EC /* ONB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ONB.swift; sourceTree = "<group>"; };
 		3B87964C1E786820009CA4C8 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyBandsViewController.swift; sourceTree = "<group>"; };
 		3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBandViewController.swift; sourceTree = "<group>"; };
@@ -428,6 +430,7 @@
 				3BFF119A1DC0389A000E574D /* Invite.swift */,
 				3B8796521E79D095009CA4C8 /* Band.swift */,
 				3BA97CE01E85B2AF001167FC /* SessionFeedSess.swift */,
+				3B72F5361E8C29E8006013EC /* ONB.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -800,6 +803,7 @@
 				3B9641A91DB544F900E35480 /* CurrentSessionsCollectionView.swift in Sources */,
 				3B9641AB1DB54B6000E35480 /* SessionCell.swift in Sources */,
 				3BFE84E21DB1674300E105F2 /* Session.swift in Sources */,
+				3B72F5371E8C29E8006013EC /* ONB.swift in Sources */,
 				3BEFDB7F1E7F38640076E2BC /* MP3PlayerViewController.swift in Sources */,
 				3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */,
 				3BF9951C1DA9ADAE00ABF5CF /* Artist.swift in Sources */,

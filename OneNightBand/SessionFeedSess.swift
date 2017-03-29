@@ -18,6 +18,8 @@ class SessionFeedSess: NSObject {
     var sessionID = String()
     var views = Int()
     var soloSessBool = String()
+    var bandID = String()
+    var bandName = String()
     
 
 }

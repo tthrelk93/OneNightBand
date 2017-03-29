@@ -39,7 +39,7 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
         addMP3.isHidden = true
         closeMP3Button.isHidden = false
         mp3Picker.isHidden = false
-        if mp3URLArray.count > 0{
+        //if mp3URLArray.count > 0{
             self.mediaItems = MPMediaQuery.songs().items!
         
         // Or you can filter on various property
@@ -58,7 +58,7 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
             print(song.albumArtist!)
             
         }
-        }
+        //}
         /*let mediaCollection = MPMediaItemCollection(items: mediaItems!)
        
         
