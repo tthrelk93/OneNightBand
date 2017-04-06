@@ -69,6 +69,16 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
                             }
                         })
                         let user = FIRAuth.auth()?.currentUser?.uid
+                        var tempDict = [String : Any]()
+                        tempDict["artistsONBs"] = self.tempArray
+                        let userRef = self.ref.child("users").child(user!)
+                        userRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
+                            if err != nil {
+                                print(err as Any)
+                                return
+                            }
+                        })
+
                         //var sessionVals = Dictionary
                         //let userSessRef = ref.child("users").child(user).child("activeSessions")
                     }

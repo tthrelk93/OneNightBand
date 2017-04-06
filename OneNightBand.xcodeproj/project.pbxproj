@@ -29,6 +29,7 @@
 		3B5B8A681E96D9AF00A2AABF /* JoinBandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */; };
 		3B5B8A6A1E96E0BF00A2AABF /* BandBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A691E96E0BF00A2AABF /* BandBoardViewController.swift */; };
 		3B5B8A6C1E96F77600A2AABF /* CreateOneNightBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */; };
+		3B5B8A6E1E970B3B00A2AABF /* OneNightBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A6D1E970B3B00A2AABF /* OneNightBandViewController.swift */; };
 		3B6248DE1DD4F5CB00847676 /* UploadSessionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */; };
 		3B69E7111DA3042C00D97BE2 /* MainNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */; };
 		3B72BCD61DF5E25A0084D4B5 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */; };
@@ -133,6 +134,7 @@
 		3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JoinBandCollectionViewCell.xib; sourceTree = "<group>"; };
 		3B5B8A691E96E0BF00A2AABF /* BandBoardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BandBoardViewController.swift; sourceTree = "<group>"; };
 		3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateOneNightBandViewController.swift; sourceTree = "<group>"; };
+		3B5B8A6D1E970B3B00A2AABF /* OneNightBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneNightBandViewController.swift; sourceTree = "<group>"; };
 		3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadSessionPopup.swift; sourceTree = "<group>"; };
 		3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigationViewController.swift; sourceTree = "<group>"; };
 		3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */,
 				3B5B8A691E96E0BF00A2AABF /* BandBoardViewController.swift */,
 				3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */,
+				3B5B8A6D1E970B3B00A2AABF /* OneNightBandViewController.swift */,
 			);
 			name = ProfileNavigation;
 			sourceTree = "<group>";
@@ -805,6 +808,7 @@
 				3BF1F0961DA1A7B90074BCA2 /* TutorialViewController.swift in Sources */,
 				3B02D6CB1DDE67300076860A /* Player.swift in Sources */,
 				3BC9272E1DB2AC19005C753A /* CreateSessionPopup.swift in Sources */,
+				3B5B8A6E1E970B3B00A2AABF /* OneNightBandViewController.swift in Sources */,
 				3B5B8A6C1E96F77600A2AABF /* CreateOneNightBandViewController.swift in Sources */,
 				3BF0B8B51DAC4A05005DB1C9 /* ImageViewExtension.swift in Sources */,
 				3B1062941DAD7B9500D818ED /* ALRadialMenuButton.swift in Sources */,

@@ -70,8 +70,12 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                 
             }
             else {
-                print("OneNightBand")
                 self.bandTypeView.isHidden = true
+                let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateOneNightBandViewController") as! CreateBandViewController
+                self.addChildViewController(popOverVC)
+                popOverVC.view.frame = self.view.frame
+                self.view.addSubview(popOverVC.view)
+                popOverVC.didMove(toParentViewController: self)
                 self.dropDownDone = true
                 self.createNewBandButton.isHidden = false
             }
@@ -94,6 +98,9 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     var ONBArray = [Band]()
     var bandsDict = [String: Any]()
     var sizingCell: SessionCell?
+    var onbArray = [ONB]()
+    var onbDict = [String: Any]()
+    var onbIDArray = [String]()
     func loadCollectionViews(){
         bandArray.removeAll()
         ONBArray.removeAll()
@@ -120,6 +127,24 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                     }
                 }
                 
+                self.ref.child("oneNightBands").observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                        for snap in snapshots{
+                            let dictionary = snap.value as? [String: Any]
+                            let tempONB = ONB()
+                            tempONB.setValuesForKeys(dictionary!)
+                            self.onbArray.append(tempONB)
+                            self.onbDict[tempONB.onbID] = tempONB
+                        }
+                    }
+                    self.ref.child("users").child("artistsONBs").observeSingleEvent(of: .value, with: {(snapshot) in
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            for snap in snapshots{
+                                self.onbIDArray.append((snap.value! as! String))
+                            }
+                        }
+                   
+                
                 
                         
                         
@@ -133,20 +158,21 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                                 self.myBandsCollectionView.dataSource = self
                                 self.myBandsCollectionView.delegate = self
                             }
-                            
+                            for _ in self.onbIDArray{
+                                let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                                self.myONBCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                                self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                                self.myONBCollectionView.backgroundColor = UIColor.clear
+                                self.myONBCollectionView.dataSource = self
+                                self.myONBCollectionView.delegate = self
+                            }
                         }
-                
-                        
                     })
-                    
-                    
                 })
-        
+            })
+        })
     }
-
     
-    
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
