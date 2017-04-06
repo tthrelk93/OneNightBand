@@ -10,6 +10,7 @@ import UIKit
 
 class songCell: UITableViewCell {
 
+    @IBOutlet weak var albumCoverImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()

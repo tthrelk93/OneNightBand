@@ -153,7 +153,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         self.view.backgroundColor = UIColor.clear
         //self.view.backgroundColor?.withAlphaComponent(0.8)
         sessionBioTextView.textColor = UIColor.gray
-        sessionBioTextView.text = "tap to add a little info about the type of session you are trying to create."
+        sessionBioTextView.text = "tap to add a little info about the session you are creating (Songs played, location, etc...)."
         self.showAnimate()
         picker.delegate = self
         
@@ -178,7 +178,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
         if sessionBioTextView.text.isEmpty {
-            sessionBioTextView.text = "tap to add a little info about the type of session you are trying to create."
+            sessionBioTextView.text = "tap to add a little info about the session you are creating (Songs played, location, etc...)."
             sessionBioTextView.textColor = UIColor.gray
         }
     }
@@ -204,6 +204,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                     self.view.removeFromSuperview()
                     self.view.superview?.reloadInputViews()
                 }
+                SwiftOverlays.removeAllBlockingOverlays()
         });
     }
 
@@ -236,12 +237,14 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         values["sessionArtists"] = [(FIRAuth.auth()?.currentUser?.uid)!:"Session Founder"]
                         values["sessionBio"] = self.sessionBioTextView.text
                         values["sessionPictureURL"] = self.sessionPics
-                        values["sessionMedia"] = [String: Any]()
+                        values["sessionMedia"] = [String]()
                         values["messages"] = [String: Any]()
                         values["views"] = 0
                         values["bandID"] = self.bandID
-                        values["sessFeedMedia"] = [""]
-                        values["mp3s"] = [""]
+                        values["sessFeedMedia"] = [String]()
+                        values["mp3URLs"] = [String]()
+                        values["mp3StorageNames"] = [String]()
+                        
                         
                         
                         let dateformatter = DateFormatter()

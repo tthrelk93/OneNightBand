@@ -174,28 +174,23 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     //fill datasources for collectionViews
                     for snap in snapshots{
                         if snap.key == "media"{
-                            let mediaSnaps = snap.children.allObjects as? [FIRDataSnapshot]
-                            for m_snap in mediaSnaps!{
+                            let mediaSnaps = snap.value as! [String]
+                            for m_snap in mediaSnaps{
                                 //fill youtubeArray
-                                if m_snap.key == "youtube"{
-                                    for y_snap in m_snap.value as! [String]
-                                    {
-                                        
-                                        self.youtubeArray.append(NSURL(string: y_snap)!)
-                                        self.nsurlArray.append(NSURL(string: y_snap)!)
-                                        self.nsurlDict[NSURL(string: y_snap)!] = "y"
-                                    }
+                                self.youtubeArray.append(NSURL(string: m_snap)!)
+                                self.nsurlArray.append(NSURL(string: m_snap)!)
+                                if m_snap.contains("yout"){
+                                    self.nsurlDict[NSURL(string: m_snap)!] = "y"
+                                } else {
+                                     self.nsurlDict[NSURL(string: m_snap)!] = "v"
                                 }
-                                //fill vidsFromPhone array
-                                else{
-                                    for v_snap in m_snap.value as! [String]
-                                    {
-                                        self.vidFromPhoneArray.append(NSURL(string: v_snap)!)
-                                        self.nsurlArray.append(NSURL(string: v_snap)!)
-                                        self.nsurlDict[NSURL(string: v_snap)!] = "v"
-                                    }
-                                }
+                                
+                                
+                                
+                                
                             }
+                        
+                        
                             //fill prof pic array
                         } else if snap.key == "profileImageUrl"{
                             if let snapshots = snap.children.allObjects as? [FIRDataSnapshot]{
@@ -500,14 +495,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var sessionsPlayed: UILabel!
     
     func createSessionButtonSelected() {
-        /*//self.view.backgroundColor = UIColor.black
-        //self.view.alpha = 0.6
-        //shadeView.isHidden = false
-        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateSessionPopup") as! CreateSessionPopup
-        self.addChildViewController(popOverVC)
-        popOverVC.view.frame = self.view.frame
-        self.view.addSubview(popOverVC.view)
-        popOverVC.didMove(toParentViewController: self)*/
+        performSegue(withIdentifier:"MainNavToFindBands", sender: self)
         
             }
     func currentSessionsButtonSelected(){
@@ -521,7 +509,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         performSegue(withIdentifier: "ProfileToSessionFeed", sender: self)
     }
     var inviteButtonLocation: CGRect?
-    var menuText = ["Messages/\n Invites", "My\n Bands", "My\n Bands", "Session\n Feed"]
+    var menuText = ["Message/\n Invite", "My\n Bands", "Join\n Band", "Session\n Feed"]
     func generateButtons() -> [ALRadialMenuButton] {
         
         var buttons = [ALRadialMenuButton]()

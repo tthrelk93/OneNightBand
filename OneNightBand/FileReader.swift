@@ -13,6 +13,6 @@ import Foundation
 
 class FileReader: NSObject{
     class func readFiles() -> [String] {
-        return  Bundle.main.paths(forResourcesOfType: "mp3", inDirectory: nil) as! [String]
+        return  Bundle.main.paths(forResourcesOfType: "m4a", inDirectory: nil) as! [String]
     }
 }

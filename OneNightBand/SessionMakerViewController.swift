@@ -283,6 +283,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
             if let snapshotsss = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshotsss{
                     let dictionary = snap.value as? [String: Any]
+                    print("dict: \(dictionary)")
                     let tempSess = Session()
                     tempSess.setValuesForKeys(dictionary!)
                     self.allSessionsDict[tempSess.sessionUID] = tempSess

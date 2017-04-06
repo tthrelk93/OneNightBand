@@ -111,6 +111,11 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         self.selectVideoLabel.isHidden = true
         self.sessionCollectionView.isHidden = true
         self.selectVideoFromSessionCollect.isHidden = true
+        
+        //self.soloSessTextView
+        self.soloSessTextView.text = "Give a little background on the session you are uploading."
+        self.soloSessTextView.textColor = UIColor.orange
+        
         ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
@@ -124,31 +129,20 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                         self.currentUserNameLabel.text = snap.value as! String
                     }
                     if snap.key == "media"{
-                        let mediaSnaps = snap.children.allObjects as? [FIRDataSnapshot]
-                        for m_snap in mediaSnaps!{
+                        let mediaSnaps = snap.value as! [String]
+                        for m_snap in mediaSnaps{
                             //fill youtubeArray
-                            if m_snap.key == "youtube"{
-                                for y_snap in m_snap.value as! [String]
-                                {
-                                    self.soloVidURLArray.append(NSURL(string: y_snap)!)
-                                    self.userMediaArrayNSURL.append(NSURL(string: y_snap)!)
+                            self.soloVidURLArray.append(NSURL(string: m_snap)!)
+                            self.userMediaArrayNSURL.append(NSURL(string: m_snap)!)
                                     //self.nsurlArray.append(NSURL(string: y_snap)!)
                                     //self.nsurlDict[NSURL(string: y_snap)!] = "y"
-                                }
-                            }
+                            
                                 //fill vidsFromPhone array
-                            else{
-                                for v_snap in m_snap.value as! [String]
-                                {
-                                    self.userMediaArrayNSURL.append(NSURL(string: v_snap)!)
-                                    self.soloVidURLArray.append(NSURL(string: v_snap)!)
-                                    //self.nsurlArray.append(NSURL(string: v_snap)!)
-                                    //self.nsurlDict[NSURL(string: v_snap)!] = "v"
-                                }
-                            }
+                           
                         }
-                        //fill prof pic array
                     }
+                        //fill prof pic array
+    
                     if snap.key == "artistsBands"{
                         for id in (snap.value as! [String]){
                             self.bandArray.append(id)
@@ -430,7 +424,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                             collectionView.deselectItem(at: indexPath as IndexPath, animated: false)
                             self.yourBandsCollect.reloadData()
                             self.sessionCollectionView.reloadData()
-                            self.selectVideoFromSessionCollect.reloadData()
+                            //self.selectVideoFromSessionCollect.reloadData()
                     }
                 
                 }
@@ -477,21 +471,21 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                 for sess in self.bandSessionObjectArray{
                     if sess.sessionUID == sessCell.sessionId {
                         if sess.sessionMedia.count != 0{
-                            if (sess.sessionMedia.keys.contains("youtube")){
-                            let tempMediaArray = sess.sessionMedia["youtube"] as! [String]
-                            for vid in tempMediaArray{
-                                self.bandMedia.append(NSURL(string: vid)!)
+                            //if (sess.sessionMedia.keys.contains("youtube")){
+                            
+                                for vid in sess.sessionMedia{
+                                    self.bandMedia.append(NSURL(string: vid)!)
+                                }
                             }
-                            }
-                            if (sess.sessionMedia.keys.contains("vidsFromPhone")){
+                            /*if (sess.sessionMedia.keys.contains("vidsFromPhone")){
                             
                             let tempMediaArray2 = sess.sessionMedia["vidsFromPhone"] as! [String]
                             for vid in tempMediaArray2{
                                 self.bandMedia.append(NSURL(string: vid)!)
                             }
-                            }
-                        }
-                        
+                    }
+                    }*/
+                    
                     }
                 }
                 DispatchQueue.main.async{
@@ -639,11 +633,13 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             
             cell.videoURL =  self.bandMedia[indexPath.row] as NSURL?
             if(String(describing: cell.videoURL).contains("youtube") || String(describing: cell.videoURL).contains("youtu.be")){
+                print("youtubeSelected")
                 cell.youtubePlayerView.loadVideoURL(cell.videoURL as! URL)
                 cell.youtubePlayerView.isHidden = false
                 cell.player?.view.isHidden = true
                 cell.isYoutube = true
             }else{
+                print("vidFromPhoneSelected")
                 cell.player?.setUrl(cell.videoURL as! URL)
                 cell.player?.view.isHidden = false
                 cell.youtubePlayerView.isHidden = true
@@ -709,20 +705,17 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     }
  
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.orange {
-            textView.text = ""
-            textView.textColor = UIColor.white
+        if soloSessTextView.textColor == UIColor.orange {
+            soloSessTextView.text = nil
+            soloSessTextView.textColor = UIColor.white
         }
     }
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text == "" {
-            textView.text = "Tap here to give your fans a little background on this Session."
-            textView.textColor = UIColor.orange
+        if soloSessTextView.text.isEmpty {
+            soloSessTextView.text = "Give a little background on the session you are uploading."
+            soloSessTextView.textColor = UIColor.orange
         }
-       
-        
     }
-
     
     func showAnimate()
     {
@@ -940,14 +933,17 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                         values2["sessionsOnFeed"] = tempSessArray
                         
                         var tempURLArray = self.mostRecentSessionSelected.sessFeedMedia
+            if tempURLArray == nil{
+                tempURLArray = [String]()
+            }
                         for url in self.selectedSessionMediaArray{
+                            if tempURLArray?.count != 0{
                             
-                            if tempURLArray[0] == ""{
-                                tempURLArray.removeAll()
-                                tempURLArray.append(String(describing: url))
-                            }else{
-                                    tempURLArray.append(String(describing: url))
-                                }
+                                tempURLArray!.append(String(describing: url))
+                                
+                            } else {
+                                tempURLArray!.append(String(describing: url))
+                            }
                             let videoName = NSUUID().uuidString
                             let storageRef = FIRStorage.storage().reference(withPath: "session_videos/").child("\(videoName).mov")
                             let uploadMetadata = FIRStorageMetadata()

@@ -10,9 +10,16 @@ import UIKit
 
 
 class ONB: NSObject {
+    var onbID = String()
+    var onbPictureURL = [String]()
+    var views = Int()
+    var messages: [String: Any]?
+    var onbMedia = [String]()
+    var onbArtists = [String: Any]()
     var onbName = String()
     var onbDate = String()
-    var onbTime = String()
-    //var
+    var sessFeedMedia: [String]?
+    var onbInfo = String()
+
 
 }

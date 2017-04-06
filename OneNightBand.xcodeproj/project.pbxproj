@@ -25,11 +25,16 @@
 		3B4927811E479DA400A8D0B3 /* InviteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B49277F1E479DA200A8D0B3 /* InviteCell.xib */; };
 		3B4DAD301E8064BA008FB825 /* songCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DAD2E1E8064BA008FB825 /* songCell.swift */; };
 		3B4DAD311E8064BA008FB825 /* songCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B4DAD2F1E8064BA008FB825 /* songCell.xib */; };
+		3B5B8A671E96D9AF00A2AABF /* JoinBandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A651E96D9AE00A2AABF /* JoinBandCollectionViewCell.swift */; };
+		3B5B8A681E96D9AF00A2AABF /* JoinBandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */; };
+		3B5B8A6A1E96E0BF00A2AABF /* BandBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A691E96E0BF00A2AABF /* BandBoardViewController.swift */; };
+		3B5B8A6C1E96F77600A2AABF /* CreateOneNightBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */; };
 		3B6248DE1DD4F5CB00847676 /* UploadSessionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */; };
 		3B69E7111DA3042C00D97BE2 /* MainNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */; };
 		3B72BCD61DF5E25A0084D4B5 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */; };
 		3B72BCD71DF5E25A0084D4B5 /* VideoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */; };
 		3B72F5371E8C29E8006013EC /* ONB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72F5361E8C29E8006013EC /* ONB.swift */; };
+		3B72F5391E8C5C0A006013EC /* FindBandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72F5381E8C5C0A006013EC /* FindBandsViewController.swift */; };
 		3B87964D1E786820009CA4C8 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B87964C1E786820009CA4C8 /* UserNotifications.framework */; };
 		3B87964F1E79B510009CA4C8 /* MyBandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */; };
 		3B8796511E79C224009CA4C8 /* CreateBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */; };
@@ -124,11 +129,16 @@
 		3B49277F1E479DA200A8D0B3 /* InviteCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InviteCell.xib; sourceTree = "<group>"; };
 		3B4DAD2E1E8064BA008FB825 /* songCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = songCell.swift; sourceTree = "<group>"; };
 		3B4DAD2F1E8064BA008FB825 /* songCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = songCell.xib; sourceTree = "<group>"; };
+		3B5B8A651E96D9AE00A2AABF /* JoinBandCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinBandCollectionViewCell.swift; sourceTree = "<group>"; };
+		3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JoinBandCollectionViewCell.xib; sourceTree = "<group>"; };
+		3B5B8A691E96E0BF00A2AABF /* BandBoardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BandBoardViewController.swift; sourceTree = "<group>"; };
+		3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateOneNightBandViewController.swift; sourceTree = "<group>"; };
 		3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadSessionPopup.swift; sourceTree = "<group>"; };
 		3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigationViewController.swift; sourceTree = "<group>"; };
 		3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoCollectionViewCell.xib; sourceTree = "<group>"; };
 		3B72F5361E8C29E8006013EC /* ONB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ONB.swift; sourceTree = "<group>"; };
+		3B72F5381E8C5C0A006013EC /* FindBandsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindBandsViewController.swift; sourceTree = "<group>"; };
 		3B87964C1E786820009CA4C8 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyBandsViewController.swift; sourceTree = "<group>"; };
 		3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBandViewController.swift; sourceTree = "<group>"; };
@@ -261,7 +271,6 @@
 				3BDFEE301DCBC8D6004B4FA1 /* SessionFeedTouched */,
 				3BDFEE2F1DCBC888004B4FA1 /* CurrentSessionsTouched */,
 				3B47F92D1DC28F8F00FD1E94 /* InviteButtonTouched */,
-				3BC9272D1DB2AC19005C753A /* CreateSessionPopup.swift */,
 				3BFD58FC1DF0DC3300C85225 /* AddMediaToProfile.swift */,
 				3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */,
 				3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */,
@@ -269,6 +278,10 @@
 				3BB0FE651DF7888E0028D544 /* PictureCollectionViewCell.xib */,
 				3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */,
 				3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */,
+				3B5B8A651E96D9AE00A2AABF /* JoinBandCollectionViewCell.swift */,
+				3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */,
+				3B5B8A691E96E0BF00A2AABF /* BandBoardViewController.swift */,
+				3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */,
 			);
 			name = ProfileNavigation;
 			sourceTree = "<group>";
@@ -351,6 +364,7 @@
 				3B0CA9E31E4E4FDF00D871B6 /* LoadViewController.swift */,
 				3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */,
 				3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */,
+				3B72F5381E8C5C0A006013EC /* FindBandsViewController.swift */,
 			);
 			path = OneNightBand;
 			sourceTree = "<group>";
@@ -409,6 +423,7 @@
 			isa = PBXGroup;
 			children = (
 				3BF995171DA976CA00ABF5CF /* SessionMakerViewController.swift */,
+				3BC9272D1DB2AC19005C753A /* CreateSessionPopup.swift */,
 				3B486AF71DB9335600A243C5 /* ArtistCell.swift */,
 				3B486AF51DB931FB00A243C5 /* ArtistCell.xib */,
 				3BF995191DA9AB6F00ABF5CF /* ArtistFinderViewController.swift */,
@@ -539,7 +554,7 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 2A8TEKG3F8;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 1;
@@ -609,6 +624,7 @@
 				3B72BCD71DF5E25A0084D4B5 /* VideoCollectionViewCell.xib in Resources */,
 				3B9641AF1DB573D800E35480 /* SessionCell.xib in Resources */,
 				3BEFDB891E7F3CDD0076E2BC /* BasePlayer.png in Resources */,
+				3B5B8A681E96D9AF00A2AABF /* JoinBandCollectionViewCell.xib in Resources */,
 				3BE29F1B1D9B256A007A326B /* Assets.xcassets in Resources */,
 				3BEFDB8B1E7F3CDD0076E2BC /* Pause.png in Resources */,
 				3B4DAD311E8064BA008FB825 /* songCell.xib in Resources */,
@@ -789,6 +805,7 @@
 				3BF1F0961DA1A7B90074BCA2 /* TutorialViewController.swift in Sources */,
 				3B02D6CB1DDE67300076860A /* Player.swift in Sources */,
 				3BC9272E1DB2AC19005C753A /* CreateSessionPopup.swift in Sources */,
+				3B5B8A6C1E96F77600A2AABF /* CreateOneNightBandViewController.swift in Sources */,
 				3BF0B8B51DAC4A05005DB1C9 /* ImageViewExtension.swift in Sources */,
 				3B1062941DAD7B9500D818ED /* ALRadialMenuButton.swift in Sources */,
 				3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */,
@@ -797,9 +814,11 @@
 				3BDFEE321DCBC96B004B4FA1 /* SessionFeedViewController.swift in Sources */,
 				3BFF119B1DC0389A000E574D /* Invite.swift in Sources */,
 				3BE29F471D9C4469007A326B /* KaedeTextField.swift in Sources */,
+				3B5B8A6A1E96E0BF00A2AABF /* BandBoardViewController.swift in Sources */,
 				3B0CA9E41E4E4FDF00D871B6 /* LoadViewController.swift in Sources */,
 				3BCC0BAF1DDA66540008BF19 /* ChatViewController.swift in Sources */,
 				3BDFEE351DCBDEDE004B4FA1 /* ONBGuitarButton.swift in Sources */,
+				3B5B8A671E96D9AF00A2AABF /* JoinBandCollectionViewCell.swift in Sources */,
 				3B9641A91DB544F900E35480 /* CurrentSessionsCollectionView.swift in Sources */,
 				3B9641AB1DB54B6000E35480 /* SessionCell.swift in Sources */,
 				3BFE84E21DB1674300E105F2 /* Session.swift in Sources */,
@@ -807,6 +826,7 @@
 				3BEFDB7F1E7F38640076E2BC /* MP3PlayerViewController.swift in Sources */,
 				3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */,
 				3BF9951C1DA9ADAE00ABF5CF /* Artist.swift in Sources */,
+				3B72F5391E8C5C0A006013EC /* FindBandsViewController.swift in Sources */,
 				3B1E04701DEA221400DCDAA4 /* ArtistProfileViewController.swift in Sources */,
 				3BEFDB7B1E7F36CE0076E2BC /* FileReader.swift in Sources */,
 				3B4DAD301E8064BA008FB825 /* songCell.swift in Sources */,
@@ -978,16 +998,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OneNightBand/OneNightBand.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				DEVELOPMENT_TEAM = 2A8TEKG3F8;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				INFOPLIST_FILE = OneNightBand/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.onenightband.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "98adc8b7-7e05-4494-a135-3f6709212d43";
-				PROVISIONING_PROFILE_SPECIFIER = OneNightBand;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1000,16 +1020,16 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OneNightBand/OneNightBand.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				DEVELOPMENT_TEAM = 2A8TEKG3F8;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				INFOPLIST_FILE = OneNightBand/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.onenightband.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "786e7095-eece-4136-8a5e-c413efd51731";
-				PROVISIONING_PROFILE_SPECIFIER = OneNightBand;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

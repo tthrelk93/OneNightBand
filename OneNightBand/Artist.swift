@@ -20,7 +20,7 @@ class Artist: NSObject{
     var bio: String?
     var profileImageUrl = [String]()
     var location = [String:Any]()
-    var media = [String:Any]()
+    var media = [String]()
     var artistsBands: NSDictionary?
     var soloSessKeysOnFeed = [String]()
     

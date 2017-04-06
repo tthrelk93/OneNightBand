@@ -48,6 +48,8 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
         let predicateByGenre = MPMediaPropertyPredicate(value: "Rock", forProperty: MPMediaItemPropertyTitle )//MPMediaItemPropertyGenre)
         query.filterPredicates = NSSet(object: predicateByGenre) as! Set<MPMediaPredicate>*/
         for song in mediaItems{
+           // print(song.assetURL!)
+            print(song.value(forProperty: MPMediaItemPropertyAssetURL))
             let cellNib = UINib(nibName: "songCell", bundle: nil)
             self.mp3Picker.register(cellNib, forCellReuseIdentifier: "SongCell")
             self.mp3Picker.delegate = self
@@ -55,7 +57,7 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
             mp3Names.append(song.title!)
         }
         for song in mediaItems{
-            print(song.albumArtist!)
+            //print(song.albumArtist!)
             
         }
         //}
@@ -102,6 +104,8 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var progressBar: UIProgressView!
     var mp3URLArray = [URL]()
     var picArray = [UIImage]()
+    var destArray = [URL]()
+    var mp3Dict = [String: Any]()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -127,14 +131,55 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //fill datasources for collectionViews
                 
+                
+                
                     for snap in snapshots{
-                        if snap.key == "mp3s"{
-                            if let mp3Snapshot = snap.children.allObjects as? [FIRDataSnapshot]{
-                                for mp3 in mp3Snapshot{
-                                    if (mp3.value as! String) != ""{
-                                        self.mp3URLArray.append(URL(string: (mp3.value as! String))!)
+                        if snap.key == "mp3StorageNames"{
+                            if let mp3Snapshots = snap.children.allObjects as? [FIRDataSnapshot]{
+                                for mp3Name in mp3Snapshots{
+                                    if (mp3Name.value as! String) != ""{
+                                        self.mp3StorageNames.append(mp3Name.value as! String)
                                     }
                                 }
+                                
+                            }
+                            
+                        }
+                        if snap.key == "mp3URLs"{
+                           /* let mp3URLArray = snap.value as! [String:String]
+                            let tmpDir = FileManager.default.urls(for: .musicDirectory , in: .userDomainMask).first
+                            for (storageURL, sourceURL) in mp3URLArray{
+                                let fileName = NSURL(string: sourceURL)?.lastPathComponent!
+                                let destinationURL = tmpDir!.appendingPathComponent(fileName!)
+                                if let fileData = NSData(contentsOf: NSURL(string: storageURL) as! URL){
+                                    fileData.write(to: destinationURL, atomically: false)
+                                    self.destArray.append(destinationURL)
+                                    }
+                            
+                            }*/
+                            //var tempDict = [String:Any]()
+                            
+                           if let mp3Snapshot = snap.children.allObjects as? [FIRDataSnapshot]{
+                                for mp3 in mp3Snapshot{
+                                    if (mp3.value as! String) != ""{
+                                        //let fileName = sourceUrl.lastPathComponent!
+                                        self.mp3URLString.append(mp3.value as! String)
+                                        
+                                       /*let httpsReference = FIRStorage.storage().reference(forURL: mp3.value as! Sting)
+                                        //print(httpsReference)
+                                        httpsReference.downloadURL(completion: {url, error in
+                                            if let error = error{
+                                                print(error)
+                                            } else {*/
+                                        //self.mp3URLArray.append()
+                                           // }
+                                        //})
+                                        //Bundle.main.te
+                                    
+                                        //httpsReference.downloadURL(completion: <#T##(URL?, Error?) -> Void#>)
+                                        //self.mp3URLArray.append(URL(string: (mp3.value as! String))!)
+                                    }
+                            }
                             }
                             
                             
@@ -165,36 +210,24 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
                             self.viewsLabel.text = String(describing: (snap.value as! Int))
                         }
                         else if snap.key == "sessionMedia"{
-                            let mediaSnaps = snap.children.allObjects as? [FIRDataSnapshot]
-                            for m_snap in mediaSnaps!{
+                            let mediaSnaps = snap.value as! [String]
+                            for m_snap in mediaSnaps{
                                 //fill youtubeArray
-                                if m_snap.key == "youtube"{
-                                    for y_snap in m_snap.value as! [String]
-                                    {
-                                        
-                                        self.youtubeArray.append(NSURL(string: y_snap)!)
-                                        self.nsurlArray.append(NSURL(string: y_snap)!)
-                                        self.nsurlDict[NSURL(string: y_snap)!] = "y"
-                                    }
+                                //self.youtubeArray.append(NSURL(string: m_snap)!)
+                                if m_snap.contains("yout"){
+                                    self.nsurlDict[NSURL(string: m_snap)!] = "y"
+                                } else {
+                                    self.nsurlDict[NSURL(string: m_snap)!] = "v"
                                 }
-                                    //fill vidsFromPhone array
-                                else{
-                                    for v_snap in m_snap.value as! [String]
-                                    {
-                                        self.vidFromPhoneArray.append(NSURL(string: v_snap)!)
-                                        self.nsurlArray.append(NSURL(string: v_snap)!)
-                                        self.nsurlDict[NSURL(string: v_snap)!] = "v"
-                                    }
-                                }
+                                self.nsurlArray.append(NSURL(string: m_snap)!)
+                                
                             }
-                            //fill prof pic array
                         }
-                        
-                        
-                    
-                    }
-                
+                }
             }
+                                    //fill vidsFromPhone array
+                        
+                       
     
                 if self.nsurlArray.count == 0{
                     self.currentCollect = "youtube"
@@ -225,10 +258,12 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
                     }
                 }
                 
+            
                 
-                
-                
-                self.mp3Player = MP3Player(urlArray: self.mp3URLArray)
+                print("urlArray:\(self.mp3URLString)")
+            print("mp3Names: \(self.mp3StorageNames)")
+            self.mp3Player = MP3Player(urlArray: self.mp3URLString, mp3Names: self.mp3StorageNames, sessionID: self.sessionID!)
+            
                 if self.mp3URLArray.count > 0{
                     self.setupNotificationCenter()
                     self.setTrackName()
@@ -285,15 +320,19 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     @IBAction func playSong(_ sender: Any) {
-        if mp3URLArray.count > 0{
-        mp3Player?.play()
+        if mp3URLString.count > 0{
+            print("play")
+        mp3Player?.player?.play()
+           
         startTimer()
         }
     }
    
     @IBAction func stopSong(_ sender: Any) {
-        if mp3URLArray.count > 0{
-        mp3Player?.stop()
+        if mp3URLString.count > 0{
+        mp3Player?.pause()
+            mp3Player?.player?.seek(to: kCMTimeZero)
+            //mp3Player?.
         updateViews()
         timer?.invalidate()
         }
@@ -301,14 +340,14 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     @IBAction func pauseSong(_ sender: Any) {
-        if mp3URLArray.count > 0{
+        if mp3URLString.count > 0{
         mp3Player?.pause()
         timer?.invalidate()
         }
     }
    
     @IBAction func playNextSong(_ sender: Any) {
-        if mp3URLArray.count > 0{
+        if mp3URLString.count > 0{
         mp3Player?.nextSong(songFinishedPlaying: false)
         startTimer()
         }
@@ -322,7 +361,7 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     @IBAction func playPreviousSong(_ sender: Any) {
-        if mp3URLArray.count > 0{
+        if mp3URLString.count > 0{
         mp3Player?.previousSong()
         startTimer()
         }
@@ -330,13 +369,13 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
    
     
     func setTrackName(){
-        if mp3URLArray.count > 0{
+        if mp3URLString.count > 0{
         trackName.text = (mp3Player?.getCurrentTrackName())!
         }
     }
     
     func startTimer(){
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: Selector("updateViews"), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MP3PlayerViewController.updateViews), userInfo: nil, repeats: true)
     }
     
     func updateViewsWithTimer(theTimer: Timer){
@@ -389,6 +428,8 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
         //print((self.thisSession.sessionArtists?.count)!)
         return self.mp3Names.count
     }
+    //var mp3PlayerDict = [String: Any]()
+    var mp3StorageNames = [String]()
     var mp3URLString = [String]()
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         //(tableView.cellForRow(at: indexPath) as ArtistCell).artistUID
@@ -396,34 +437,113 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
         //performSegue(withIdentifier: "ArtistCellTouched", sender: self)
         //print(mediaItems[indexPath.row].assetURL)
         let mp3Name = NSUUID().uuidString
-        let storageRef = FIRStorage.storage().reference(withPath: "bandMP3's").child("\(mp3Name).mp3")
+        var storageName = "\(mp3Name).m4a"
+        let storageRef = FIRStorage.storage().reference(withPath: "session_audio").child(sessionID!).child(storageName)
         let uploadMetadata = FIRStorageMetadata()
-        uploadMetadata.contentType = "mp3"
+        uploadMetadata.contentType = "audio/m4a" //might need to be mp4
+       
+        var item = mediaItems[indexPath.row]
         
-            _ = storageRef.putFile(mediaItems[indexPath.row].assetURL!, metadata: uploadMetadata){(metadata, error) in
-                if(error != nil){
-                    print("got an error: \(error)")
+        
+        
+        if let assetURL = item.assetURL {
+            export(assetURL) { fileURL, error in
+                guard let fileURL = fileURL, error == nil else {
+                    print("export failed: \(error)")
+                    return
                 }
-            
+                print(fileURL)
+               // print(FIRStorage.storage().reference(forURL: <#T##String#>))
+                
+                // use fileURL of temporary file here
+                _ = storageRef.putFile(fileURL, metadata: uploadMetadata){(metadata, error) in
+                    
+                    if(error != nil){
+                        print("got an error: \(error)")
+                        let alert = UIAlertController(title: "Error", message: "inside putfile error.", preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "okay", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    print((metadata?.downloadURL()?.absoluteString)!)
+                    self.mp3URLString.append((metadata?.downloadURL()?.absoluteString)!)
+                    self.mp3StorageNames.append(storageName)
+                    //self.mp3URLString.append(String(describing: fileURL))
+                    var values2 = [String: Any]()
+                    values2["mp3URLs"] = self.mp3URLString
+                    values2["mp3StorageNames"] = self.mp3StorageNames
+                    FIRDatabase.database().reference().child("sessions").child(self.sessionID!).updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                        if err != nil {
+                            print(err!)
+                            return
+                        }
+                    })
+                    
+                
+                }
+                self.mp3URLArray.append(fileURL)
+                
+                
+            }
         }
-        mp3URLArray.append(mediaItems[indexPath.row].assetURL!)
-        for url in mp3URLArray{
+
+        
+        
+        
+        //print(item.mediaType.)
+        
+        /*for url in mp3URLArray{
             mp3URLString.append(String(describing: url))
-        }
-        var values2 = [String:Any]()
-        values2["mp3s"] = mp3URLString
+        }*/
+        
+        
+    }
     
-       FIRDatabase.database().reference().child("sessions").child(sessionID!).updateChildValues(values2, withCompletionBlock: {(err, ref) in
-        if err != nil {
-            print(err!)
+    /// Export MPMediaItem to temporary file.
+    ///
+    /// - Parameters:
+    ///   - assetURL: The `assetURL` of the `MPMediaItem`.
+    ///   - completionHandler: Closure to be called when the export is done. The parameters are a boolean `success`, the `URL` of the temporary file, and an optional `Error` if there was any problem. The parameters of the closure are:
+    ///
+    ///   - fileURL: The `URL` of the temporary file created for the exported results.
+    ///   - error: The `Error`, if any, of the asynchronous export process.
+    
+    func export(_ assetURL: URL, completionHandler: @escaping (_ fileURL: URL?, _ error: Error?) -> ()) {
+        let asset = AVURLAsset(url: assetURL)
+        guard let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetAppleM4A) else {
+            completionHandler(nil, ExportError.unableToCreateExporter)
             return
         }
-    })
+        
+        let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent(NSUUID().uuidString)
+            .appendingPathExtension("m4a")
+        
+        exporter.outputURL = fileURL
+        exporter.outputFileType = "com.apple.m4a-audio"
+        
+        exporter.exportAsynchronously {
+            if exporter.status == .completed {
+                completionHandler(fileURL, nil)
+            } else {
+                completionHandler(nil, exporter.error)
+            }
+        }
     }
+    
+    
+    enum ExportError: Error {
+        case unableToCreateExporter
+    }
+    
+    
+    
+    
 
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath as IndexPath) as! songCell
+        var artwork = mediaItems[indexPath.row].artwork
+        var artworkImage = artwork?.image(at: cell.albumCoverImageView.frame.size)
         cell.nameLabel.text = mp3Names[indexPath.row]
         
         
