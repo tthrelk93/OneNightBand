@@ -157,6 +157,9 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         self.showAnimate()
         picker.delegate = self
         
+        //*******************************
+        //****************create ref to users active sessions and copy them all to array. Then append the new session and update the database value
+        //*********************************
             
     }
     var bandID: String?
@@ -209,7 +212,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
     }
 
     @IBAction func cancelTouched(_ sender: AnyObject) {
-        dismissalDelegate?.finishedShowing(viewController: self)
+        dismissalDelegate?.finishedShowing()
         removeAnimate()
     }
     //let newSess = Session()
@@ -263,8 +266,6 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                         let sessReferenceAnyObject = sessReference.key
                         values["sessionUID"] = sessReferenceAnyObject
                         
-                        
-                        
                         //self.newSess.setValuesForKeys(values)
 
                         
@@ -299,7 +300,7 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
                                 }
                             })
                             self.finalizeSessionButton.isEnabled = true
-                            self.dismissalDelegate?.finishedShowing(viewController: self)
+                            self.dismissalDelegate?.finishedShowing()
                             self.removeAnimate()
                             //this is ridiculously stupid way to reload currentSession data. find someway to fix
                             //self.performSegue(withIdentifier: "FinalizeSessionToProfile", sender: self)

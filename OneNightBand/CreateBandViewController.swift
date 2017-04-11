@@ -43,6 +43,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                         values["messages"] = [String: Any]()
                         values["fanPicks"] = 0
                         values["sessionsOnFeed"] = [""]
+                        values["wantedAds"] = [String]()
                         //values["messages"] = [String: Any]()
                         
                         
@@ -82,7 +83,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                                 }
                             })
                             //self.finalizeSessionButton.isEnabled = true
-                            self.dismissalDelegate?.finishedShowing(viewController: self)
+                            self.dismissalDelegate?.finishedShowing()
                             self.removeAnimate()
                             //this is ridiculously stupid way to reload currentSession data. find someway to fix
                             //self.performSegue(withIdentifier: "FinalizeSessionToProfile", sender: self)
@@ -164,7 +165,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
         
     }
     @IBAction func cancelTouched(_ sender: Any) {
-        dismissalDelegate?.finishedShowing(viewController: self)
+        dismissalDelegate?.finishedShowing()
         removeAnimate()
     }
     lazy var sessionImageView: UIImageView = {
@@ -257,6 +258,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
             {
                 self.view.superview?.reloadInputViews()
                 self.view.removeFromSuperview()
+                SwiftOverlays.removeAllBlockingOverlays()
                 
             }
         });

@@ -20,6 +20,7 @@ class Band: NSObject{
     var bandBio: String?
     var messages = [String: Any]()
     var sessionsOnFeed  = [String]()
+    var wantedAds = [String]()
     
     
     //var sessionDate: String?

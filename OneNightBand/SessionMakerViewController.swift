@@ -33,6 +33,11 @@ protocol SessionIDDest : class
 
 class SessionMakerViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, GetSessionIDDelegate, DismissalDelegate, UIPickerViewDelegate, UIPickerViewDataSource{
     
+    internal func finishedShowing() {
+        
+    }
+
+    
     var sessionID: String?
     
     
@@ -64,8 +69,9 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         if segue.identifier == "SessionToArtistFinder"{
             if let vc = segue.destination as? ArtistFinderViewController
             {
-                vc.thisSession = sessionID
-                vc.thisSessionObject = thisBand
+                vc.bandID = sessionID!
+                vc.thisBandObject = thisBand
+                vc.bandType = "band"
                 
             }
         }

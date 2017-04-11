@@ -16,6 +16,8 @@ import SwiftOverlays
 class CreateOneNightBandViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate, Dismissable {
     @IBOutlet weak var cancelPressed: UIButton!
     @IBAction func cancelPressed(_ sender: Any) {
+        dismissalDelegate?.finishedShowing()
+        removeAnimate()
     }
     @IBOutlet weak var createONBButton: UIButton!
 
@@ -48,7 +50,7 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
                         values["onbMedia"] = [String]()
                         values["messages"] = [String: Any]()
                         values["views"] = 0
-                        
+                        values["wantedAds"] = [String]()
                         values["sessFeedMedia"] = [String]()
                         
                         let dateformatter = DateFormatter()
@@ -70,6 +72,15 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
                         })
                         let user = FIRAuth.auth()?.currentUser?.uid
                         var tempDict = [String : Any]()
+                        self.ref.child("users").child(user!).child("artistsONBs").observeSingleEvent(of: .value, with: { (snapshot) in
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                for snap in snapshots{
+                                    
+                                    self.tempArray.append(snap.value as! String)
+                                }
+                            }
+
+                        
                         tempDict["artistsONBs"] = self.tempArray
                         let userRef = self.ref.child("users").child(user!)
                         userRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
@@ -78,11 +89,16 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
                                 return
                             }
                         })
+                        self.dismissalDelegate?.finishedShowing()
+                        self.removeAnimate()
 
                         //var sessionVals = Dictionary
                         //let userSessRef = ref.child("users").child(user).child("activeSessions")
+                        })
                     }
+                    
                 })
+                
             }
             
             
@@ -102,18 +118,15 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
     
     lazy var sessionImageViewButton: UIButton = {
         var tempButton = UIButton()
-        //tempButton.setBackgroundImage(UIImage(named: "icon-profile"), for: .normal)
-        /*tempButton.contentMode = .scaleAspectFill
-         tempButton.translatesAutoresizingMaskIntoConstraints = false
-         tempButton.isEnabled = true*/
+       
         tempButton.layer.borderWidth = 2
-        tempButton.layer.borderColor = UIColor.darkGray.cgColor
+        tempButton.layer.borderColor = UIColor.lightGray.cgColor
         tempButton.backgroundColor = UIColor.clear
         tempButton.setTitle("Select\n Session\n Image", for: .normal)
         tempButton.titleLabel?.numberOfLines = 3
         tempButton.titleLabel?.textAlignment = NSTextAlignment.center
         tempButton.titleLabel?.lineBreakMode = .byWordWrapping
-        tempButton.setTitleColor(UIColor.gray, for: .normal)
+        tempButton.setTitleColor(UIColor.lightGray, for: .normal)
         tempButton.titleLabel?.font = UIFont.systemFont(ofSize: 28.0, weight: UIFontWeightLight)
         tempButton.layer.cornerRadius = 10
         tempButton.clipsToBounds = true
@@ -131,26 +144,26 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
         switch UIScreen.main.bounds.width{
         case 320:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: bandNameTextField.topAnchor, constant: -12).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 125).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 125).isActive = true
             
         case 375:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: bandNameTextField.topAnchor, constant: -12).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
             
         case 414:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: bandNameTextField.topAnchor, constant: -12).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
             
             
         default:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: bandNameTextField.topAnchor, constant: -12).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
             
@@ -180,6 +193,7 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
         
         return imageView
     }()
+    
     func setupSessionImageView() {
         //need x, y, width, height constraints
         sessionImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -197,12 +211,23 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationController?.isNavigationBarHidden = true
+        self.navigationItem.hidesBackButton = true
+
+        
         datePicker.datePickerMode = UIDatePickerMode.date
         datePicker.backgroundColor = UIColor.white.withAlphaComponent(0.6)
         view.addSubview(sessionImageView)
         view.addSubview(sessionImageViewButton)
         setupSessionImageView()
         setupSessionImageViewButton()
+        onbInfoTextView.layer.borderColor = UIColor.white.cgColor
+        onbInfoTextView.layer.borderWidth = 2
+        onbInfoTextView.layer.masksToBounds = false
+        onbInfoTextView.delegate = self
+        onbInfoTextView.textColor = UIColor.white
+        
         self.onbInfoTextView.text = "tap to add a little info about the OneNightBand you are creating (songs to learn, location, etc...)."
         
         self.showAnimate()
@@ -216,8 +241,10 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
     }
     
     
+    
+    
     public func textViewDidBeginEditing(_ textView: UITextView) {
-        if  onbInfoTextView.textColor == UIColor.white {
+        if onbInfoTextView.textColor == UIColor.white {
             onbInfoTextView.text = nil
             onbInfoTextView.textColor = UIColor.orange
         }
@@ -228,6 +255,8 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
             onbInfoTextView.textColor = UIColor.white
         }
     }
+
+    
     
     func showAnimate()
     {
@@ -255,6 +284,7 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = false
         SwiftOverlays.removeAllBlockingOverlays()
     }
     

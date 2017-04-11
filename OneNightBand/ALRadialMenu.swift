@@ -28,8 +28,8 @@ private struct Angle {
 
 
 
-open class ALRadialMenu: UIButton {
-    
+open class ALRadialMenu: UIButton, Dismissable {
+    weak var dismissalDelegate: DismissalDelegate?
     
     // MARK: Public API
     //var button = UIButton
@@ -258,14 +258,16 @@ open class ALRadialMenu: UIButton {
         overlayView.removeFromSuperview()
         if(selectedIndex == -1){
             for i in 0..<buttons.count {
+                buttons[i].delegate.noButtonTouched()
                 dismissAnimation(buttons[i], index: i)
+                
             }
         
         }
         else{
             for i in 0..<buttons.count {
 
-                if buttons[selectedIndex].home == "mainNav"{
+                
                     if i == selectedIndex {
                         selectedAnimation(buttons[i])
                         if(i == 0){
@@ -282,61 +284,13 @@ open class ALRadialMenu: UIButton {
                         }
                     }else{
                         dismissAnimation(buttons[i], index: i)
+                        
                     }
                         
                     
-                }
-                else if(buttons[selectedIndex].home == "artistFinder"){
-                    if i == selectedIndex {
-                        selectedAnimation(buttons[i])
-                        if(i == 0){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 1){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 2){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 3){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 4){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 5){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 6){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 7){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 8){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 9){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 10){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 11){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)                        }
-                        if(i == 12){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                        if(i == 13){
-                            buttons[selectedIndex].artistDelegate.buttonOneTouched(name: buttons[selectedIndex].name!)
-                        }
-                    
-                    } else {
-                        dismissAnimation(buttons[i], index: i)
-                    }
-                }
                 
             }
+            
         }
         
     }
@@ -352,20 +306,20 @@ open class ALRadialMenu: UIButton {
             switch screenSize.width{
             case 320:
                 radius = 95.0
-                animationOrigin = CGPoint(x: animationOrigin.x - 23.0 ,y: animationOrigin.y)
+                animationOrigin = CGPoint(x: animationOrigin.x,y: animationOrigin.y)
             case 375:
                 radius = 133.0
-                animationOrigin = CGPoint(x: animationOrigin.x - 9 ,y: animationOrigin.y)
+                animationOrigin = CGPoint(x: animationOrigin.x,y: animationOrigin.y)
             case 414:
                 radius = 147.0
-                animationOrigin = CGPoint(x: animationOrigin.x - 4,y: animationOrigin.y)
+                animationOrigin = CGPoint(x: animationOrigin.x,y: animationOrigin.y)
             default:
                 animationOrigin = CGPoint(x: animationOrigin.x, y: animationOrigin.y)
                 radius = 147.0
             }
             print(radius)
 
-            newCenter = pointOnCircumference(animationOrigin, radius: radius + tempOffset, angle: Angle(degrees: degrees))
+            newCenter = pointOnCircumference(animationOrigin, radius: radius + tempOffset, angle: Angle(degrees: degrees - 90))
             
             circumference = Angle(degrees: 120)
             print(screenSize)
@@ -399,7 +353,7 @@ open class ALRadialMenu: UIButton {
         }else{
             self.setTitle("Search By\n Instrument", for: .normal)
         }
-        UIView.animate(withDuration: 0.5, delay: _delay, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: animationOptions, animations: {
+        UIView.animate(withDuration: 0.2, delay: _delay, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
             view.alpha = 0
             view.center = self.animationOrigin
             }, completion: { finished in
@@ -408,7 +362,7 @@ open class ALRadialMenu: UIButton {
         UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 10, options: [], animations: {
             let tempBounds = self.bounds
             self.bounds = CGRect(x: tempBounds.origin.x - 30, y: tempBounds.origin.y, width: tempBounds.size.width + 15, height: tempBounds.size.height + 15)
-            }, completion: nil)
+        }, completion: nil)
         tempOffset = tempOffset + 100
     }
         fileprivate func selectedAnimation(_ view: ALRadialMenuButton) {

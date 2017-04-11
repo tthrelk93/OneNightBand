@@ -20,6 +20,7 @@ class ONB: NSObject {
     var onbDate = String()
     var sessFeedMedia: [String]?
     var onbInfo = String()
+    var wantedAds = [String]()
 
 
 }

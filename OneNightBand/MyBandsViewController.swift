@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
 
-class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, DismissalDelegate  {
+class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, DismissalDelegate {
     
     @IBOutlet weak var bandTypeView: UIView!
     @IBOutlet weak var myBandsCollectionView: UICollectionView!
@@ -71,7 +71,7 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
             }
             else {
                 self.bandTypeView.isHidden = true
-                let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateOneNightBandViewController") as! CreateBandViewController
+                let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateOneNightBandViewController") as! CreateOneNightBandViewController
                 self.addChildViewController(popOverVC)
                 popOverVC.view.frame = self.view.frame
                 self.view.addSubview(popOverVC.view)
@@ -137,12 +137,13 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                             self.onbDict[tempONB.onbID] = tempONB
                         }
                     }
-                    self.ref.child("users").child("artistsONBs").observeSingleEvent(of: .value, with: {(snapshot) in
+                    self.ref.child("users").child(userID!).child("artistsONBs").observeSingleEvent(of: .value, with: {(snapshot) in
                         if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                             for snap in snapshots{
                                 self.onbIDArray.append((snap.value! as! String))
                             }
                         }
+                    
                    
                 
                 
@@ -158,13 +159,15 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                                 self.myBandsCollectionView.dataSource = self
                                 self.myBandsCollectionView.delegate = self
                             }
-                            for _ in self.onbIDArray{
-                                let cellNib = UINib(nibName: "SessionCell", bundle: nil)
-                                self.myONBCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
-                                self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
-                                self.myONBCollectionView.backgroundColor = UIColor.clear
-                                self.myONBCollectionView.dataSource = self
-                                self.myONBCollectionView.delegate = self
+                            DispatchQueue.main.async{
+                                for _ in self.onbIDArray{
+                                    let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                                    self.myONBCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                                    self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                                    self.myONBCollectionView.backgroundColor = UIColor.clear
+                                    self.myONBCollectionView.dataSource = self
+                                    self.myONBCollectionView.delegate = self
+                                }
                             }
                         }
                     })
@@ -189,12 +192,11 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         if segue.identifier == "MyBandsToSessionMaker" {
             if let viewController = segue.destination as? SessionMakerViewController {
                 viewController.sessionID = self.bandIDArray[tempIndex]
-                if(self.pressedButton == "band"){
-                    viewController.sessionID = self.bandIDArray[tempIndex]
-                }
-                if(self.pressedButton == "ONB"){
-                    viewController.sessionID = self.ONBIDArray[tempIndex]
-                }
+
+            }
+        } else {
+            if let viewController = segue.destination as? OneNightBandViewController {
+                viewController.onbID = self.onbIDArray[tempIndex]
             }
         }
 
@@ -203,7 +205,12 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     
     @available(iOS 6.0, *)
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        return self.bandIDArray.count
+        if collectionView == myBandsCollectionView{
+            return self.bandIDArray.count
+        }
+        else{
+            return self.onbIDArray.count
+        }
         
     }
     
@@ -212,17 +219,26 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     @available(iOS 6.0, *)
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell{
         var tempCell = collectionView.dequeueReusableCell(withReuseIdentifier: "SessionCell", for: indexPath) as! SessionCell
-        tempCell.sessionCellImageView.loadImageUsingCacheWithUrlString((bandsDict[bandIDArray[indexPath.row]] as! Band).bandPictureURL[0])
+        if collectionView == myBandsCollectionView{
+            tempCell.sessionCellImageView.loadImageUsingCacheWithUrlString((bandsDict[bandIDArray[indexPath.row]] as! Band).bandPictureURL[0])
         //print(self.upcomingSessionArray[indexPath.row].sessionUID as Any)
-        tempCell.sessionCellLabel.text = (bandsDict[bandIDArray[indexPath.row]] as! Band).bandName
-        tempCell.sessionCellLabel.textColor = UIColor.white
-        tempCell.sessionId = (bandsDict[bandIDArray[indexPath.row]] as! Band).bandID
+            tempCell.sessionCellLabel.text = (bandsDict[bandIDArray[indexPath.row]] as! Band).bandName
+            tempCell.sessionCellLabel.textColor = UIColor.white
+            tempCell.sessionId = (bandsDict[bandIDArray[indexPath.row]] as! Band).bandID
+        }
+        else {
+            tempCell.sessionCellImageView.loadImageUsingCacheWithUrlString((onbDict[onbIDArray[indexPath.row]] as! ONB).onbPictureURL[0])
+            //print(self.upcomingSessionArray[indexPath.row].sessionUID as Any)
+            tempCell.sessionCellLabel.text = (onbDict[onbIDArray[indexPath.row]] as! ONB).onbName
+            tempCell.sessionCellLabel.textColor = UIColor.white
+            tempCell.sessionId = (onbDict[onbIDArray[indexPath.row]] as! ONB).onbID
+        }
 
         return tempCell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-       // if(self.collectionView == myBandsCollectionView){
+        if(collectionView == myBandsCollectionView){
             if self.bandIDArray.count != 1{
                 return UIEdgeInsetsMake(0, 0, 0, 0)
             }else{
@@ -233,20 +249,30 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                 let rightInset = leftInset
                 return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
             }
-        /*} else{
-            return UIEdgeInsetsMake(0, 0, 0, 0)
-        }*/
+        }
+         else{
+            if self.onbIDArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
+                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.bandIDArray.count)
+                let totalSpacingWidth = 10 * (self.bandIDArray.count - 1)
+                
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
+
+        }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if(collectionView == self.myBandsCollectionView){
             tempIndex = indexPath.row
-            if collectionView == self.myBandsCollectionView {
-                self.pressedButton = "band"
-            }else{
-                self.pressedButton = "ONB"
-            }
-            performSegue(withIdentifier: "MyBandsToSessionMaker", sender: self)
+                performSegue(withIdentifier: "MyBandsToSessionMaker", sender: self)
+        } else{
+            tempIndex = indexPath.row
+            performSegue(withIdentifier: "MyBandsToONB", sender: self)
         }
+
         
         
     }
@@ -287,12 +313,13 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         return myTitle
     }
     
-    func finishedShowing(viewController: UIViewController) {
+    func finishedShowing() {
         //if viewController.isBeingPresented && viewController.presentingViewController == self
         //{
         //self.shadeView.isHidden = true
-        self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
         
+        self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
+        print("hello")
         self.dismiss(animated: true, completion: nil)
         return
         //}

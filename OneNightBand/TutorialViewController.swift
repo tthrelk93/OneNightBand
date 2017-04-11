@@ -149,7 +149,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         }
         dropDown.direction = .top
         //dropDown.selectRow(at: 1)
-        dropDown.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        dropDown.backgroundColor = UIColor.black.withAlphaComponent(0.9)
         dropDown.textColor = UIColor.white.withAlphaComponent(0.8)
         
 

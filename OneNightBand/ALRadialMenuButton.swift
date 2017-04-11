@@ -22,6 +22,7 @@ protocol PerformSegueInRootProtocol {
     func currentSessionsButtonSelected()
     func sessionInvitesButtonSelected()
     func sessionFeedButtonSelected()
+    func noButtonTouched()
 }
 protocol PerformSegueInArtistFinder{
     func buttonOneTouched(name: String)
@@ -31,6 +32,8 @@ public class ALRadialMenuButton: UIButton {
     public var home: String?
     public var homeScreenSize: Double?
     public var name: String?
+    
+    
     //var inviteLabel: UILabel?
     var newCenter: CGPoint?
     var delegate: PerformSegueInRootProtocol!

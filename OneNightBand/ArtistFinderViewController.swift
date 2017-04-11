@@ -16,6 +16,25 @@ import FirebaseAuth
 
 class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, SessionIDDest, PerformSegueInArtistFinderController, UIPickerViewDelegate,UIPickerViewDataSource{
  
+    @IBOutlet weak var searchByInstrumentButton: UIButton!
+    @IBOutlet weak var searchNarrowView: UIView!
+    @IBOutlet weak var postToBoardButton: UIButton!
+    var thisONBObject = ONB()
+    var thisBandObject = Band()
+    @IBAction func postToBoardButtonPressed(_ sender: Any) {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateWantedAdViewController") as! CreateWantedAdViewController
+        self.addChildViewController(popOverVC)
+        popOverVC.bandID = self.bandID
+        popOverVC.bandType = self.bandType
+        popOverVC.view.frame = self.view.frame
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+        //searchNarrowView.isHidden = true
+        
+    }
+    @IBAction func searchByInstrumentPressed(_ sender: Any) {
+        searchNarrowView.isHidden = true
+    }
     @IBOutlet weak var InstrumentPicker: UIPickerView!
     
     @IBOutlet weak var artistCollectionView: UICollectionView!
@@ -30,6 +49,8 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
     var ref = FIRDatabase.database().reference()
     var thisSession: String!
     var thisSessionObject: Band!
+    var bandID = String()
+    var bandType = String()
     var instrumentPicked: String!
     var distancePicked: String!
     var profileArtistUID: String?
@@ -40,6 +61,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         {
             vc.artistUID = profileArtistUID
         }
+        
     }
     @IBOutlet weak var searchButton: UIButton!
     func performSegueToProfile(artistUID: String) {
@@ -193,6 +215,8 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
    override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
+    self.postToBoardButton.layer.cornerRadius = self.postToBoardButton.frame.width/2
+    self.searchByInstrumentButton.layer.cornerRadius = self.searchByInstrumentButton.frame.width/2
         noArtistsFoundLabel.isHidden = false
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)

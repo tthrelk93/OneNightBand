@@ -17,7 +17,7 @@ import SwiftOverlays
 
 protocol DismissalDelegate : class
 {
-    func finishedShowing(viewController: UIViewController);
+    func finishedShowing();
 }
 
 
@@ -27,9 +27,8 @@ protocol Dismissable : class
     weak var dismissalDelegate : DismissalDelegate? { get set }
 }
 
-extension DismissalDelegate where Self: UIViewController
-{
-    }
+
+
 
 
 
@@ -37,6 +36,7 @@ extension DismissalDelegate where Self: UIViewController
 
 class MainNavigationViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UICollectionViewDelegate,UICollectionViewDataSource, PerformSegueInRootProtocol, DismissalDelegate, UITableViewDelegate, UITableViewDataSource  {
     
+    @IBOutlet weak var addMediaButton: UIButton!
     @IBOutlet weak var instrumentTableView: UITableView!
 
     //func view
@@ -95,15 +95,16 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
     var picArray = [UIImage]()
     let userID = FIRAuth.auth()?.currentUser?.uid
-    
+    var shiftViewOrigin = CGPoint()
     @IBOutlet weak var inviteCountAlert: UILabel!
     var inviteCount: Int?
     
     override func viewDidLoad(){
         super.viewDidLoad()
          //loadVidFromPhone()
-        
-        
+        self.shiftViewOrigin = shiftView.frame.origin
+        self.createSessionButton.dismissalDelegate = self
+        //createSessionButton.dismissalDelegate = self
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
@@ -160,9 +161,12 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         createSessionButton.titleLabel?.textAlignment = .center
         createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         createSessionButton.layer.cornerRadius = 15
+        
         createSessionButton.clipsToBounds = true
         createSessionButton.layer.masksToBounds = false
         self.bioTextView.delegate = self
+        
+        //self.addMediaButton.layer.cornerRadius = 15
         //let backgroundQ = DispatchQueue.global(attributes: .qosDefault)
         
         
@@ -261,10 +265,10 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 }
             
             self.ref.child("users").child(self.userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
-                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                    self.sessionsPlayed.text = String(snapshots.count)
+                /*if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                     
-                }
+                    
+                }*/
                 for _ in self.picArray{
                     self.currentCollect = "pic"
                     //self.tempLink = NSURL(string: (snap.value as? String)!)
@@ -328,14 +332,22 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
     
     //@IBOutlet weak var shadeView: UIView!
+    func noButtonTouched(){
+        print("noButton")
+         UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.frame.origin = self.shiftViewOrigin
+        })
+    }
     
+    //doesntWork
     
-    func finishedShowing(viewController: UIViewController) {
+    func finishedShowing() {
+        print("finished")
         //if viewController.isBeingPresented && viewController.presentingViewController == self
         //{
         //self.shadeView.isHidden = true
         self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
-        
+        shiftView.bounds = CGRect(x: shiftView.center.x - 50, y: shiftView.center.y, width: shiftView.frame.width, height: shiftView.frame.height)
         self.dismiss(animated: true, completion: nil)
         return
         //}
@@ -492,20 +504,35 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
 
     
-    @IBOutlet weak var sessionsPlayed: UILabel!
     
     func createSessionButtonSelected() {
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.frame.origin = self.shiftViewOrigin
+        })
+
         performSegue(withIdentifier:"MainNavToFindBands", sender: self)
         
             }
     func currentSessionsButtonSelected(){
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.frame.origin = self.shiftViewOrigin
+        })
+
         performSegue(withIdentifier: "MainToBands", sender: self)
        
     }
     func sessionInvitesButtonSelected(){
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.frame.origin = self.shiftViewOrigin
+        })
+
         performSegue(withIdentifier: "MainNavToSessionInvites", sender: self)
     }
     func sessionFeedButtonSelected(){
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.frame.origin = self.shiftViewOrigin
+        })
+
         performSegue(withIdentifier: "ProfileToSessionFeed", sender: self)
     }
     var inviteButtonLocation: CGRect?
@@ -601,12 +628,14 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         return buttons
     }
     
+    @IBOutlet weak var shiftView: UIView!
     func showMenu() {
         let buttons = generateButtons()
         _ = createSessionButton
             .setButtons(buttons)
             .setDelay(0.05)
-            .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y)))
+            
+            .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y) - 170))
             .presentInView(view)
         for button in buttons{
             if button.name == "Session Invites"{
@@ -668,12 +697,16 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         //editBioLabel.isHidden = false
    
     }
-    
+     fileprivate var animationOptions: UIViewAnimationOptions = [.curveEaseInOut, .beginFromCurrentState]
+    @IBOutlet weak var positionView: UIView!
     @IBAction func sessionMenuTouched(_ sender: AnyObject) {
         //createSessionButton.zoomIn()
         //self.bioTextView.alpha = 0.3
+        UIView.animate(withDuration: 0.2, delay: 0.09, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+        self.shiftView.frame.origin = self.positionView.frame.origin
+        })
         createSessionButton.setTitle("", for: .normal)
-        UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 10, options: [], animations: {
+        UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 20, options: [], animations: {
             let bounds = self.createSessionButton.frame
             self.createSessionButton.bounds = CGRect(x: bounds.origin.x, y: bounds.origin.y, width: bounds.size.width - bounds.size.width, height: bounds.size.height - bounds.size.height)
             }, completion: nil)
