@@ -62,8 +62,12 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     @IBOutlet weak var editSessionInfoButton: UIButton!
     @IBOutlet weak var removeArtistButton: UIButton!
     
+    @IBOutlet weak var becomeFanButton: UIButton!
+    @IBAction func becomeFanPressed(_ sender: Any) {
+    }
     @IBOutlet weak var editSessionButton: UIButton!
     var cellTouchedArtistUID = String()
+    var sender = String()
     @IBOutlet weak var uploadSessionToFeed: UIButton!
     override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         if segue.identifier == "SessionToArtistFinder"{
@@ -96,7 +100,12 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 vc.sessionID = self.selectedCell?.sessionId
                 vc.navigationController?.isNavigationBarHidden = false
                 vc.navigationItem.hidesBackButton = false
-                 
+                if self.sender != "feed"{
+                    vc.sender = "bandPage"
+                } else {
+                    vc.sender = "feed"
+                }
+                
             }
 
         }
@@ -138,6 +147,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     
     @IBOutlet weak var currentSessionsCollect: UICollectionView!
     
+    @IBOutlet weak var fanCount: UILabel!
     @IBOutlet weak var sessionsOnFeedCollect: UICollectionView!
     @IBOutlet weak var upcomingSessionsCollect: UICollectionView!
     @IBOutlet weak var pastSessionsCollect: UICollectionView!
@@ -149,6 +159,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = false
         navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         
         
         sessionPicker.delegate = self
@@ -171,19 +182,31 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         //AddMusiciansButton.titleLabel?.numberOfLines = 2
         //AddMusiciansButton.setTitleColor(UIColor.darkGray, for: .normal)
        // AddMusiciansButton.titleLabel?.font = UIFont.systemFont(ofSize: 23.0, weight: UIFontWeightLight)
-        AddMusiciansButton.titleLabel?.textAlignment = NSTextAlignment.center
+        if self.sender != "feed" || self.sender == "bandBoard"{
+            self.becomeFanButton.isHidden = true
+            AddMusiciansButton.titleLabel?.textAlignment = NSTextAlignment.center
+            editSessionInfoButton.isHidden = false
         
-        chatButton.setTitle("Band Chat", for: .normal)
-        chatButton.titleLabel?.numberOfLines = 2
-        chatButton.setTitleColor(UIColor.darkGray, for: .normal)
-        chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
-        chatButton.titleLabel?.textAlignment = NSTextAlignment.center
+            chatButton.setTitle("Band Chat", for: .normal)
+            chatButton.titleLabel?.numberOfLines = 2
+            chatButton.setTitleColor(UIColor.darkGray, for: .normal)
+            chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
+            chatButton.titleLabel?.textAlignment = NSTextAlignment.center
         
-        addNewSession.setTitle("Add New Session", for: .normal)
-        addNewSession.titleLabel?.numberOfLines = 2
-        addNewSession.setTitleColor(UIColor.darkGray, for: .normal)
-        addNewSession.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
-        addNewSession.titleLabel?.textAlignment = NSTextAlignment.center
+            addNewSession.setTitle("New Session", for: .normal)
+            addNewSession.titleLabel?.numberOfLines = 2
+            addNewSession.setTitleColor(UIColor.darkGray, for: .normal)
+            addNewSession.titleLabel?.font = UIFont.systemFont(ofSize: 20.0, weight: UIFontWeightLight)
+            addNewSession.titleLabel?.textAlignment = NSTextAlignment.center
+        } else {
+            
+            editSessionInfoButton.isHidden = true
+            AddMusiciansButton.isHidden = true
+            chatButton.isHidden = true
+            addNewSession.isHidden = true
+            self.becomeFanButton.isHidden = false
+        }
+        
         
 
         

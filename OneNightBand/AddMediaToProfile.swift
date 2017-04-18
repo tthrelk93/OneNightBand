@@ -337,12 +337,18 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
                     
                     //values2["vidsFromPhone"] = self.recentlyAddedVidArray
                 }
-                /*else{
-                    for link in vidFromPhoneArray{
-                        self.allVidURLs.append(String(describing: link))
-                    }
+                else{
+                    values2["sessionMedia"] = self.allVidURLs
                     
-                }*/
+                    print("allVids: \(self.allVidURLs)")
+                    recipient.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                        if err != nil {
+                            print(err!)
+                            return
+                        }
+                    })
+                    
+                }
             }
             
             

@@ -35,6 +35,15 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
        override func viewDidLoad() {
         super.viewDidLoad()
         
+        /*let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+        layout.minimumInteritemSpacing = 20
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        myONBCollectionView.collectionViewLayout = layout
+        myBandsCollectionView.collectionViewLayout = layout*/
+        
         dropDown.cancelAction = {[unowned self] () in
             self.bandTypeView.isHidden = true
             self.createNewBandButton.isHidden = false
@@ -65,6 +74,7 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                 popOverVC.view.frame = self.view.frame
                 self.view.addSubview(popOverVC.view)
                 popOverVC.didMove(toParentViewController: self)
+                popOverVC.dismissalDelegate = self
                 self.dropDownDone = true
                 self.createNewBandButton.isHidden = false
                 
@@ -77,6 +87,7 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                 self.view.addSubview(popOverVC.view)
                 popOverVC.didMove(toParentViewController: self)
                 self.dropDownDone = true
+                popOverVC.dismissalDelegate = self
                 self.createNewBandButton.isHidden = false
             }
             
@@ -192,6 +203,7 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         if segue.identifier == "MyBandsToSessionMaker" {
             if let viewController = segue.destination as? SessionMakerViewController {
                 viewController.sessionID = self.bandIDArray[tempIndex]
+                viewController.sender = "myBands"
 
             }
         } else {
@@ -317,10 +329,11 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         //if viewController.isBeingPresented && viewController.presentingViewController == self
         //{
         //self.shadeView.isHidden = true
-        
+        //self.myONBCollectionView.reloadData()
+        //self.myBandsCollectionView.reloadData()
         self.view.backgroundColor = UIColor.clear.withAlphaComponent(1.0)
         print("hello")
-        self.dismiss(animated: true, completion: nil)
+        //self.dismiss(animated: true, completion: nil)
         return
         //}
         
@@ -335,11 +348,7 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         }
         
     }*/
-
-    
-
-
-    
+ 
 
 
 }

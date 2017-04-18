@@ -52,6 +52,7 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
                         values["views"] = 0
                         values["wantedAds"] = [String]()
                         values["sessFeedMedia"] = [String]()
+                        values["fanCount"] = 0
                         
                         let dateformatter = DateFormatter()
                         dateformatter.dateStyle = DateFormatter.Style.short

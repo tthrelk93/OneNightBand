@@ -45,8 +45,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         /*self.sessionCollectionView.isHidden = true
         self.selectVideoFromSessionCollect = true*/
         self.uploadBandToFeed.isHidden = false
-        self.soloImageView.isHidden = false
-        self.currentUserNameLabel.isHidden = false
+        //self.soloImageView.isHidden = false
+        //self.currentUserNameLabel.isHidden = false
        
 
     }
@@ -75,13 +75,14 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
        @IBOutlet weak var selectSessionLabel: UILabel!
     
     @IBOutlet weak var selectVideoLabel: UILabel!
-    
+    var onbArray = [String]()
     @IBOutlet weak var selectVideoFromSessionCollect: UICollectionView!
        func backToFeed(){
         //let vc = SessionFeedViewController()
         //present(vc, animated: true, completion: nil)
         performSegue(withIdentifier: "CancelPressed", sender: self)
     }
+    var onbObjectArray = [ONB]()
     override func viewWillDisappear(_ animated: Bool) {
         SwiftOverlays.removeAllBlockingOverlays()
     }
@@ -104,9 +105,11 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.originalMediaBounds = selectVideoFromSessionCollect.frame
         self.soloSessTextView.delegate = self
         self.soloPicker.isHidden = true
-        self.yourBandsCollect.isHidden = false
+        self.yourBandsCollect.isHidden = true
+        self.onbCollect.isHidden = true
         self.selectSessionLabel.isHidden = true
         self.selectVideoLabel.isHidden = true
         self.sessionCollectionView.isHidden = true
@@ -119,15 +122,6 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
-                    if snap.key == "profileImageUrl"{
-                        print((snap.value as! [String]).first!)
-                        self.soloImageView.loadImageUsingCacheWithUrlString((snap.value as! [String]).first!)
-                        self.currentUserButton.isHidden = false
-                        self.soloPicArray = snap.value as! [String]
-                    }
-                    if snap.key == "name"{
-                        self.currentUserNameLabel.text = snap.value as! String
-                    }
                     if snap.key == "media"{
                         let mediaSnaps = snap.value as! [String]
                         for m_snap in mediaSnaps{
@@ -148,8 +142,27 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                             self.bandArray.append(id)
                         }
                     }
+                    if snap.key == "artistsONBs"{
+                        for id in (snap.value as! [String]){
+                            self.onbArray.append(id)
+                        }
+                    }
                 }
             }
+            
+            self.ref.child("oneNightBands").observeSingleEvent(of: .value, with: {(snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    for snap in snapshots{
+                        let tempDict = snap.value as! [String:Any]
+                        let tempONB = ONB()
+                        if self.onbArray.contains(snap.key){
+                            tempONB.setValuesForKeys(tempDict)
+                            self.onbObjectArray.append(tempONB)
+                        }
+                    }
+                }
+                
+            
             
 
         
@@ -171,6 +184,18 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             }*/
             DispatchQueue.main.async{
                 print(self.bandArray)
+                for _ in self.onbArray{
+                    self.currentCollect = "onb"
+                    
+                    //self.curPastArrayIndex = self.pastSessionArray.index(of: session)!
+                    
+                    let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                    self.onbCollect.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                    self.sizingCell = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                    self.onbCollect.backgroundColor = UIColor.clear
+                    self.onbCollect.dataSource = self
+                    self.onbCollect.delegate = self
+                }
                 for _ in self.bandArray{
                     self.currentCollect = "band"
                     
@@ -218,6 +243,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                 }
             }
 
+        })
         })
         })
        
@@ -309,6 +335,9 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         if collectionView == yourBandsCollect{
             return bandArray.count
         }
+        if collectionView == onbCollect{
+            return onbArray.count
+        }
         if collectionView == sessionCollectionView{
             return bandSessionObjectArray.count
         }
@@ -324,7 +353,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == yourBandsCollect || collectionView == sessionCollectionView{
+        if collectionView == yourBandsCollect || collectionView == sessionCollectionView || collectionView == onbCollect{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SessionCell", for:  indexPath as IndexPath) as! SessionCell
             self.configureCell(cell, collectionView, forIndexPath: indexPath as NSIndexPath)
             return cell
@@ -344,14 +373,22 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     
+    @IBOutlet weak var onbCollect: UICollectionView!
     
     //**
     //DidSelect
     //**
+    //var onbVideoArray = [String]()
+    var originalMediaBounds = CGRect()
+    var mostRecentONBSelected = ONB()
+    var onbMediaArray = [String]()
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //collectionView.des
         if collectionView == yourBandsCollect{
             self.currentCollect = "band"
+        }
+        if collectionView == onbCollect{
+            self.currentCollect = "onb"
         }
         if collectionView == sessionCollectionView{
             self.currentCollect = "session"
@@ -368,7 +405,69 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         ref.child("sessions").observeSingleEvent(of: .value, with: { (snapshot) in
             
             //if band collection view cell is touched
+            if collectionView == self.onbCollect{
+                var bandCell = collectionView.cellForItem(at: indexPath) as! SessionCell
+                self.selectVideoLabel.isHidden = true
+                if bandCell.cellSelected == false{
+                    //self.bandSessionObjectArray.removeAll()
+                    //self.bandSessionIDArray.removeAll()
+                    bandCell.cellSelected = true
+                    for cell in collectionView.visibleCells{
+                        if cell != bandCell {
+                            //collectionView.deselectItem(at: collectionView.indexPath(for: cell)! , animated: true)
+                            (cell as! SessionCell).cellSelected = false
+                            (cell as! SessionCell).isSelected = false
+                        }
+                    }
+                    bandCell.layer.borderWidth = 2.0
+                    bandCell.layer.borderColor = UIColor.orange.cgColor
+                    //self.selectedSessionMediaArray.append(self.mostRecentSessionSelected)
+                    bandCell.isSelected = true
+                    
+                    //self.sessionCollectionView.isHidden = false
+                    //self.selectSessionLabel.isHidden = false
+                    self.mostRecentONBSelected = self.onbObjectArray[indexPath.row]
+                    self.bandType = "onb"
+                    for vid in self.mostRecentONBSelected.onbMedia{
+                        self.onbMediaArray.append(vid)
+                    }
+                        DispatchQueue.main.async{
+                        for _ in self.onbMediaArray{
+                            self.currentCollect = "media"
+                            
+                            let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
+                            self.selectVideoFromSessionCollect.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
+                            self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
+                            self.selectVideoFromSessionCollect.backgroundColor = UIColor.clear
+                            self.selectVideoFromSessionCollect.dataSource = self
+                            self.selectVideoFromSessionCollect.delegate = self
+                            }
+                        collectionView.deselectItem(at: indexPath as IndexPath, animated: false)
+                        self.onbCollect.reloadData()
+                        self.selectVideoFromSessionCollect.reloadData()
+                        //self.selectVideoFromSessionCollect.reloadData()
+                    }
+                    
+                }
+                else{
+                    bandCell.cellSelected = false
+                    self.sessionCollectionView.isHidden = true
+                    self.selectSessionLabel.isHidden = true
+                    self.onbMediaArray.removeAll()
+                    //self.bandSessionIDArray.removeAll()
+                    
+                    self.selectVideoFromSessionCollect.isHidden = true
+                    self.selectVideoLabel.isHidden = true
+                    self.bandMedia.removeAll()
+                    self.selectedSessionMediaArray.removeAll()
+                    //let cell = collectionView.cellForItem(at: indexPath) as! SessionCell
+                    bandCell.layer.borderColor = UIColor.clear.cgColor
+                    bandCell.isSelected = false
+                }
+            }
+
             if collectionView == self.yourBandsCollect{
+                self.selectVideoFromSessionCollect.frame = self.sessionCollectionView.frame
                 var bandCell = collectionView.cellForItem(at: indexPath) as! SessionCell
                 self.selectVideoLabel.isHidden = true
                 if bandCell.cellSelected == false{
@@ -390,6 +489,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                         self.sessionCollectionView.isHidden = false
                     self.selectSessionLabel.isHidden = false
                     self.mostRecentBandSelected = self.bandObjectArray[indexPath.row]
+                    self.bandType = "band"
                     for sess in self.mostRecentBandSelected.bandSessions{
                         self.bandSessionIDArray.append(sess)
                     }
@@ -434,6 +534,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                     self.selectSessionLabel.isHidden = true
                     self.bandSessionObjectArray.removeAll()
                     self.bandSessionIDArray.removeAll()
+                    
+                    self.selectVideoFromSessionCollect.frame = self.originalMediaBounds
                 
                     self.selectVideoFromSessionCollect.isHidden = true
                     self.selectVideoLabel.isHidden = true
@@ -652,6 +754,45 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         
 
     }
+    @IBAction func soloSessionPressed(_ sender: Any) {
+        self.soloPicker.isHidden = false
+        self.soloPickerUsed = true
+        self.yourBandsCollect.isHidden = true
+        self.sessionCollectionView.isHidden = true
+        self.selectVideoFromSessionCollect.isHidden = true
+        self.uploadBandToFeed.isHidden = true
+        
+
+    }
+    @IBAction func bandTypePressed(_ sender: Any) {
+        self.soloPicker.isHidden = true
+        //self.soloPickerUsed = false
+        self.onbCollect.isHidden = true
+        self.yourBandsCollect.isHidden = false
+        self.bandType = "band"
+        self.sessionCollectionView.isHidden = true
+        self.selectVideoFromSessionCollect.isHidden = true
+        self.uploadBandToFeed.isHidden = false
+        yourONBsLabel.isHidden = true
+        yourBandsLabel.isHidden = false
+       
+
+    }
+    @IBAction func oneNightBandTypePressed(_ sender: Any) {
+        self.soloPicker.isHidden = true
+        //self.soloPickerUsed = false
+        self.onbCollect.isHidden = false
+        self.yourBandsCollect.isHidden = true
+        
+        self.bandType = "band"
+        self.sessionCollectionView.isHidden = true
+        self.selectVideoFromSessionCollect.isHidden = true
+        self.uploadBandToFeed.isHidden = false
+        yourONBsLabel.isHidden = false
+        yourBandsLabel.isHidden = true
+    }
+    @IBOutlet weak var yourONBsLabel: UILabel!
+    @IBOutlet weak var yourBandsLabel: UILabel!
     func configureCell(_ cell: SessionCell,_ collectionView: UICollectionView, forIndexPath indexPath: NSIndexPath) {
         //print(self.currentCollect)
         if collectionView == self.yourBandsCollect{
@@ -869,19 +1010,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     var autoIdString = String()
     @IBAction func Upload(_ sender: AnyObject) {
         if self.selectedSessionMediaArray.count != 0{
-            soloPressed = false
-            /*var tempURLArray2 = self.mostRecentSessionSelected.sessFeedMedia
-            var vidBool = false
-            for url in self.selectedSessionMediaArray{
-                if tempURLArray2.contains(String(describing: url)){
-                    vidBool = true
-                    let alert = UIAlertController(title: "Media Already on Feed", message: "One or more of the selected videos are already with this session on the Feed. Please deselect the offending video.", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                    
-                }
-            }
-            if vidBool == false{*/
+            
+           
                 SwiftOverlays.showBlockingTextOverlay("Uploading Session to Feed")
                 
                 uploadMovieToFirebaseStorage()
@@ -894,10 +1024,94 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         
     }
 
-    
+    var bandType = String()
     func uploadMovieToFirebaseStorage(){
-        
-        if soloPressed == false{
+        if bandType == "solo"{
+            let recipient = self.ref.child("sessionFeed")
+            let recipient2 = self.ref.child("users")
+            var values = Dictionary<String, Any>()
+            var values2 = Dictionary<String, Any>()
+            
+            values["sessionName"] = self.soloSessionNameTextView.text
+            values["sessionArtists"] = [userID!: "-"] as [String: Any]
+            values["sessionBio"] = self.soloSessTextView.text
+            values["sessionDate"] = ""
+            values["sessionID"] = ""
+            values["bandID"] = self.userID
+            values["bandName"] = self.currentUserNameLabel.text
+            
+            var tempArray = [String]()
+            for pic in selectedSoloPicArray{
+                tempArray.append(String(describing: pic))
+            }
+            values["sessionPictureURL"] = tempArray
+            values["views"] = 0
+            var tempVidArray = [String]()
+            for vid in selectedSoloVidArray{
+                tempVidArray.append(String(describing: vid))
+            }
+            
+            values["sessionMedia"] = tempVidArray
+            values["soloSessBool"] = "true"
+            
+            
+            for url in self.selectedSoloVidArray{
+                
+                let videoName = NSUUID().uuidString
+                let storageRef = FIRStorage.storage().reference(withPath: "session_videos/").child("\(videoName).mov")
+                let uploadMetadata = FIRStorageMetadata()
+                uploadMetadata.contentType = "video/quicktime"
+                let uploadTask = storageRef.putFile(url as URL, metadata: uploadMetadata){(metadata, error) in
+                    if(error != nil){
+                        print("got an error: \(error)")
+                    }else{
+                        print("upload complete: metadata = \(metadata)")
+                        print("download url = \(metadata?.downloadURL())")
+                    }
+                }
+            }
+            for pic in selectedSoloPicArray{
+                print("soloPic:\(pic)")
+                let imageName = NSUUID().uuidString
+                let storageRef = FIRStorage.storage().reference().child("profile_images/").child("\(imageName).jpg")
+                if let uploadData = UIImageJPEGRepresentation(pic, 0.1) {
+                    storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
+                        if error != nil {
+                            print(error!)
+                            return
+                        }
+                    })
+                }
+            }
+            
+            let autoId = recipient.childByAutoId()
+            
+            values2["soloSessKeysOnFeed"] = [String(describing: autoId)]
+            //self.autoIdString = String(describing: autoId)
+            print("valuesB4Upload: \(values)")
+            autoId.updateChildValues(values, withCompletionBlock: {(err, ref) in
+                if err != nil {
+                    print(err as Any)
+                    return
+                }
+                
+                
+            })
+            recipient2.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                if err != nil {
+                    print(err as Any)
+                    return
+                }
+                DispatchQueue.main.async {
+                    print("segue")
+                    self.performSegue(withIdentifier: "CancelPressed", sender: self)
+                }
+            })
+        }
+        if bandType == "onb"{
+    
+        }
+        if bandType == "band"{
                 let recipient = self.ref.child("sessionFeed")
                 let recipient2 = self.ref.child("bands").child(self.mostRecentBandSelected.bandID!)
                 let recipient3 = self.ref.child("sessions").child(self.mostRecentSessionSelected.sessionUID)
@@ -918,6 +1132,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                         values["sessionDate"] = self.mostRecentSessionSelected.sessionDate
                         values["sessionID"] = self.mostRecentSessionSelected.sessionUID
             values["soloSessBool"] = "false"
+            values["bandType"] = self.bandType
         ///
                         values["sessionPictureURL"] = self.mostRecentSessionSelected.sessionPictureURL
                         values["views"] = 0
@@ -988,88 +1203,8 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             print("Uploaded \(progress.completedUnitCount) so far")
         }*/
         }
-        else{
-            let recipient = self.ref.child("sessionFeed")
-            let recipient2 = self.ref.child("users")
-            var values = Dictionary<String, Any>()
-            var values2 = Dictionary<String, Any>()
+       
             
-            values["sessionName"] = self.soloSessionNameTextView.text
-            values["sessionArtists"] = [userID!: "-"] as [String: Any]
-            values["sessionBio"] = self.soloSessTextView.text
-            values["sessionDate"] = ""
-            values["sessionID"] = ""
-            values["bandID"] = self.userID
-            values["bandName"] = self.currentUserNameLabel.text
-
-            var tempArray = [String]()
-            for pic in selectedSoloPicArray{
-                tempArray.append(String(describing: pic))
-            }
-            values["sessionPictureURL"] = tempArray
-            values["views"] = 0
-            var tempVidArray = [String]()
-            for vid in selectedSoloVidArray{
-                tempVidArray.append(String(describing: vid))
-            }
-            
-            values["sessionMedia"] = tempVidArray
-            values["soloSessBool"] = "true"
-    
-            
-            for url in self.selectedSoloVidArray{
-                
-                let videoName = NSUUID().uuidString
-                let storageRef = FIRStorage.storage().reference(withPath: "session_videos/").child("\(videoName).mov")
-                let uploadMetadata = FIRStorageMetadata()
-                uploadMetadata.contentType = "video/quicktime"
-                let uploadTask = storageRef.putFile(url as URL, metadata: uploadMetadata){(metadata, error) in
-                    if(error != nil){
-                        print("got an error: \(error)")
-                    }else{
-                        print("upload complete: metadata = \(metadata)")
-                        print("download url = \(metadata?.downloadURL())")
-                    }
-                }
-            }
-                for pic in selectedSoloPicArray{
-                    print("soloPic:\(pic)")
-                    let imageName = NSUUID().uuidString
-                    let storageRef = FIRStorage.storage().reference().child("profile_images/").child("\(imageName).jpg")
-                    if let uploadData = UIImageJPEGRepresentation(pic, 0.1) {
-                        storageRef.put(uploadData, metadata: nil, completion: { (metadata, error) in
-                            if error != nil {
-                                print(error!)
-                                return
-                            }
-                        })
-                    }
-            }
-            
-                let autoId = recipient.childByAutoId()
-            
-            values2["soloSessKeysOnFeed"] = [String(describing: autoId)]
-                //self.autoIdString = String(describing: autoId)
-            print("valuesB4Upload: \(values)")
-                autoId.updateChildValues(values, withCompletionBlock: {(err, ref) in
-                    if err != nil {
-                        print(err as Any)
-                        return
-                    }
-                    
-
-                })
-            recipient2.updateChildValues(values2, withCompletionBlock: {(err, ref) in
-                if err != nil {
-                    print(err as Any)
-                    return
-                }
-                DispatchQueue.main.async {
-                    print("segue")
-                    self.performSegue(withIdentifier: "CancelPressed", sender: self)
-                }
-            })
-        }
     }
     var movieURLFromPicker: NSURL?
 

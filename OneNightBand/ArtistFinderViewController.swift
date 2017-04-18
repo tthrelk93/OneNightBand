@@ -105,14 +105,20 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                     artist.setValuesForKeys(dictionary!)
                     self.artistArray.append(artist)
                 }
-                FIRDatabase.database().reference().child("sessions").child(self.thisSession).child("sessionArtists").observeSingleEvent(of: .value, with: { (ssnapshot) in
+                var tempRef = FIRDatabaseReference()
+                if self.bandType == "band"{
+                    tempRef =  FIRDatabase.database().reference().child("bands").child(self.thisBandObject.bandID!).child("bandMembers")
+                }
+                else{
+                    tempRef =  FIRDatabase.database().reference().child("oneNightBands").child(self.thisONBObject.onbID).child("onbArtists")
+                }
+                   tempRef.observeSingleEvent(of: .value, with: { (ssnapshot) in
                     if let ssnapshots = ssnapshot.children.allObjects as? [FIRDataSnapshot]{
                         for ssnap in ssnapshots{
                             artistsAlreadyInSession.append(ssnap.value as! String)
                         }
                     }
-                    
-                    
+                   
                     for artist in self.artistArray{
                         self.instrumentArray.removeAll()
                         if(artist.artistUID != FIRAuth.auth()?.currentUser?.uid){
@@ -280,7 +286,13 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         
         cell.artistCardCellImageView.loadImageUsingCacheWithUrlString(artistAfterDist[indexPath.row].profileImageUrl.first!)
         cell.artistUID = artistAfterDist[indexPath.row].artistUID
-        cell.invitedSessionID = self.thisSession
+        if self.bandType == "onb"{
+            cell.artistCount = self.thisONBObject.onbArtists.count
+        } else {
+            cell.artistCount = self.thisBandObject.bandMembers.count
+        }
+        cell.bandType = self.bandType
+        cell.invitedBandID = self.thisSession
         cell.buttonName = self.instrumentPicked
         //cell.sessionDate = self.thisSessionObject.sessionDate
         
@@ -339,6 +351,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
             }
         })
     }
+    var artistCount = Int()
     var yearsArray = [String]()
     var playingYearsArray = ["1","2","3","4","5+","10+"]
     var playingLevelArray = ["beginner", "intermediate", "advanced", "expert"]

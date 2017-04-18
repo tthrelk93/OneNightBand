@@ -44,6 +44,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                         values["fanPicks"] = 0
                         values["sessionsOnFeed"] = [""]
                         values["wantedAds"] = [String]()
+                        values["fanCount"] = 0
                         //values["messages"] = [String: Any]()
                         
                         

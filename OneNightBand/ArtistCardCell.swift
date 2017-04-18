@@ -29,7 +29,9 @@ class ArtistCardCell: UICollectionViewCell {
     var ref = FIRDatabase.database().reference()
     var artistUID: String?
     var buttonName: String!
-    var invitedSessionID: String!
+    var invitedBandID: String!
+    var bandType: String!
+    var artistCount: Int!
     var sessionDate: String!
     var delegate: PerformSegueInArtistFinderController!
     @IBOutlet weak var artistCardCellNameLabel: UILabel!
@@ -54,7 +56,7 @@ class ArtistCardCell: UICollectionViewCell {
                 
                 for snap in snapshots{
                     if let dictionary = snap.value as? [String: Any] {
-                        if dictionary["sessionID"] as! String == self.invitedSessionID{
+                        if dictionary["bandID"] as! String == self.invitedBandID{
                             //ref.sessions.invitedsessionId.observe{
                             //if invitedSession.sessionartists.contains(artistUID) != true{ carry on
                             let alert = UIAlertController(title: "Whoops!", message: "Artist already has pending invite for this session.", preferredStyle: UIAlertControllerStyle.alert)
@@ -78,10 +80,12 @@ class ArtistCardCell: UICollectionViewCell {
             var values = [String: Any]()
             //values[sessRef] = testArray //as Any?
             values["sender"] = currentUser!
-            values["sessionID"] = self.invitedSessionID
+            values["bandID"] = self.invitedBandID
             values["instrumentNeeded"] = self.buttonName
-            values["sessionDate"] = self.sessionDate
+            values["date"] = self.sessionDate
             values["inviteKey"] = String(describing: tempID)
+            values["bandType"] = self.bandType
+            values["artistCount"] = self.artistCount
             
             tempID.updateChildValues(values, withCompletionBlock: {(err, ref) in
                 if err != nil {

@@ -21,6 +21,7 @@
 		3B19CB491E64B61100390DDA /* InstrumentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */; };
 		3B19CB4A1E64B61100390DDA /* InstrumentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */; };
 		3B1E04701DEA221400DCDAA4 /* ArtistProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */; };
+		3B2AFB5A1EA2A1D4005B8D15 /* SendAuditionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2AFB591EA2A1D4005B8D15 /* SendAuditionViewController.swift */; };
 		3B486AF61DB931FB00A243C5 /* ArtistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B486AF51DB931FB00A243C5 /* ArtistCell.xib */; };
 		3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B486AF71DB9335600A243C5 /* ArtistCell.swift */; };
 		3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49277E1E479DA200A8D0B3 /* InviteCell.swift */; };
@@ -128,6 +129,7 @@
 		3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstrumentTableViewCell.swift; sourceTree = "<group>"; };
 		3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InstrumentTableViewCell.xib; sourceTree = "<group>"; };
 		3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistProfileViewController.swift; sourceTree = "<group>"; };
+		3B2AFB591EA2A1D4005B8D15 /* SendAuditionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendAuditionViewController.swift; sourceTree = "<group>"; };
 		3B486AF51DB931FB00A243C5 /* ArtistCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCell.xib; sourceTree = "<group>"; };
 		3B486AF71DB9335600A243C5 /* ArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
 		3B49277E1E479DA200A8D0B3 /* InviteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteCell.swift; sourceTree = "<group>"; };
@@ -246,12 +248,36 @@
 		3B01255A1E9D430200D07D0C /* JoinBand */ = {
 			isa = PBXGroup;
 			children = (
-				3B5B8A651E96D9AE00A2AABF /* JoinBandCollectionViewCell.swift */,
-				3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */,
 				3B5B8A691E96E0BF00A2AABF /* BandBoardViewController.swift */,
 				3B01255B1E9D443C00D07D0C /* CreateWantedAdViewController.swift */,
+				3B72F5381E8C5C0A006013EC /* FindBandsViewController.swift */,
+				3B2AFB591EA2A1D4005B8D15 /* SendAuditionViewController.swift */,
 			);
 			name = JoinBand;
+			sourceTree = "<group>";
+		};
+		3B01255D1E9E855300D07D0C /* Collection/TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				3B5B8A651E96D9AE00A2AABF /* JoinBandCollectionViewCell.swift */,
+				3B5B8A661E96D9AE00A2AABF /* JoinBandCollectionViewCell.xib */,
+				3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */,
+				3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */,
+				3BB0FE641DF7888E0028D544 /* PictureCollectionViewCell.swift */,
+				3BB0FE651DF7888E0028D544 /* PictureCollectionViewCell.xib */,
+				3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */,
+				3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */,
+				3B4DAD2E1E8064BA008FB825 /* songCell.swift */,
+				3B4DAD2F1E8064BA008FB825 /* songCell.xib */,
+				3B9641AA1DB54B6000E35480 /* SessionCell.swift */,
+				3B9641AE1DB573D800E35480 /* SessionCell.xib */,
+				3B486AF71DB9335600A243C5 /* ArtistCell.swift */,
+				3B486AF51DB931FB00A243C5 /* ArtistCell.xib */,
+				3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */,
+				3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */,
+				3BAD69131DA4734400C2CFC0 /* InstrumentTags */,
+			);
+			name = Collection/TableViewCells;
 			sourceTree = "<group>";
 		};
 		3B47F92D1DC28F8F00FD1E94 /* InviteButtonTouched */ = {
@@ -289,12 +315,6 @@
 				3BDFEE2F1DCBC888004B4FA1 /* CurrentSessionsTouched */,
 				3B47F92D1DC28F8F00FD1E94 /* InviteButtonTouched */,
 				3BFD58FC1DF0DC3300C85225 /* AddMediaToProfile.swift */,
-				3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */,
-				3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */,
-				3BB0FE641DF7888E0028D544 /* PictureCollectionViewCell.swift */,
-				3BB0FE651DF7888E0028D544 /* PictureCollectionViewCell.xib */,
-				3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */,
-				3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */,
 				3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */,
 				3B5B8A6D1E970B3B00A2AABF /* OneNightBandViewController.swift */,
 			);
@@ -315,8 +335,6 @@
 			isa = PBXGroup;
 			children = (
 				3B9641A81DB544F900E35480 /* CurrentSessionsCollectionView.swift */,
-				3B9641AA1DB54B6000E35480 /* SessionCell.swift */,
-				3B9641AE1DB573D800E35480 /* SessionCell.xib */,
 			);
 			name = CurrentSessionsTouched;
 			sourceTree = "<group>";
@@ -357,19 +375,18 @@
 		3BE29F121D9B256A007A326B /* OneNightBand */ = {
 			isa = PBXGroup;
 			children = (
-				3B01255A1E9D430200D07D0C /* JoinBand */,
-				3BEFDB791E7F36990076E2BC /* mp3Player */,
 				3BE29F451D9B2F2A007A326B /* OneNightBand.entitlements */,
 				3BE29F131D9B256A007A326B /* AppDelegate.swift */,
 				3BD3236A1DAED8F1003ECA54 /* UIViewExtension.swift */,
 				3BF0B8B41DAC4A05005DB1C9 /* ImageViewExtension.swift */,
+				3B01255D1E9E855300D07D0C /* Collection/TableViewCells */,
+				3B01255A1E9D430200D07D0C /* JoinBand */,
 				3BF9951E1DA9ADDC00ABF5CF /* Model */,
 				3B9641A71DB544AF00E35480 /* ProfileNavigation */,
 				3BF9951D1DA9ADB800ABF5CF /* Session */,
 				3B69E7131DA3057C00D97BE2 /* CreateAccount/LoginController */,
 				3B69E7121DA3051700D97BE2 /* TutorialControllers */,
 				3BE29F4B1D9C5ACC007A326B /* TextFieldEffect */,
-				3BAD69131DA4734400C2CFC0 /* InstrumentTags */,
 				3BE29F1A1D9B256A007A326B /* Assets.xcassets */,
 				3B0CA9E51E4E5AE700D871B6 /* Main.storyboard */,
 				3BE29F1C1D9B256A007A326B /* LaunchScreen.storyboard */,
@@ -380,7 +397,6 @@
 				3B0CA9E31E4E4FDF00D871B6 /* LoadViewController.swift */,
 				3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */,
 				3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */,
-				3B72F5381E8C5C0A006013EC /* FindBandsViewController.swift */,
 			);
 			path = OneNightBand;
 			sourceTree = "<group>";
@@ -429,8 +445,6 @@
 				3BEFDB841E7F3CDC0076E2BC /* Pause.png */,
 				3BEFDB851E7F3CDC0076E2BC /* Play.png */,
 				3BEFDB861E7F3CDD0076E2BC /* Stop.png */,
-				3B4DAD2E1E8064BA008FB825 /* songCell.swift */,
-				3B4DAD2F1E8064BA008FB825 /* songCell.xib */,
 			);
 			name = mp3Player;
 			sourceTree = "<group>";
@@ -438,14 +452,11 @@
 		3BF9951D1DA9ADB800ABF5CF /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				3BEFDB791E7F36990076E2BC /* mp3Player */,
 				3BF995171DA976CA00ABF5CF /* SessionMakerViewController.swift */,
 				3BC9272D1DB2AC19005C753A /* CreateSessionPopup.swift */,
-				3B486AF71DB9335600A243C5 /* ArtistCell.swift */,
-				3B486AF51DB931FB00A243C5 /* ArtistCell.xib */,
 				3BF995191DA9AB6F00ABF5CF /* ArtistFinderViewController.swift */,
 				3BCC0BAE1DDA66540008BF19 /* ChatViewController.swift */,
-				3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */,
-				3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */,
 				3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */,
 				3BEFDB751E7F311F0076E2BC /* SessionViewer.swift */,
 			);
@@ -810,6 +821,7 @@
 			files = (
 				3B16D5C61DE6267200DC19AC /* ArtistCardCell.swift in Sources */,
 				3B87964F1E79B510009CA4C8 /* MyBandsViewController.swift in Sources */,
+				3B2AFB5A1EA2A1D4005B8D15 /* SendAuditionViewController.swift in Sources */,
 				3B0125591E9C051500D07D0C /* WantedAd.swift in Sources */,
 				3BEFDB7D1E7F37370076E2BC /* MP3Player.swift in Sources */,
 				3B8796531E79D095009CA4C8 /* Band.swift in Sources */,

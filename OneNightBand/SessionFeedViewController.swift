@@ -69,7 +69,11 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     let kFretY = 383
     
     @IBAction func visitBandPageTouched(_ sender: Any) {
-        
+        if currentButtonFunc().session?.bandType == "onb"{
+            performSegue(withIdentifier: "feedToONB", sender: self)
+        } else{
+            performSegue(withIdentifier: "SessionFeedToBandPage", sender: self)
+        }
     }
     @IBOutlet weak var bandBio: UITextView!
     @IBOutlet weak var bandInfoViewName: UILabel!
@@ -375,6 +379,20 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             if let vc = segue.destination as? ArtistProfileViewController{
                 //print(self.cellTouchedArtistUID)
                 vc.artistUID = self.cellTouchedArtistUID
+            }
+        }
+        if segue.identifier == "SessionFeedToBandPage"{
+            if let vc = segue.destination as? SessionMakerViewController{
+                vc.sender = "feed"
+                vc.sessionID = currentButton?.session?.bandID
+            }
+            
+        }
+        if segue.identifier == "feedToONB"{
+            if let vc = segue.destination as? OneNightBandViewController{
+                vc.sender = "feed"
+                vc.onbID = (currentButton?.session?.bandID)!
+                
             }
         }
 

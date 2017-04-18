@@ -16,7 +16,7 @@ import SwiftOverlays
 class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextViewDelegate, UINavigationControllerDelegate, Dismissable {
     
     @IBOutlet weak var bandImageView: UIImageView!
-    @IBOutlet weak var bandName: UILabel!
+    //@IBOutlet weak var bandName: UILabel!
     @IBOutlet weak var instrumentPicker: UIPickerView!
     
     weak var dismissalDelegate: DismissalDelegate?
@@ -38,18 +38,20 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
             var values = Dictionary<String, Any>()
             tempArray2.append((FIRAuth.auth()?.currentUser?.uid)! as String)
             values["bandType"] =  self.bandType
-            values["bandName"] = self.bandName.text
+            values["bandName"] = self.bandName
             values["bandID"] = self.bandID
-            values["instrumentNeeded"] = self.instrumentPicker.selectedRow(inComponent: 1)
+            values["instrumentNeeded"] = [self.instrumentText[self.instrumentPicker.selectedRow(inComponent: 0)]]
             values["moreInfo"] = self.moreInfoTextView.text
-            values["city"] = self.cityPicker.selectedRow(inComponent: 1)
+            values["city"] = self.locationText[self.cityPicker.selectedRow(inComponent: 0)]
             if self.bandType == "band"{
                 values["date"] = ""
             } else{
                 values["date"] = self.onbDate
             }
             values["wantedImage"] = self.imageString
-            values["experience"] = self.expPicker.selectedRow(inComponent: 1)
+            values["experience"] = self.expText[self.expPicker.selectedRow(inComponent: 0)]
+            values["senderID"] = self.user
+            values["responses"] = [String:Any]()
                         
             let ref = FIRDatabase.database().reference()
             let wantedReference = ref.child("wantedAds").childByAutoId()
@@ -121,17 +123,27 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
         }
                        // let user = FIRAuth.auth()?.curren
     }
-    
+    var coordinateText = [String]()
     @IBOutlet weak var moreInfoTextView: UITextView!
     @IBOutlet weak var cityPicker: UIPickerView!
     @IBOutlet weak var expPicker: UIPickerView!
+    var bandName = String()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        for (key, value) in cityDict{
+            locationText.append(key)
+            coordinateText.append(value)
+        }
+        locationText.sort()
+        locationText.insert("Current City", at: 0)
+        locationText.insert("All", at: 0)
         moreInfoTextView.delegate = self
         instrumentPicker.delegate = self
         cityPicker.delegate = self
         expPicker.delegate = self
+        
+        navigationController?.isNavigationBarHidden = true
+        self.navigationItem.hidesBackButton = true
         
         moreInfoTextView.text = "tap to add info about the type of musician you are looking for. This may include playing style, musical influences, etc... "
         if self.bandType == "band"{
@@ -140,11 +152,11 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
                     for snap in snapshots{
                         if snap.key == "bandPictureURL"{
                             var tempArray = snap.value as! [String]
-                            self.bandImageView.loadImageUsingCacheWithUrlString(tempArray.first!)
+                            //self.bandImageView.loadImageUsingCacheWithUrlString(tempArray.first!)
                             self.imageString = tempArray.first!
                         }
                         if snap.key == "bandName"{
-                            self.bandName.text = snap.value as! String
+                            self.bandName = snap.value as! String
                         }
                     
                     }
@@ -156,11 +168,11 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
                     for snap in snapshots{
                         if snap.key == "onbPictureURL"{
                             var tempArray = snap.value as! [String]
-                            self.bandImageView.loadImageUsingCacheWithUrlString(tempArray.first!)
+                            //self.bandImageView.loadImageUsingCacheWithUrlString(tempArray.first!)
                             self.imageString = tempArray.first!
                         }
                         if snap.key == "onbName"{
-                            self.bandName.text = snap.value as! String
+                            self.bandName = snap.value as! String
                         }
                         if snap.key == "onbDate"{
                             self.onbDate = snap.value as! String
@@ -224,8 +236,16 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
         });
     }
     
-    var instrumentText = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp"]
-    var locationText = ["All","Near You","Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]
+    @IBAction func cancelPressed(_ sender: Any) {
+        dismissalDelegate?.finishedShowing()
+        removeAnimate()
+    }
+    
+    
+    var locationText = [String]()
+    var cityDict = ["New York":"","Los Angeles":"","Chicago":"","Houston":"","Philadelphia":"","Phoenix, AZ":"","San Antonio":"","San Diego":"","Dallas":"","San Jose":"", "Austin":"","Jacksonville": "","San Francisco":"","Indianapolis":"","Columbus":"", "Fort Worth":"","Charlotte":"","Detroit":"","El Paso":"","Seattle":"","Denver":"","Washington ":"","Memphis":"","Boston":"","Nashville":"","Atlanta":""]
+    var instrumentText = ["All","Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp"]
+    /*var locationText = ["All","Near You","Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]*/
     var expText = ["Beginner","Intermediate","Advanced","Expert"]
     public func numberOfComponents(in pickerView: UIPickerView) -> Int{
         return 1
@@ -292,7 +312,7 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
             if self.bandType == "band"{
                 vc.searchType = "Bands"
             } else {
-                vc.searchType = "Onbs"
+                vc.searchType = "OneNightBands"
             }
         }
     }

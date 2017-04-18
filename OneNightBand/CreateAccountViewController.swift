@@ -455,6 +455,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                             
                             values["location"] = ["lat":Double((self.locationManager.location?.coordinate.latitude)!), "long": Double((self.locationManager.location?.coordinate.longitude)!)] as [String:Any]
                             values["media"] = [String:Any]()
+                            values["wantedAdResponses"] = [String]()
                             
                             
                             

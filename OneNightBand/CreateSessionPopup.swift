@@ -51,26 +51,26 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
         switch UIScreen.main.bounds.width{
         case 320:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: sessionNameTextField.topAnchor).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 125).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 125).isActive = true
             
         case 375:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: sessionNameTextField.topAnchor).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
             
         case 414:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: sessionNameTextField.topAnchor).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
             
             
         default:
             sessionImageViewButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            sessionImageViewButton.bottomAnchor.constraint(equalTo: datePicker.topAnchor).isActive = true
+            sessionImageViewButton.bottomAnchor.constraint(equalTo: sessionNameTextField.topAnchor).isActive = true
             sessionImageViewButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
             sessionImageViewButton.heightAnchor.constraint(equalToConstant: 150).isActive = true
             
@@ -135,6 +135,9 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
     @IBOutlet weak var backgroundView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.isNavigationBarHidden = true
+        self.navigationItem.hidesBackButton = true
+        
         self.finalizeSessionButton.isEnabled = true
         popupView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         popupView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
@@ -320,6 +323,8 @@ class CreateSessionPopup: UIViewController, UITextViewDelegate, UINavigationCont
             }
     
     override func viewDidDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = false
+        //self.navigationItem.hidesBackButton = true
         SwiftOverlays.removeAllBlockingOverlays()
     }
     

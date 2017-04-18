@@ -94,7 +94,7 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
         //self.performSegue(withIdentifier: "MP3ToBand", sender: self)
         self.navigationController?.popViewController(animated: true)
     }
-    
+    var sender = String()
     @IBOutlet weak var sessionBio: UITextView!
     @IBOutlet weak var sessionVidCollect: UICollectionView!
     @IBOutlet weak var sessionImagesCollect: UICollectionView!
@@ -106,6 +106,12 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
     var picArray = [UIImage]()
     var destArray = [URL]()
     var mp3Dict = [String: Any]()
+    
+    
+    @IBOutlet weak var addSessionToFavorites: UIButton!
+    
+    @IBAction func addSessToFavoritesPressed(_ sender: Any) {
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -120,7 +126,15 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         sessionImagesCollect.collectionViewLayout = layout
-        
+        if self.sender != "feed" || self.sender == "bandBoard"{
+            addMP3.isHidden = false
+            addPicAndVid.isHidden = false
+            addSessionToFavorites.isHidden = true
+        } else {
+            addMP3.isHidden = true
+            addPicAndVid.isHidden = true
+            addSessionToFavorites.isHidden = false
+        }
         
         
         navigationController?.isNavigationBarHidden = false

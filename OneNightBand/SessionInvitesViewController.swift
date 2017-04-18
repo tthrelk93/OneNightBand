@@ -24,8 +24,8 @@ protocol AcceptDeclineData : class
 }
 
 
-class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, AcceptDeclineDelegate {
-    //var inviteCollectionView: UICollectionView
+/*class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, AcceptDeclineDelegate {
+     //var inviteCollectionView: UICollectionView
     var inviteArray = [Invite]()
     var snapKey = [String: Any]()
     var collectCount: Int?
@@ -56,7 +56,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
                             
                             self.sessionsArray.append(snap.value as! String)
                         }
-                        self.sessionsArray.append(self.inviteArray[invite].sessionID!)
+                        self.sessionsArray.append(self.inviteArray[invite].bandID!)
                         
                         tempDict2["activeSessions"] = self.sessionsArray
                         
@@ -187,7 +187,7 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
         
         
         
-        
+ 
         }
         
         
@@ -404,4 +404,4 @@ class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, 
     //PageController Functions
     
     
-}
+}*/

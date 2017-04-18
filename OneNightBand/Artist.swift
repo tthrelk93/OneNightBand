@@ -24,6 +24,7 @@ class Artist: NSObject{
     var artistsBands: NSDictionary?
     var artistsONBs: NSDictionary?
     var soloSessKeysOnFeed = [String]()
+    var wantedAdResponses = [String]()
     
     
     

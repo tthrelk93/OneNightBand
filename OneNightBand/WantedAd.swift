@@ -19,6 +19,8 @@ class WantedAd: NSObject {
     var wantedImage = String()
     var experience = String()
     var wantedID = String()
+    var senderID = String()
+    var responses = [String:Any]()
 
 
 }

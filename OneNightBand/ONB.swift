@@ -21,6 +21,7 @@ class ONB: NSObject {
     var sessFeedMedia: [String]?
     var onbInfo = String()
     var wantedAds = [String]()
+    var fanCount = Int()
 
 
 }

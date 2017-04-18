@@ -118,6 +118,11 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         profilePicCollectionView.collectionViewLayout = layout
+        self.view.backgroundColor = UIColor.clear
+        //self.shadeView.isHidden = true
+        self.view.alpha = 1.0
+        
+
         
 
     }
@@ -155,9 +160,6 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        self.view.backgroundColor = UIColor.clear
-        //self.shadeView.isHidden = true
-        self.view.alpha = 1.0
         createSessionButton.titleLabel?.textAlignment = .center
         createSessionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         createSessionButton.layer.cornerRadius = 15
@@ -186,15 +188,15 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                                 if m_snap.contains("yout"){
                                     self.nsurlDict[NSURL(string: m_snap)!] = "y"
                                 } else {
-                                     self.nsurlDict[NSURL(string: m_snap)!] = "v"
+                                    self.nsurlDict[NSURL(string: m_snap)!] = "v"
                                 }
                                 
                                 
                                 
                                 
                             }
-                        
-                        
+                            
+                            
                             //fill prof pic array
                         } else if snap.key == "profileImageUrl"{
                             if let snapshots = snap.children.allObjects as? [FIRDataSnapshot]{
@@ -221,15 +223,15 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     self.youtubeCollectionView.backgroundColor = UIColor.clear
                     self.youtubeCollectionView.dataSource = self
                     self.youtubeCollectionView.delegate = self
-
+                    
                 }
                 for vid in self.nsurlArray{
                     
-                        // Put your code which should be executed with a delay here
+                    // Put your code which should be executed with a delay here
                     self.currentCollect = "youtube"
                     
                     self.tempLink = vid
-                       
+                    
                     let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
                     self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
                     self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
@@ -239,58 +241,58 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 }
                 
                 
-               self.viewDidAppearBool = true
-            
-            self.ref.child("users").child(self.userID!).observeSingleEvent(of: .value, with: { (snapshot) in
-                let value = snapshot.value as? NSDictionary
+                self.viewDidAppearBool = true
                 
-                self.bioTextView.text = value?["bio"] as! String
-                self.navigationItem.title = (value?["name"] as! String)
-                let instrumentDict = value?["instruments"] as! [String: Any]
-                self.dictionaryOfInstruments = value?["instruments"] as! [String: Any]
-                //var instrumentArray = [String]()
-                for (key, value) in instrumentDict{
-                    self.instrumentArray.append(key)
-                    self.skillArray.append(self.playingLevelArray[(value as! [Int])[0]])
-                    self.yearsArray.append(self.playingYearsArray[(value as! [Int])[1]])
+                self.ref.child("users").child(self.userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    let value = snapshot.value as? NSDictionary
                     
-                }
-                
-                //print(instrumentArray)
-                for _ in self.instrumentArray{
-                    let cellNib = UINib(nibName: "InstrumentTableViewCell", bundle: nil)
-                    self.instrumentTableView.register(cellNib, forCellReuseIdentifier: "InstrumentCell")
-                    self.instrumentTableView.delegate = self
-                    self.instrumentTableView.dataSource = self
-                }
-            
-            self.ref.child("users").child(self.userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
-                /*if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    self.bioTextView.text = value?["bio"] as! String
+                    self.navigationItem.title = (value?["name"] as! String)
+                    let instrumentDict = value?["instruments"] as! [String: Any]
+                    self.dictionaryOfInstruments = value?["instruments"] as! [String: Any]
+                    //var instrumentArray = [String]()
+                    for (key, value) in instrumentDict{
+                        self.instrumentArray.append(key)
+                        self.skillArray.append(self.playingLevelArray[(value as! [Int])[0]])
+                        self.yearsArray.append(self.playingYearsArray[(value as! [Int])[1]])
+                        
+                    }
                     
+                    //print(instrumentArray)
+                    for _ in self.instrumentArray{
+                        let cellNib = UINib(nibName: "InstrumentTableViewCell", bundle: nil)
+                        self.instrumentTableView.register(cellNib, forCellReuseIdentifier: "InstrumentCell")
+                        self.instrumentTableView.delegate = self
+                        self.instrumentTableView.dataSource = self
+                    }
                     
-                }*/
-                for _ in self.picArray{
-                    self.currentCollect = "pic"
-                    //self.tempLink = NSURL(string: (snap.value as? String)!)
-                    
-                    //self.YoutubeArray.append(snap.value as! String)
-                    
-                    let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
-                    self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
-                    
-                    self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
-                    self.profilePicCollectionView.backgroundColor = UIColor.clear
-                    self.profilePicCollectionView.dataSource = self
-                    self.profilePicCollectionView.delegate = self
-                    
-                }
-                
-
-            })
-                DispatchQueue.main.async{
-                    self.instrumentTableView.reloadData()
-                }
-             })
+                    self.ref.child("users").child(self.userID!).child("activeSessions").observeSingleEvent(of: .value, with: {(snapshot) in
+                        /*if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                         
+                         
+                         }*/
+                        for _ in self.picArray{
+                            self.currentCollect = "pic"
+                            //self.tempLink = NSURL(string: (snap.value as? String)!)
+                            
+                            //self.YoutubeArray.append(snap.value as! String)
+                            
+                            let cellNib = UINib(nibName: "PictureCollectionViewCell", bundle: nil)
+                            self.profilePicCollectionView.register(cellNib, forCellWithReuseIdentifier: "PictureCollectionViewCell")
+                            
+                            self.sizingCell = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! PictureCollectionViewCell?)!
+                            self.profilePicCollectionView.backgroundColor = UIColor.clear
+                            self.profilePicCollectionView.dataSource = self
+                            self.profilePicCollectionView.delegate = self
+                            
+                        }
+                        
+                        
+                    })
+                    DispatchQueue.main.async{
+                        self.instrumentTableView.reloadData()
+                    }
+                })
             })
             //self.viewDidAppearBool = true
         }
@@ -299,8 +301,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         if FIRAuth.auth()?.currentUser?.uid == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         }
-
-        }
+        
+               }
         
         
         

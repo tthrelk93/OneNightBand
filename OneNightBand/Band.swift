@@ -21,6 +21,7 @@ class Band: NSObject{
     var messages = [String: Any]()
     var sessionsOnFeed  = [String]()
     var wantedAds = [String]()
+    var fanCount = Int()
     
     
     //var sessionDate: String?

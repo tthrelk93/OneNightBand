@@ -20,6 +20,7 @@ class SessionFeedSess: NSObject {
     var soloSessBool = String()
     var bandID = String()
     var bandName = String()
+    var bandType = String()
     
 
 }

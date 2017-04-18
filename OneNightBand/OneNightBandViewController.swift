@@ -11,7 +11,24 @@ import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
 
-class OneNightBandViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource /*GetSessionIDDelegate, DismissalDelegate*/ {
+class OneNightBandViewController: UIViewController, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, PerformSegueInBandBoard, UICollectionViewDelegate, UICollectionViewDataSource /*GetSessionIDDelegate, DismissalDelegate*/ {
+    internal func joinBand(bandID: String, wantedAd: WantedAd) {
+        
+    }
+
+    @IBOutlet weak var becomeFanButton: UIButton!
+    @IBOutlet weak var fanCount: UILabel!
+    
+    
+    
+    @IBAction func becomeFanPressed(_ sender: Any) {
+    }
+    
+    func performSegueToBandPage(bandID: String){
+        
+    }
+    var sender = String()
+    
     @IBOutlet weak var videoCollectionView: UICollectionView!
     @IBOutlet weak var artistTableView: UITableView!
     @IBOutlet weak var onbInfoTextView: UITextView!
@@ -27,13 +44,32 @@ class OneNightBandViewController: UIViewController, UINavigationControllerDelega
     @IBOutlet weak var findArtistsButton: UIButton!
 
     @IBAction func findArtistsPressed(_ sender: Any) {
+        performSegue(withIdentifier: "ONBToArtistFinder", sender: self)
     }
+    var artistDict = [String: Any]()
     var picArray = [UIImage]()
     let ref = FIRDatabase.database().reference()
     let userID = FIRAuth.auth()?.currentUser?.uid
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        findArtistsButton.setTitleColor(UIColor.darkGray, for: .normal)
+         navigationController?.navigationBar.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        print(sender)
+        if sender == "feed" || sender == "bandBoard"{
+            print("in if")
+            addMediaButton.isHidden = true
+            chatButton.isHidden = true
+            becomeFanButton.isHidden = false
+            
+            
+        } else {
+            print("else")
+            addMediaButton.isHidden = false
+            chatButton.isHidden = false
+            becomeFanButton.isHidden = true
+            
+
+        }
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
@@ -43,17 +79,17 @@ class OneNightBandViewController: UIViewController, UINavigationControllerDelega
         pictureCollectionView.collectionViewLayout = layout
         
         artistTableView.dataSource = self
-        addMediaButton.layer.cornerRadius = addMediaButton.frame.width/2
-        chatButton.layer.cornerRadius = chatButton.frame.width/2
-        findArtistsButton.layer.cornerRadius = findArtistsButton.frame.width/2
+        //addMediaButton.layer.cornerRadius = addMediaButton.frame.width/2
+        //chatButton.layer.cornerRadius = chatButton.frame.width/2
+        //findArtistsButton.layer.cornerRadius = findArtistsButton.frame.width/2
 
         // Do any additional setup after loading the view.
         
-        ref.child("users").child(self.userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.child("oneNightBands").child(onbID).observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 //fill datasources for collectionViews
                 for snap in snapshots{
-                    if snap.key == "profileImageUrl"{
+                    if snap.key == "onbPictureURL"{
                         if let snapshots = snap.children.allObjects as? [FIRDataSnapshot]{
                             for p_snap in snapshots{
                                 if let url = NSURL(string: p_snap.value as! String){
@@ -64,7 +100,18 @@ class OneNightBandViewController: UIViewController, UINavigationControllerDelega
                             }
                         }
                     }
+                    if snap.key == "onbArtists"{
+                        self.artistDict = snap.value as! [String: Any]
+                        
+                    }
+                    if snap.key == "onbDate"{
+                        self.dateLabel.text = snap.value as! String
                 }
+                    if snap.key == "onbInfo"{
+                        self.onbInfoTextView.text = snap.value as! String
+                    }
+                
+            }
             }
             
                 for _ in self.picArray{
@@ -76,9 +123,20 @@ class OneNightBandViewController: UIViewController, UINavigationControllerDelega
                     self.pictureCollectionView.dataSource = self
                     self.pictureCollectionView.delegate = self
             }
+            let cellNib = UINib(nibName: "ArtistCell", bundle: nil)
+            self.artistTableView.register(cellNib, forCellReuseIdentifier: "ArtistCell")
+            self.artistTableView.delegate = self
+            self.artistTableView.dataSource = self
+            DispatchQueue.main.async{
+                self.artistTableView.reloadData()
+                //self.sessionVidCollectionView.reloadData()
+                //print("vidArray: \(self.vidArray)")
+                
+            }
+
         })
-        
-        self.ref.child("bands").observeSingleEvent(of: .value, with: {(snapshot) in
+
+        self.ref.child("oneNightBands").observeSingleEvent(of: .value, with: {(snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 for snap in snapshots{
                     if (snap.key == self.onbID){
@@ -108,7 +166,7 @@ class OneNightBandViewController: UIViewController, UINavigationControllerDelega
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         //print((self.thisSession.sessionArtists?.count)!)
         //return (self.thisBand.bandMembers.count)
-        return 0
+        return artistDict.count
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
@@ -120,6 +178,41 @@ class OneNightBandViewController: UIViewController, UINavigationControllerDelega
     @available(iOS 2.0, *)
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "ArtistCell", for: indexPath as IndexPath) as! ArtistCell
+        let tempArtist = Artist()
+        //let userID = FIRAuth.auth()?.currentUser?.uid
+        var artistArray = [String]()
+        var instrumentArray = [String]()
+        for value in thisONB.onbArtists{
+            artistArray.append(value.key)
+            instrumentArray.append(value.value as! String)
+        }
+        
+        
+        ref.child("users").child(artistArray[indexPath.row]).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            
+            let dictionary = snapshot.value as? [String: AnyObject]
+            tempArtist.setValuesForKeys(dictionary!)
+            
+            /*var tempInstrument = ""
+             let userID = FIRAuth.auth()?.currentUser?.uid
+             for value in self.thisSession.sessionArtists{
+             if value.key == userID{
+             tempInstrument = value.value as! String
+             
+             }
+             }*/
+            cell.artistUID = tempArtist.artistUID!
+            
+            print(instrumentArray)
+            cell.artistNameLabel.text = tempArtist.name
+            cell.artistInstrumentLabel.text = "test"
+            cell.artistImageView.loadImageUsingCacheWithUrlString(tempArtist.profileImageUrl.first!)
+            cell.artistInstrumentLabel.text = instrumentArray[indexPath.row]
+            
+        })
+        return cell
+
         /*let tempArtist = Artist()
         //let userID = FIRAuth.auth()?.currentUser?.uid
         var artistArray = [String]()
