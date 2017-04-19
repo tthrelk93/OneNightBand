@@ -66,6 +66,23 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
                                 return
                             }
                         })
+            var userValues = [String:Any]()
+            var userWantedAdArray = [String]()
+            ref.child("users").child(user!).child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    for snap in snapshots{
+                        if let snapDict = snap.value as? [String:Any] {
+                            let wantedID = snapDict["wantedID"]
+                            userWantedAdArray.append(wantedID as! String)
+                        }
+                    }
+                    userWantedAdArray.append(wantedReferenceAnyObject)
+                }
+                userValues["wantedAds"] = userWantedAdArray
+                ref.child("users").child(self.user!).updateChildValues(userValues)
+                
+            })
+            
             if self.bandType == "band"{
                 self.ref.child("bands").child(bandID).child("wantedAds").observeSingleEvent(of: .value, with: { (snapshot) in
                     if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{

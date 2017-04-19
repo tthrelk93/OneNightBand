@@ -43,7 +43,7 @@ class ArtistCardCell: UICollectionViewCell {
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var reputationLabel: UILabel!
     @IBOutlet weak var inviteToSession: UIButton!
-    
+    var bandName = String()
     @IBOutlet weak var artistCardCellButton: UIButton!
     
     @IBAction func artistCardButtonPressed(_ sender: AnyObject) {
@@ -86,6 +86,9 @@ class ArtistCardCell: UICollectionViewCell {
             values["inviteKey"] = String(describing: tempID)
             values["bandType"] = self.bandType
             values["artistCount"] = self.artistCount
+            values["bandType"] = self.bandType
+            values["bandName"] = self.bandName
+            
             
             tempID.updateChildValues(values, withCompletionBlock: {(err, ref) in
                 if err != nil {

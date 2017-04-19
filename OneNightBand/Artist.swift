@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class Artist: NSObject{
-    var activeSessions: NSDictionary?
     var name: String?
     var email: String?
     var instruments = [String:Any]()
@@ -25,6 +24,9 @@ class Artist: NSObject{
     var artistsONBs: NSDictionary?
     var soloSessKeysOnFeed = [String]()
     var wantedAdResponses = [String]()
+    var wantedAds = [String]()
+    var acceptedAudits = [String:Any]()
+    
     
     
     

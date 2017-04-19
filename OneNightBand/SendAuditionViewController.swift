@@ -35,47 +35,55 @@ class SendAuditionViewController: UIViewController, UITextViewDelegate, Dismissa
                     }
                 }
             })
-        
         let wantedOwnerRef = FIRDatabase.database().reference().child("users").child(wantedAd.senderID).child("wantedAdResponses")
         let tempID = wantedRef.child("responses").childByAutoId()
             let id = tempID.key
             print("id: \(id)")
-        var values = [String:Any]()
-        values["respondingArtist"] = userID
-        values["infoText1"] = self.auditInfoTextView1.text
-        values["infoText2"] = self.auditInfoTextView2.text
-        
-        var responses = [String:Any]()
-            print(tempID)
-        responses[id] = values
-            var values2 = [String:Any]()
-            values2["responses"] = responses
-        
-        wantedRef.updateChildValues(values2)
-            
-        
-        
-        wantedOwnerRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
-            for snap in snapshots{
-                self.responsesArray.append(snap.value as! String)
-            }
-            if self.responsesArray.contains(self.wantedAd.wantedID) == false{
-                self.responsesArray.append(self.wantedAd.wantedID)
-            }
-            var values3 = [String:Any]()
-            values3["wantedAdResponses"] = self.responsesArray
-            FIRDatabase.database().reference().child("users").child(self.wantedAd.senderID).updateChildValues(values3)
-        })
-        
-        
-        
-        
-        removeAnimate()
-        }
+            var snapDict = [String:Any]()
+            FIRDatabase.database().reference().child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    for snap in snapshots{
+                        if snap.key == self.wantedAd.wantedID{
 
-        
+                            let tempDict = snap.value as! [String:Any]
+                            if tempDict["responses"] != nil{
+                                let responseDict = tempDict["responses"] as! [String:Any]
+                                for (key, value) in responseDict{
+                                    snapDict[key] = value as! [String:Any]
+                                }
+                            } else {
+                                break
+                            }
+                            
+                        }
+                    }
+                }
+                var values = [String:Any]()
+                values["respondingArtist"] = self.userID
+                values["infoText1"] = self.auditInfoTextView1.text
+                values["infoText2"] = self.auditInfoTextView2.text
+                snapDict[id] = values
+                var values2 = [String:Any]()
+                values2["responses"] = snapDict
+                wantedRef.updateChildValues(values2)
+                wantedOwnerRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
+                    for snap in snapshots{
+                        self.responsesArray.append(snap.value as! String)
+                    }
+                    if self.responsesArray.contains(self.wantedAd.wantedID) == false{
+                        self.responsesArray.append(self.wantedAd.wantedID)
+                    }
+                    var values3 = [String:Any]()
+                    values3["wantedAdResponses"] = self.responsesArray
+                    FIRDatabase.database().reference().child("users").child(self.wantedAd.senderID).updateChildValues(values3)
+                })
+            })
+            removeAnimate()
+        }
     }
+    
+    
     var responsesArray = [String]()
     @IBAction func cancelPressed(_ sender: Any) {
         dismissalDelegate?.finishedShowing()

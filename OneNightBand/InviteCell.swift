@@ -26,7 +26,9 @@ class InviteCell: UICollectionViewCell, AcceptDeclineData  {
     @IBOutlet weak var sessionDate: UILabel!
     @IBOutlet weak var sessionName: UILabel!
     @IBOutlet weak var sessionDescription: UITextView!
-    
+    var responseID = String()
+    var bandID = String()
+    var bandType = String()
     var curCell: InviteCell?
     var sessionMedia = String()
     weak var acceptDeclineDelegate : AcceptDeclineDelegate?

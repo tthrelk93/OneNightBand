@@ -16,6 +16,8 @@ protocol AcceptDeclineDelegate : class
 {
     func acceptPressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell)
     func declinePressed(indexPathRow: Int, indexPath: IndexPath, curCell: InviteCell)
+    func acceptPressedWanted(indexPathRow: Int, indexPath: IndexPath, curCell: WantedReceivedCell)
+    func declinePressedWanted(indexPathRow: Int, indexPath: IndexPath, curCell: WantedReceivedCell)
     
 }
 protocol AcceptDeclineData : class
@@ -23,6 +25,35 @@ protocol AcceptDeclineData : class
     weak var acceptDeclineDelegate : AcceptDeclineDelegate? { get set }
 }
 
+class SessionInvitesViewController: UIViewController{
+    
+    var ref = FIRDatabase.database().reference()
+    var sender = String()
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? InviteViewerViewController{
+            vc.sender = self.sender
+        }
+        
+    }
+
+    
+    @IBAction func invitesReceivedPressed(_ sender: Any) {
+        self.sender = "invite"
+        self.performSegue(withIdentifier: "InviteToViewer", sender: self)
+    }
+    
+    @IBAction func auditionsReceivedPressed(_ sender: Any) {
+        self.sender = "auditReceived"
+        self.performSegue(withIdentifier: "InviteToViewer", sender: self)
+    }
+    @IBAction func auditionsAcceptedPressed(_ sender: Any) {
+        self.sender = "auditAccepted"
+        self.performSegue(withIdentifier: "InviteToViewer", sender: self)
+    }
+    
+    
+    }
 
 /*class SessionInvitesViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, AcceptDeclineDelegate {
      //var inviteCollectionView: UICollectionView

@@ -441,8 +441,9 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                         if let profileImageUrl = metadata?.downloadURL()?.absoluteString {
                         
                             var values = Dictionary<String, Any>()
-                            values["artistsBands"] = ""
-                            values["activeSessions"] = ""
+                            values["artistsBands"] = [String]()
+                            values["artistsONBs"] = [String]()
+                            
                             values["name"] = name
                             values["email"] = email
                             values["instruments"] = ""
@@ -456,6 +457,8 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                             values["location"] = ["lat":Double((self.locationManager.location?.coordinate.latitude)!), "long": Double((self.locationManager.location?.coordinate.longitude)!)] as [String:Any]
                             values["media"] = [String:Any]()
                             values["wantedAdResponses"] = [String]()
+                            values["wantedAds"] = [String]()
+                            values["acceptedAudits"] = [String:Any]()
                             
                             
                             

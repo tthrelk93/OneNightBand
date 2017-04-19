@@ -80,6 +80,7 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
                                     self.tempArray.append(snap.value as! String)
                                 }
                             }
+                            //self.tempArray.append(sessReferenceAnyObject)
 
                         
                         tempDict["artistsONBs"] = self.tempArray

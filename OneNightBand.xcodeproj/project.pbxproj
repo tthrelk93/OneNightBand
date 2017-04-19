@@ -22,6 +22,11 @@
 		3B19CB4A1E64B61100390DDA /* InstrumentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */; };
 		3B1E04701DEA221400DCDAA4 /* ArtistProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */; };
 		3B2AFB5A1EA2A1D4005B8D15 /* SendAuditionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2AFB591EA2A1D4005B8D15 /* SendAuditionViewController.swift */; };
+		3B2AFB5D1EA6A30E005B8D15 /* AcceptedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2AFB5B1EA6A30E005B8D15 /* AcceptedCell.swift */; };
+		3B2AFB5E1EA6A30E005B8D15 /* AcceptedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B2AFB5C1EA6A30E005B8D15 /* AcceptedCell.xib */; };
+		3B2AFB601EA6B007005B8D15 /* InviteViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2AFB5F1EA6B007005B8D15 /* InviteViewerViewController.swift */; };
+		3B2AFB631EA6C6AA005B8D15 /* WantedReceivedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2AFB611EA6C6A9005B8D15 /* WantedReceivedCell.swift */; };
+		3B2AFB641EA6C6AA005B8D15 /* WantedReceivedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B2AFB621EA6C6A9005B8D15 /* WantedReceivedCell.xib */; };
 		3B486AF61DB931FB00A243C5 /* ArtistCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B486AF51DB931FB00A243C5 /* ArtistCell.xib */; };
 		3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B486AF71DB9335600A243C5 /* ArtistCell.swift */; };
 		3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49277E1E479DA200A8D0B3 /* InviteCell.swift */; };
@@ -130,6 +135,11 @@
 		3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InstrumentTableViewCell.xib; sourceTree = "<group>"; };
 		3B1E046F1DEA221400DCDAA4 /* ArtistProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistProfileViewController.swift; sourceTree = "<group>"; };
 		3B2AFB591EA2A1D4005B8D15 /* SendAuditionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendAuditionViewController.swift; sourceTree = "<group>"; };
+		3B2AFB5B1EA6A30E005B8D15 /* AcceptedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AcceptedCell.swift; sourceTree = "<group>"; };
+		3B2AFB5C1EA6A30E005B8D15 /* AcceptedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AcceptedCell.xib; sourceTree = "<group>"; };
+		3B2AFB5F1EA6B007005B8D15 /* InviteViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteViewerViewController.swift; sourceTree = "<group>"; };
+		3B2AFB611EA6C6A9005B8D15 /* WantedReceivedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WantedReceivedCell.swift; sourceTree = "<group>"; };
+		3B2AFB621EA6C6A9005B8D15 /* WantedReceivedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WantedReceivedCell.xib; sourceTree = "<group>"; };
 		3B486AF51DB931FB00A243C5 /* ArtistCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCell.xib; sourceTree = "<group>"; };
 		3B486AF71DB9335600A243C5 /* ArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
 		3B49277E1E479DA200A8D0B3 /* InviteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteCell.swift; sourceTree = "<group>"; };
@@ -286,6 +296,11 @@
 				3B93D4DC1DC006F4009FAC53 /* SessionInvitesViewController.swift */,
 				3B49277E1E479DA200A8D0B3 /* InviteCell.swift */,
 				3B49277F1E479DA200A8D0B3 /* InviteCell.xib */,
+				3B2AFB5B1EA6A30E005B8D15 /* AcceptedCell.swift */,
+				3B2AFB5C1EA6A30E005B8D15 /* AcceptedCell.xib */,
+				3B2AFB5F1EA6B007005B8D15 /* InviteViewerViewController.swift */,
+				3B2AFB611EA6C6A9005B8D15 /* WantedReceivedCell.swift */,
+				3B2AFB621EA6C6A9005B8D15 /* WantedReceivedCell.xib */,
 			);
 			name = InviteButtonTouched;
 			sourceTree = "<group>";
@@ -648,11 +663,13 @@
 				3BEFDB8D1E7F3CDD0076E2BC /* Stop.png in Resources */,
 				3BEFDB881E7F3CDD0076E2BC /* background.jpg in Resources */,
 				3B19CB4A1E64B61100390DDA /* InstrumentTableViewCell.xib in Resources */,
+				3B2AFB641EA6C6AA005B8D15 /* WantedReceivedCell.xib in Resources */,
 				3BEFDB8A1E7F3CDD0076E2BC /* FWD.png in Resources */,
 				3B72BCD71DF5E25A0084D4B5 /* VideoCollectionViewCell.xib in Resources */,
 				3B9641AF1DB573D800E35480 /* SessionCell.xib in Resources */,
 				3BEFDB891E7F3CDD0076E2BC /* BasePlayer.png in Resources */,
 				3B5B8A681E96D9AF00A2AABF /* JoinBandCollectionViewCell.xib in Resources */,
+				3B2AFB5E1EA6A30E005B8D15 /* AcceptedCell.xib in Resources */,
 				3BE29F1B1D9B256A007A326B /* Assets.xcassets in Resources */,
 				3BEFDB8B1E7F3CDD0076E2BC /* Pause.png in Resources */,
 				3B4DAD311E8064BA008FB825 /* songCell.xib in Resources */,
@@ -820,6 +837,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B16D5C61DE6267200DC19AC /* ArtistCardCell.swift in Sources */,
+				3B2AFB601EA6B007005B8D15 /* InviteViewerViewController.swift in Sources */,
 				3B87964F1E79B510009CA4C8 /* MyBandsViewController.swift in Sources */,
 				3B2AFB5A1EA2A1D4005B8D15 /* SendAuditionViewController.swift in Sources */,
 				3B0125591E9C051500D07D0C /* WantedAd.swift in Sources */,
@@ -841,6 +859,7 @@
 				3BF0B8B51DAC4A05005DB1C9 /* ImageViewExtension.swift in Sources */,
 				3B1062941DAD7B9500D818ED /* ALRadialMenuButton.swift in Sources */,
 				3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */,
+				3B2AFB5D1EA6A30E005B8D15 /* AcceptedCell.swift in Sources */,
 				3B0AB7071D9DED340012AE56 /* CreateAccountViewController.swift in Sources */,
 				3BEFDB761E7F311F0076E2BC /* SessionViewer.swift in Sources */,
 				3BDFEE321DCBC96B004B4FA1 /* SessionFeedViewController.swift in Sources */,
@@ -862,6 +881,7 @@
 				3B1E04701DEA221400DCDAA4 /* ArtistProfileViewController.swift in Sources */,
 				3BEFDB7B1E7F36CE0076E2BC /* FileReader.swift in Sources */,
 				3B4DAD301E8064BA008FB825 /* songCell.swift in Sources */,
+				3B2AFB631EA6C6AA005B8D15 /* WantedReceivedCell.swift in Sources */,
 				3BAD690A1DA4636500C2CFC0 /* Tag.swift in Sources */,
 				3B93D4DD1DC006F4009FAC53 /* SessionInvitesViewController.swift in Sources */,
 				3BA97CE11E85B2AF001167FC /* SessionFeedSess.swift in Sources */,

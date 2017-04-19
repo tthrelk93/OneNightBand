@@ -74,6 +74,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                                     tempArray.append(snap.value as! String)
                                 }
                             }
+                            tempArray.append(bandReferenceAnyObject)
                             var tempDict = [String : Any]()
                             tempDict["artistsBands"] = tempArray
                             let userRef = self.ref.child("users").child(user!)

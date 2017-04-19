@@ -123,40 +123,24 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                         self.instrumentArray.removeAll()
                         if(artist.artistUID != FIRAuth.auth()?.currentUser?.uid){
                                 if(artistsAlreadyInSession.contains(artist.artistUID!) == false){
-                                        
-                                        //if(artist.instruments.contains(where: (key: self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)],value: self.menuText.index(of: self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]))) == true){
-                                        
                                         for key in artist.instruments.keys{
                                             self.instrumentArray.append(key)
                                         }
                                         print("test: \(self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)])")
                                     
                                         if(self.instrumentArray.contains(self.menuText[self.InstrumentPicker.selectedRow(inComponent: 0)]) == false){
-                                            self.artistArray.remove(at: self.artistArray.index(of: artist)! )
-                                            
-                                            
+                                            self.artistArray.remove(at: self.artistArray.index(of: artist)!)
                                     }
-                                    
-                                            
-                                    
-                            
                             }
                         }else{
                             self.artistArray.remove(at: self.artistArray.index(of: artist)! )
                         }
                     }
-                
-                    
-                    
-                    
-            
-            
-                    
                     DispatchQueue.main.async{
-            print(self.artistArray)
-            let userID = FIRAuth.auth()?.currentUser?.uid
-            self.ref.child("users").child(userID!).child("location").observeSingleEvent(of: .value, with: { (snapshot) in
-            for artist in self.artistArray{
+                        print(self.artistArray)
+                        let userID = FIRAuth.auth()?.currentUser?.uid
+                        self.ref.child("users").child(userID!).child("location").observeSingleEvent(of: .value, with: { (snapshot) in
+                            for artist in self.artistArray{
                                 print("in artitAfterDist filler")
                                 tempLong = artist.location["long"] as? CLLocationDegrees
                                 tempLat = artist.location["lat"] as? CLLocationDegrees
@@ -291,6 +275,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         } else {
             cell.artistCount = self.thisBandObject.bandMembers.count
         }
+        cell.bandName = self.thisBandObject.bandName!
         cell.bandType = self.bandType
         cell.invitedBandID = self.thisSession
         cell.buttonName = self.instrumentPicked

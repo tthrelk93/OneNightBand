@@ -17,5 +17,6 @@ class Invite: NSObject {
     var date: String?
     var inviteKey: String?
     var artistCount: Int?
+    var bandName: String?
     
 }
