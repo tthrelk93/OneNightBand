@@ -7,10 +7,22 @@
 //
 
 import Foundation
-//import Firebase
+//import FirebaseD
 import FirebaseAuth
 import FirebaseDatabase
 import UIKit
+
+protocol GoToBandDelegate : class
+{
+    func goToBand(bandID: String)
+    func dismissAccepted(indexPath: IndexPath)
+    
+}
+protocol GoToBandData : class
+{
+    weak var goToBandDelegate : GoToBandDelegate? { get set }
+}
+
 
 protocol AcceptDeclineDelegate : class
 {
@@ -36,7 +48,10 @@ class SessionInvitesViewController: UIViewController{
         }
         
     }
+    @IBOutlet weak var invitesAlertCount: UILabel!
 
+    @IBOutlet weak var auditsReceivedAlertCount: UILabel!
+    @IBOutlet weak var auditionsAlertCount: UILabel!
     
     @IBAction func invitesReceivedPressed(_ sender: Any) {
         self.sender = "invite"
@@ -50,6 +65,43 @@ class SessionInvitesViewController: UIViewController{
     @IBAction func auditionsAcceptedPressed(_ sender: Any) {
         self.sender = "auditAccepted"
         self.performSegue(withIdentifier: "InviteToViewer", sender: self)
+    }
+    var currentUser = FIRAuth.auth()?.currentUser?.uid
+    //var ref = FIRDatabase.database().reference()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.auditionsAlertCount.isHidden = true
+        self.auditsReceivedAlertCount.isHidden = true
+        self.invitesAlertCount.isHidden = true
+        
+        ref.child("users").child(currentUser!).observeSingleEvent(of: .value, with: {(snapshot) in
+            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                for snap in snapshots{
+                    if snap.key == "invites"{
+                        var tempCount = 0
+                        var inviteDict = snap.value as! [String:Any]
+                        for (_, _) in inviteDict{
+                            tempCount += 1
+                        }
+                        if tempCount > 0{
+                            self.auditionsAlertCount.text = String(describing: tempCount)
+                            self.auditionsAlertCount.isHidden = false
+                        }
+                        
+                    }
+                    if snap.key == "acceptedAudits"{
+                        let tempArray = snap.value as! [[String:Any]]
+                        if tempArray.count > 0{
+                            self.auditionsAlertCount.text = String(describing: tempArray.count)
+                            self.auditionsAlertCount.isHidden = false
+                        }
+                    }
+                    
+                }
+            }
+            //ref.chil
+        })
+
     }
     
     

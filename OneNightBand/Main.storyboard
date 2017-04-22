@@ -179,7 +179,7 @@
                         <viewControllerLayoutGuide type="top" id="ud6-em-JC1"/>
                         <viewControllerLayoutGuide type="bottom" id="PP9-Kv-k2z"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Qnk-Mg-yFT">
+                    <view key="view" contentMode="scaleToFill" misplaced="YES" id="Qnk-Mg-yFT">
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -191,21 +191,11 @@
                                 <rect key="frame" x="0.0" y="-61" width="375" height="664"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jXY-zc-fZV">
-                                        <rect key="frame" x="71" y="185" width="233" height="48"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="TfL-Yn-kEV">
+                                        <rect key="frame" x="134" y="404" width="107" height="83"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.68860237729999996" colorSpace="calibratedRGB"/>
-                                        <state key="normal" title="Invites Received">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="invitesReceivedPressed:" destination="YbZ-c6-Tnb" eventType="touchUpInside" id="amv-BJ-xY2"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TfL-Yn-kEV">
-                                        <rect key="frame" x="71" y="433" width="233" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.68860237729999996" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.58048552530613495" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
                                         <state key="normal" title="Auditions Accepted">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -214,9 +204,10 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="5iP-RS-CCw">
-                                        <rect key="frame" x="71" y="308" width="233" height="48"/>
+                                        <rect key="frame" x="134" y="291" width="107" height="83"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.68860237729999996" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.58048552530613495" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
                                         <state key="normal" title="Auditions Received">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -224,6 +215,42 @@
                                             <action selector="auditionsReceivedPressed:" destination="YbZ-c6-Tnb" eventType="touchUpInside" id="nKm-dN-up3"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="jXY-zc-fZV">
+                                        <rect key="frame" x="134" y="174" width="107" height="83"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.58048552530613495" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
+                                        <state key="normal" title="Invites Received">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="invitesReceivedPressed:" destination="YbZ-c6-Tnb" eventType="touchUpInside" id="amv-BJ-xY2"/>
+                                        </connections>
+                                    </button>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wQA-XU-Y1H">
+                                        <rect key="frame" x="230" y="385" width="22" height="19"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.11776766900000001" blue="0.018303598880000001" alpha="0.58213909119999996" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HL9-JL-JKJ">
+                                        <rect key="frame" x="230" y="269" width="22" height="19"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.11776766900000001" blue="0.018303598880000001" alpha="0.58213909119999996" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nz4-Pz-wp7">
+                                        <rect key="frame" x="230" y="147" width="22" height="19"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.11776766900000001" blue="0.018303598880000001" alpha="0.58213909119999996" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.67415823063380287" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -231,6 +258,9 @@
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="auditionsAlertCount" destination="wQA-XU-Y1H" id="A7R-rG-7jG"/>
+                        <outlet property="auditsReceivedAlertCount" destination="HL9-JL-JKJ" id="30C-C2-cry"/>
+                        <outlet property="invitesAlertCount" destination="nz4-Pz-wp7" id="xr4-qs-KPM"/>
                         <segue destination="u9l-sm-gjZ" kind="show" identifier="InviteToViewer" id="nMv-dm-pYJ"/>
                     </connections>
                 </viewController>
@@ -246,7 +276,7 @@
                         <viewControllerLayoutGuide type="top" id="ful-q7-uYW"/>
                         <viewControllerLayoutGuide type="bottom" id="cOf-Ld-vlZ"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" misplaced="YES" id="S1I-RI-vJW">
+                    <view key="view" contentMode="scaleToFill" id="S1I-RI-vJW">
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -271,7 +301,7 @@
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="InviteCell" id="x9a-4l-RdF" customClass="InviteCell" customModule="OneNightBand" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="2" width="325" height="308"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="325" height="308"/>
                                                     <autoresizingMask key="autoresizingMask"/>
@@ -292,7 +322,7 @@
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AcceptedCell" id="IVq-hI-bTU" customClass="AcceptedCell" customModule="OneNightBand" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="65" width="234" height="215"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="234" height="215"/>
                                                     <autoresizingMask key="autoresizingMask"/>
@@ -3532,15 +3562,15 @@
         <image name="wood-grain-texture-xi" width="960" height="642"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ohD-d8-jdN"/>
-        <segue reference="oym-9M-WfI"/>
+        <segue reference="fbL-QW-wOg"/>
+        <segue reference="Kng-CQ-tdH"/>
+        <segue reference="XEN-6s-5Ba"/>
+        <segue reference="pvU-Tj-C52"/>
         <segue reference="x54-WP-gdZ"/>
-        <segue reference="Drd-XR-2Bn"/>
-        <segue reference="JUy-us-Qrb"/>
-        <segue reference="7DD-y8-pwi"/>
-        <segue reference="nT5-9p-PIq"/>
+        <segue reference="mWQ-36-8AY"/>
         <segue reference="sHF-tF-KcH"/>
         <segue reference="nu1-ng-cA1"/>
+        <segue reference="nT5-9p-PIq"/>
         <segue reference="Trg-0p-BpW"/>
         <segue reference="w5U-3u-slB"/>
     </inferredMetricsTieBreakers>

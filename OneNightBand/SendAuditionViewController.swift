@@ -21,7 +21,7 @@ class SendAuditionViewController: UIViewController, UITextViewDelegate, Dismissa
     @IBAction func auditionButtonPressed(_ sender: Any) {
         if auditInfoTextView1.text == "Tap here to give a little information about why you are auditioning for this band." || auditInfoTextView2.text == "Tap here to give some background on your playing style. (favorite songs, musicial influences, past playing experience, etc...)"{
             let alert = UIAlertController(title: "Whoops!", message: "Missing Information", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
 
                     } else {
@@ -79,8 +79,12 @@ class SendAuditionViewController: UIViewController, UITextViewDelegate, Dismissa
                     FIRDatabase.database().reference().child("users").child(self.wantedAd.senderID).updateChildValues(values3)
                 })
             })
+            
             removeAnimate()
-        }
+            
+            
+            }
+            
     }
     
     

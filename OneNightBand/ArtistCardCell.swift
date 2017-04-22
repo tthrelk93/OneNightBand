@@ -83,11 +83,12 @@ class ArtistCardCell: UICollectionViewCell {
             values["bandID"] = self.invitedBandID
             values["instrumentNeeded"] = self.buttonName
             values["date"] = self.sessionDate
-            values["inviteKey"] = String(describing: tempID)
+            values["inviteKey"] = String(describing: tempID.key)
             values["bandType"] = self.bandType
             values["artistCount"] = self.artistCount
             values["bandType"] = self.bandType
             values["bandName"] = self.bandName
+            values["inviteResponse"] = String()
             
             
             tempID.updateChildValues(values, withCompletionBlock: {(err, ref) in

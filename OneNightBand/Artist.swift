@@ -20,12 +20,12 @@ class Artist: NSObject{
     var profileImageUrl = [String]()
     var location = [String:Any]()
     var media = [String]()
-    var artistsBands: NSDictionary?
-    var artistsONBs: NSDictionary?
+    var artistsBands = [String]()
+    var artistsONBs = [String]()
     var soloSessKeysOnFeed = [String]()
     var wantedAdResponses = [String]()
     var wantedAds = [String]()
-    var acceptedAudits = [String:Any]()
+    var acceptedAudits = [[String:Any]]()
     
     
     

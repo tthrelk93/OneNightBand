@@ -266,8 +266,8 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
             if self.onbIDArray.count != 1{
                 return UIEdgeInsetsMake(0, 0, 0, 0)
             }else{
-                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.bandIDArray.count)
-                let totalSpacingWidth = 10 * (self.bandIDArray.count - 1)
+                let totalCellWidth = (self.sizingCell?.frame.width)! * CGFloat(self.onbIDArray.count)
+                let totalSpacingWidth = 10 * (self.onbIDArray.count - 1)
                 
                 let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
                 let rightInset = leftInset

@@ -9,14 +9,14 @@
 import Foundation
 
 class Invite: NSObject {
-    var inviteResponse: String?
-    var sender: String?
-    var bandType: String?
-    var bandID: String?
-    var instrumentNeeded: String?
-    var date: String?
-    var inviteKey: String?
-    var artistCount: Int?
-    var bandName: String?
+    var inviteResponse = String()
+    var sender = String()
+    var bandType = String()
+    var bandID = String()
+    var instrumentNeeded = String()
+    var date = String()
+    var inviteKey = String()
+    var artistCount = Int()
+    var bandName = String()
     
 }

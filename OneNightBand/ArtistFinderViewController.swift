@@ -272,12 +272,20 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
         cell.artistUID = artistAfterDist[indexPath.row].artistUID
         if self.bandType == "onb"{
             cell.artistCount = self.thisONBObject.onbArtists.count
+            cell.bandName = self.thisONBObject.onbName
+            cell.invitedBandID = self.thisONBObject.onbID
+            cell.sessionDate = self.thisONBObject.onbDate
+            
         } else {
             cell.artistCount = self.thisBandObject.bandMembers.count
+            cell.bandName = self.thisBandObject.bandName!
+            cell.invitedBandID = self.thisBandObject.bandID
+            cell.sessionDate = "n/a"
+            
         }
-        cell.bandName = self.thisBandObject.bandName!
+        
         cell.bandType = self.bandType
-        cell.invitedBandID = self.thisSession
+        
         cell.buttonName = self.instrumentPicked
         //cell.sessionDate = self.thisSessionObject.sessionDate
         

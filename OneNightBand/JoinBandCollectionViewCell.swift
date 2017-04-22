@@ -15,12 +15,10 @@ protocol PerformSegueInBandBoard {
 
 class JoinBandCollectionViewCell: UICollectionViewCell {
     @IBAction func moreLessInfoButtonPressed(_ sender: Any) {
-        if self.moreLess == "more"{
-            self.moreLess = "less"
+        if self.moreLessInfoButton.titleLabel?.text == "More Info"{
             moreInfoView.isHidden = false
             self.moreLessInfoButton.setTitle("Less Info", for: .normal)
         } else {
-            self.moreLess = "more"
             moreInfoView.isHidden = true
             self.moreLessInfoButton.setTitle("More Info", for: .normal)
         }
@@ -35,7 +33,7 @@ class JoinBandCollectionViewCell: UICollectionViewCell {
         
     }
     @IBOutlet weak var bandImageView: UIImageView!
-    var moreLess = "more"
+   
     var delegate: PerformSegueInBandBoard!
     
     var bandID = String()

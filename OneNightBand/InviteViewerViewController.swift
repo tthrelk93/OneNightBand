@@ -11,10 +11,10 @@ import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 
-struct AuditAccepted {
+class AuditAccepted: NSObject {
     var bandName = String()
     var bandID = String()
-    var picURL = String()
+    var bandPic = String()
     
 }
 
@@ -32,9 +32,37 @@ class AuditReceived: NSObject {
 }
 
 
-class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, AcceptDeclineDelegate {
+class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, AcceptDeclineDelegate, GoToBandDelegate {
     
-    
+    func goToBand(bandID: String){
+        
+    }
+    func dismissAccepted(indexPath: IndexPath){
+        
+        //self.cellArray.remove(at: indexPath.row)
+        
+        ref.child("users").child(currentUser!).child("acceptedAudits").observeSingleEvent(of: .value, with: {(snapshot) in
+            var tempArray = [[String:Any]]()
+            if let snapArray = snapshot.value as? [[String:Any]]{
+                
+                for val in snapArray{
+                    if ((val as [String:Any])["bandID"] as! String) != (self.auditAcceptedArray as! [AuditAccepted])[indexPath.row].bandID {
+                        
+                        
+                        tempArray.append(val)
+                        
+                    }
+                }
+            }
+            
+                
+            var tempDict = [String:Any]()
+            tempDict["acceptedAudits"] = tempArray
+            self.auditAcceptedArray.remove(at: indexPath.row)
+            self.auditionsAcceptedCollect.deleteItems(at: [IndexPath(row: indexPath.row, section: 0)])
+            self.ref.child("users").child(self.currentUser!).updateChildValues(tempDict)
+            })
+    }
     @IBOutlet weak var wantedCollect: UICollectionView!
     @IBOutlet weak var auditionsAcceptedCollect: UICollectionView!
     
@@ -49,16 +77,17 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
     var cellArray = [InviteCell]()
     var sizingCell1 = InviteCell()
     var sizingCell2 = WantedReceivedCell()
+    var sizingCell3 = AcceptedCell()
     
 
     var wantedAdsOnFeed = [String]()
     
-    
+    var wantedAds = [WantedAd]()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("sender:\(self.sender)")
             ref.child("users").child(currentUser!).observeSingleEvent(of: .value, with: {(snapshot) in
                     if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                         for snap in snapshots{
@@ -76,10 +105,27 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                     self.wantedAdsOnFeed.append(wantedSnap.value as! String)
                                 }
                             }
+                            if snap.key == "acceptedAudits"{
+                               
+                                    let acceptSnapArray = snap.value as! [[String:Any]]
+                                for val in acceptSnapArray{
+                                    let tempDict = val 
+                                    let accepted = AuditAccepted()
+                                    accepted.setValuesForKeys(tempDict)
+                                    print("accepted:\(accepted)")
+                                    self.auditAcceptedArray.append(accepted)
+                                }
+                               
+                                
+                            }
                         }
                 }
-                
+                self.ref.child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                 if self.sender == "invite"{
+                    self.invitesCollect.isHidden = false
+                    self.auditionsAcceptedCollect.isHidden = true
+                    self.wantedCollect.isHidden = true
                     DispatchQueue.main.async {
                         for _ in self.inviteArray{
                             let cellNib = UINib(nibName: "InviteCell", bundle: nil)
@@ -95,10 +141,15 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                     }
 
                 } else if self.sender == "auditReceived"{
-                    self.ref.child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
-                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    self.invitesCollect.isHidden = true
+                    self.auditionsAcceptedCollect.isHidden = true
+                    self.wantedCollect.isHidden = false
                             var auditReceivedDict = [String:Any]()
                             for snap in snapshots{
+                                let tempWant = WantedAd()
+                                let tempDict = snap.value as! [String:Any]
+                                tempWant.setValuesForKeys(tempDict)
+                                self.wantedAds.append(tempWant)
                                 if self.wantedAdsOnFeed.contains(snap.key){
                                     
                                     if let ad = snap.value as? [String:Any]{
@@ -118,9 +169,6 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                             
                                         }
                                         
-                                        
-                                        
-                                    
                                     var tempAuditReceived = AuditReceived()
                                     tempAuditReceived.setValuesForKeys(auditReceivedDict)
                                     self.auditReceivedArray.append(tempAuditReceived)
@@ -128,7 +176,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                     
                                 }
                             }
-                        }
+                    
                         DispatchQueue.main.async{
                             for _ in self.auditReceivedArray{
                                 let cellNib = UINib(nibName: "WantedReceivedCell", bundle: nil)
@@ -141,13 +189,32 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                 self.wantedCollect.gestureRecognizers?.first?.delaysTouchesBegan = false
                             }
                         }
-                    })
+                   
                     
                 } else {
+                    self.invitesCollect.isHidden = true
+                    self.auditionsAcceptedCollect.isHidden = false
+                    self.wantedCollect.isHidden = true
+                    DispatchQueue.main.async{
+                        print(self.auditAcceptedArray.count)
+                        for _ in self.auditAcceptedArray{
+                            let cellNib = UINib(nibName: "AcceptedCell", bundle: nil)
+                            self.auditionsAcceptedCollect.register(cellNib, forCellWithReuseIdentifier: "AcceptedCell")
+                            self.sizingCell3 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! AcceptedCell)
+                            //self.inviteCollectionView.backgroundColor = UIColor.clear
+                            self.auditionsAcceptedCollect.dataSource = self
+                            self.auditionsAcceptedCollect.delegate = self
+                            self.auditionsAcceptedCollect.gestureRecognizers?.first?.cancelsTouchesInView = false
+                            self.auditionsAcceptedCollect.gestureRecognizers?.first?.delaysTouchesBegan = false
+                        }
+                    }
                     
-                }
+                   
+
+                        }
+                    }
                 
-        
+                })
         
         
                 
@@ -178,7 +245,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                             for snap in snapshots{
                                 self.onbArray.append(snap.value as! String)
                             }
-                            self.onbArray.append(self.inviteArray[invite].bandID!)
+                            self.onbArray.append(self.inviteArray[invite].bandID)
                             tempDict2["artistsONBs"] = self.onbArray
                             FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict2)
                         }
@@ -230,7 +297,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                 for snap in snapshots{
                                     self.onbArray.append(snap.value as! String)
                                 }
-                                self.onbArray.append(self.inviteArray[invite].bandID!)
+                                self.onbArray.append(self.inviteArray[invite].bandID)
                                 tempDict2["artistsbands"] = self.bandArray
                                 FIRDatabase.database().reference().child("users").child(self.currentUser!).updateChildValues(tempDict2)
                             }
@@ -321,6 +388,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
         }
         
     }
+    var acceptedUploadArray = [[String:Any]]()
     func acceptPressedWanted(indexPathRow: Int, indexPath: IndexPath, curCell: WantedReceivedCell){
         //add senderID to band/ONB artists. 
         //add band/onb to senders bands/onbs.
@@ -344,32 +412,78 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                         for snap in snapshots{
                             tempDict[snap.key] = snap.value as! [String:Any]
                         }
+                        print(curCell.wantedID)
+                        print("tempDict b4:\(tempDict)")
                         print("responseID: \(curCell.responseID)")
                         for (key,_) in tempDict{
                             if key == curCell.responseID{
-                                print(curCell.responseID)
+                                print(tempDict.count)
+                                if tempDict.count == 1{
+                                    self.ref.child("users").child(self.currentUser!).child("wantedAdResponses").observeSingleEvent(of: .value, with: {(snapshot) in
+                                        var tempArray = [String]()
+                                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                            
+                                            for snap in snapshots{
+                                                if snap.value as! String != curCell.wantedID{
+                                                    tempArray.append(snap.value as! String)
+                                                }
+                                            }
+                                            var tempDict2 = [String:Any]()
+                                            tempDict2["wantedAdResponses"] = tempArray
+                                            self.ref.child("users").child(self.currentUser!).updateChildValues(tempDict2)
+                                        }
+                                    })
+                                }
+
                                 tempDict.removeValue(forKey: key)
                                 break
                             }
                         }
-                        self.ref.child("wantedAds").child(curCell.wantedID).child("responses").updateChildValues(tempDict)
+                        print("tempDict aftr:\(tempDict)")
+                        var respDict = [String:Any]()
+                        respDict["responses"] = tempDict
+                        self.ref.child("wantedAds").child(curCell.wantedID).updateChildValues(respDict)
                     }
+                    
                     
                 })
 
                 self.ref.child("users").child(curCell.artistID).observeSingleEvent(of: .value, with: {(snapshot) in
                     if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                         var auditDict = [String:Any]()
+                        var tempArray = [String]()
                         for snap in snapshots{
                             if snap.key == "acceptedAudits"{
-                                for (key, value) in (snap.value as! [String:Any]){
-                                    auditDict[key] = value
-                                }
+                                for val in (snap.value as! [[String:Any]]){
+                                    self.acceptedUploadArray.append(val)
+                                                                    }
                                 break
                             }
+                            if snap.key == "artistsONBs"{
+                                if let artistSnaps = snap.value as? [String]{
+                                    for onb in artistSnaps{
+                                        tempArray.append(onb)
+                                    }
+                                    
+                                }
+                            }
+                        
                         }
-                        auditDict[curCell.bandNameLabel.text!] = curCell.bandID
-                        self.ref.child("users").child(curCell.artistID).child("acceptedAudits").updateChildValues(auditDict)
+                        tempArray.append(curCell.bandID)
+                        var tempDict = [String:Any]()
+                        tempDict["artistsONBs"] = tempArray
+                        self.ref.child("users").child(curCell.artistID).updateChildValues(tempDict)
+                        auditDict["bandName"] = curCell.bandNameLabel.text!
+                        auditDict["bandID"] = curCell.bandID
+                        for wanted in self.wantedAds{
+                            if wanted.wantedID == curCell.wantedID{
+                                auditDict["bandPic"] = wanted.wantedImage
+                            }
+                        }
+                        self.acceptedUploadArray.append(auditDict)
+                        var tempDict2 = [String:Any]()
+                        tempDict2["acceptedAudits"] = self.acceptedUploadArray
+                        self.ref.child("users").child(curCell.artistID).updateChildValues(tempDict2)
                     }
                     DispatchQueue.main.async {
                         self.auditReceivedArray.remove(at: wanted)
@@ -397,9 +511,27 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                             tempDict[snap.key] = snap.value as! [String:Any]
                         }
                         
+                        
                         for (key,_) in tempDict{
                             if key == curCell.responseID{
+                                if tempDict.count == 1{
+                                    self.ref.child("users").child(self.currentUser!).child("wantedAdResponses").observeSingleEvent(of: .value, with: {(snapshot) in
+                                        var tempArray = [String]()
+                                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                        
+                                            for snap in snapshots{
+                                                if snap.key != curCell.wantedID{
+                                                    tempArray.append(snap.value as! String)
+                                                }
+                                            }
+                                            var tempDict2 = [String:Any]()
+                                            tempDict2["wantedAdResponses"] = tempArray
+                                            self.ref.child("users").child(self.currentUser!).updateChildValues(tempDict2)
+                                        }
+                                    })
+                                }
                                 tempDict.removeValue(forKey: key)
+                                break
                             }
                         }
                         self.ref.child("wantedAds").child(curCell.wantedID).child("responses").updateChildValues(tempDict)
@@ -409,6 +541,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                 self.ref.child("users").child(curCell.artistID).observeSingleEvent(of: .value, with: {(snapshot) in
                     if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                         var auditDict = [String:Any]()
+                        var tempArray = [String]()
                         for snap in snapshots{
                             if snap.key == "acceptedAudits"{
                                 for (key, value) in (snap.value as! [String:Any]){
@@ -416,7 +549,21 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                 }
                                 break
                             }
+                            if snap.key == "artistsBands"{
+                                if let artistBands = snap.value as? [String]{
+                                    for band in artistBands{
+                                        tempArray.append(band)
+                                    }
+                                    
+                                }
+                            }
+                            
+
                         }
+                        tempArray.append(curCell.bandID)
+                        var tempDict = [String:Any]()
+                        tempDict["artistsBands"] = tempArray
+                        self.ref.child("users").child(curCell.artistID).updateChildValues(tempDict)
                         auditDict[curCell.bandNameLabel.text!] = curCell.bandID
                         self.ref.child("users").child(curCell.artistID).child("acceptedAudits").updateChildValues(auditDict)
                     }
@@ -429,8 +576,6 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                     
                 })
             })
-            
-
                 }
                 break
             }
@@ -443,19 +588,59 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
             
             if curCell == self.cellArray2[wanted]{
                 
-                    DispatchQueue.main.async {
-                        self.ref.child("wantedAds").child(curCell.wantedID).child("responses").child(curCell.responseID).removeValue()
-                        self.auditReceivedArray.remove(at: wanted)
-                        self.cellArray.remove(at: wanted)
-                        self.wantedCollect.deleteItems(at: [IndexPath(row: wanted, section: 0)])
-                        print("WantedCollectionViewCells: \(self.wantedCollect.visibleCells.count)")
-                       
+                
+                
+                
+                self.ref.child("wantedAds").child(curCell.wantedID).child("responses").observeSingleEvent(of: .value, with: {(snapshot) in
+                    var tempDict = [String:Any]()
+                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                        for snap in snapshots{
+                            tempDict[snap.key] = snap.value as! [String:Any]
+                        }
+                        print(curCell.wantedID)
+                        print("tempDict b4:\(tempDict)")
+                        print("responseID: \(curCell.responseID)")
+                        for (key,_) in tempDict{
+                            if key == curCell.responseID{
+                                print(tempDict.count)
+                                if tempDict.count == 1{
+                                    self.ref.child("users").child(self.currentUser!).child("wantedAdResponses").observeSingleEvent(of: .value, with: {(snapshot) in
+                                        var tempArray = [String]()
+                                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                            
+                                            for snap in snapshots{
+                                                if snap.value as! String != curCell.wantedID{
+                                                    tempArray.append(snap.value as! String)
+                                                }
+                                            }
+                                            var tempDict2 = [String:Any]()
+                                            tempDict2["wantedAdResponses"] = tempArray
+                                            self.ref.child("users").child(self.currentUser!).updateChildValues(tempDict2)
+                                        }
+                                    })
+                                }
+                                
+                                tempDict.removeValue(forKey: key)
+                                break
+                            }
+                        }
+                        print("tempDict aftr:\(tempDict)")
+                        var respDict = [String:Any]()
+                        respDict["responses"] = tempDict
+                        self.ref.child("wantedAds").child(curCell.wantedID).updateChildValues(respDict)
                     }
-                break
-            }
-            
-        }
+                        DispatchQueue.main.async{
+                            self.auditReceivedArray.remove(at: wanted)
 
+                            self.wantedCollect.deleteItems(at: [IndexPath(row: wanted, section: 0)])
+                            print("WantedCollectionViewCells: \(self.wantedCollect.visibleCells.count)")
+                            }
+                    
+                })
+                
+            }
+            break
+        }
     }
     
 
@@ -468,6 +653,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
         else if self.sender == "auditReceived"{
             return auditReceivedArray.count
         } else {
+            //print("auditCollectArray: \(auditAcceptedArray[0].bandName)")
             return auditAcceptedArray.count
         }
         
@@ -510,6 +696,12 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
         
     }
     func configureAcceptedCell(_ cell: AcceptedCell, forIndexPath indexPath: NSIndexPath){
+        cell.bandNameLabel.text = auditAcceptedArray[indexPath.row].bandName
+        cell.bandImageView.loadImageUsingCacheWithUrlString(auditAcceptedArray[indexPath.row].bandPic)
+        cell.bandID = auditAcceptedArray[indexPath.row].bandID
+        cell.goToBandDelegate = self
+        cell.indexPath = indexPath as IndexPath
+        
     
     }
     func configureWantedCell(_ cell: WantedReceivedCell, forIndexPath indexPath: NSIndexPath){
@@ -535,7 +727,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
         })
     }
     func configureCell(_ cell: InviteCell, forIndexPath indexPath: NSIndexPath){
-        self.ref.child("users").child(inviteArray[indexPath.row].sender!).observeSingleEvent(of: .value, with: { (snapshot) in
+        self.ref.child("users").child(inviteArray[indexPath.row].sender).observeSingleEvent(of: .value, with: { (snapshot) in
             let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
             for snap in snapshots{
                 if snap.key == "name"{
@@ -545,18 +737,18 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                     cell.senderPic.loadImageUsingCacheWithUrlString((snap.value as! [String]).first!)
                 }
             }
-            cell.bandID = self.inviteArray[indexPath.row].bandID!
+            cell.bandID = self.inviteArray[indexPath.row].bandID
             cell.instrumentNeeded.text = self.inviteArray[indexPath.row].instrumentNeeded
             cell.indexPath = indexPath as IndexPath!
             cell.indexPathRow = indexPath.row
             //cell.curCell = cell
-            cell.bandType = self.inviteArray[indexPath.row].bandType!
+            cell.bandType = self.inviteArray[indexPath.row].bandType
             cell.sessionDate.text = self.inviteArray[indexPath.row].date
             cell.sessionName.text = self.inviteArray[indexPath.row].bandName
             //cell.responseID = self.auditReceivedArray[indexPath.row].responseID
             
             if self.inviteArray[indexPath.row].bandType == "onb"{
-            self.ref.child("bands").child(self.inviteArray[indexPath.row].bandID!).observeSingleEvent(of: .value, with: { (snapshot) in
+            self.ref.child("bands").child(self.inviteArray[indexPath.row].bandID).observeSingleEvent(of: .value, with: { (snapshot) in
                 let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
                 for snap in snapshots{
                     if snap.key == "bandBio"{
@@ -572,7 +764,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                 
             })
             } else {
-                self.ref.child("oneNightBands").child(self.inviteArray[indexPath.row].bandID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                self.ref.child("oneNightBands").child(self.inviteArray[indexPath.row].bandID).observeSingleEvent(of: .value, with: { (snapshot) in
                     let snapshots = snapshot.children.allObjects as! [FIRDataSnapshot]
                     for snap in snapshots{
                         if snap.key == "onbInfo"{
@@ -591,6 +783,48 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
             }
         })
     }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        if(collectionView == invitesCollect){
+            if self.inviteArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
+                let totalCellWidth = (self.sizingCell1.frame.width) * CGFloat(self.inviteArray.count)
+                let totalSpacingWidth = 10 * (self.inviteArray.count - 1)
+                
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
+        }
+        else if collectionView == wantedCollect{
+            if self.auditReceivedArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
+                let totalCellWidth = (self.sizingCell2.frame.width) * CGFloat(self.auditReceivedArray.count)
+                let totalSpacingWidth = 10 * (self.auditReceivedArray.count - 1)
+                
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
+            
+        } else {
+            if self.auditAcceptedArray.count != 1{
+                return UIEdgeInsetsMake(0, 0, 0, 0)
+            }else{
+                let totalCellWidth = (self.sizingCell3.frame.width) * CGFloat(self.auditAcceptedArray.count)
+                let totalSpacingWidth = 10 * (self.auditAcceptedArray.count - 1)
+                
+                let leftInset = (collectionView.frame.width - CGFloat(totalCellWidth + CGFloat(totalSpacingWidth))) / 2
+                let rightInset = leftInset
+                return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
+            }
+
+        }
+    }
+
     
 
     
