@@ -166,7 +166,7 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
                                 let fileName = NSURL(string: sourceURL)?.lastPathComponent!
                                 let destinationURL = tmpDir!.appendingPathComponent(fileName!)
                                 if let fileData = NSData(contentsOf: NSURL(string: storageURL) as! URL){
-                                    fileData.write(to: destinationURL, atomically: false)
+                                    fileData.write(to: destinationURL, atomically: =)
                                     self.destArray.append(destinationURL)
                                     }
                             
@@ -199,7 +199,9 @@ class MP3PlayerViewController: UIViewController, UITableViewDelegate, UITableVie
                             
                         }
                         else if snap.key == "sessionName"{
-                            self.sessionNameLabel.text = (snap.value as! String)
+                            self.navigationItem.title = (snap.value as! String)
+                            
+                            self.sessionNameLabel.text = ""
                         }
                         else if snap.key == "sessionBio"{
                             self.sessionBio.text = snap.value as! String

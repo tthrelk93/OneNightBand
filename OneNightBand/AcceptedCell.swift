@@ -9,6 +9,7 @@
 import UIKit
 
 class AcceptedCell: UICollectionViewCell, GoToBandData {
+    @IBOutlet weak var noAcceptedInvitesLabel: UILabel!
     @IBOutlet weak var bandImageView: UIImageView!
     @IBOutlet weak var dismissButton: UIButton!
     weak var goToBandDelegate : GoToBandDelegate?

@@ -235,8 +235,10 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     var dropMenu: YNDropDownMenu?
     var sessionsInDatabase = [Session]()
     var sessFeedKeyArray = [String]()
+    var displayLineMidY = CGFloat()
     override func viewDidLoad() {
         super.viewDidLoad()
+        displayLineMidY = displayLine.bounds.midY
         picVidSegment.isHidden = true
         self.sessionNameLabel.isHidden = true
         self.sessionLabel.isHidden = true
@@ -490,13 +492,14 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         self.sessionLabel.isHidden = true
         self.bandLabel.isHidden = true
         self.bandNameButton.isHidden = true
+        self.bandNameButton.layer.cornerRadius = 10
         self.sessionBioTextView.isHidden = true
         self.artistTableView.isHidden = true
         self.sessionArtistsLabel.isHidden = true
         self.bioLabel.isHidden = true
         self.sessionPicksLabel.isHidden = true
 
-         picVidSegment.isHidden = false
+        picVidSegment.isHidden = false
         videoCollect.isHidden = true
         picCollect.isHidden = false
         sessionNameLabel2.isHidden = false
@@ -646,6 +649,25 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
         count += 1
         //countingLabel.text = String(SwiftCounter++)
     }
+    func hideSessionInfo(){
+        self.sessionNameLabel.isHidden = true
+        self.sessionLabel.isHidden = true
+        self.bandLabel.isHidden = true
+        self.bandNameButton.isHidden = true
+        self.sessionBioTextView.isHidden = true
+        self.artistTableView.isHidden = true
+        self.sessionArtistsLabel.isHidden = true
+        self.bioLabel.isHidden = true
+        self.sessionPicksLabel.isHidden = true
+        
+        picVidSegment.isHidden = true
+        videoCollect.isHidden = true
+        picCollect.isHidden = true
+        sessionNameLabel2.isHidden = true
+        sessionViewsLabel2.isHidden = true
+        dropMenu?.isHidden = true
+
+    }
     
     @IBOutlet weak var displayLine: UIView!
     
@@ -666,11 +688,12 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
             }*/
             print((closest as! ONBGuitarButton).center.y)
             print(self.displayLine.bounds.maxY)
-            if(closest as! ONBGuitarButton).center.y >= self.displayLine.center.y - 50 {
+            if(closest as! ONBGuitarButton).center.y >= self.displayLine.center.y {
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: true)
             }else{
                 (closest as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
-                //88888self.player?.stop()
+                
+                
             }
        
             return (closest as! ONBGuitarButton)
@@ -735,23 +758,23 @@ class SessionFeedViewController: UIViewController, UIGestureRecognizerDelegate,U
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         touchesBeganBool = false
-        for i in viewPins{
+        /*for i in viewPins{
             //(i as! ONBGuitarButton).offsetYPosition(offset: (nextTouch?.y)! - firstTouch.y)
             //scrollOffset += (nextTouch?.y)! - firstTouch.y
             (i as! ONBGuitarButton).setIsDiplayedButton(isDisplayedButton: false)
             
             
             
-        }
+        }*/
 
         if currentButtonFunc().isDisplayed == true{
-           // picCollect.isHidden = false
             displaySessionInfo()
         }else{
-            //88888player?.stop()
+            hideSessionInfo()
         }
     }
 
+    @IBOutlet weak var segmentViewHolder: UIView!
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

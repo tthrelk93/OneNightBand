@@ -22,6 +22,7 @@ protocol PerformSegueInRootProtocol {
     func currentSessionsButtonSelected()
     func sessionInvitesButtonSelected()
     func sessionFeedButtonSelected()
+    func findArtistsButtonSelected()
     func noButtonTouched()
 }
 protocol PerformSegueInArtistFinder{

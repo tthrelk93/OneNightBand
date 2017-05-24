@@ -15,7 +15,7 @@ import DropDown
 
 
 class TutorialViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITextViewDelegate{
-    
+    public var ONBPink = UIColor(colorLiteralRed: 201.0, green: 38.0, blue: 92.0, alpha: 1.0)
     let TAGS = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp", "rapper", "DJ"]
     var sizingCell: TagCell?
     var tags = [Tag]()
@@ -128,13 +128,13 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         self.editBioTextView.delegate = self
         self.editBioTextView.isHidden = true
         editBioTextView.text = "Tap here to edit your artist bio!"
-        editBioTextView.textColor = UIColor.orange
+        editBioTextView.textColor = self.ONBPink
         //editBioTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -10).isActive = true
         //editBioTextView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 10).isActive = true
        
         //let dropDown = DropDown()
         
-        dropDown.selectionBackgroundColor = UIColor.orange.withAlphaComponent(0.4)
+        dropDown.selectionBackgroundColor = self.ONBPink
         dropDown.anchorView = self.view//collectionView.cellForItem(at: indexPath)
         dropDown.dataSource = ["beginner","intermediate","advanced","expert"]
         dropDown.selectionAction = {[unowned self] (index: Int, item: String) in
@@ -197,7 +197,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
     var lvlArray = [Int]()
     func set_years_playing(){
         dropDownLabel.text = "Select the number of years have you been playing this instrument"
-        dropDown2.selectionBackgroundColor = UIColor.orange.withAlphaComponent(0.4)
+        dropDown2.selectionBackgroundColor = self.ONBPink
         dropDown2.anchorView = self.view//collectionView.cellForItem(at: indexPath)
         dropDown2.dataSource = ["1","2","3","4","5+","10+"]
         dropDown2.selectionAction = {[unowned self] (index: Int, item: String) in
@@ -216,7 +216,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
 
     }
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if editBioTextView.textColor == UIColor.orange {
+        if editBioTextView.textColor == self.ONBPink {
             editBioTextView.text = nil
             editBioTextView.textColor = UIColor.white
         }
@@ -224,7 +224,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
     func textViewDidEndEditing(_ textView: UITextView) {
         if editBioTextView.text.isEmpty {
             editBioTextView.text = "Tap here to edit your artist bio!"
-            editBioTextView.textColor = UIColor.orange
+            editBioTextView.textColor = self.ONBPink
         }
         /*for tag in tags{
             if(tag.selected == true){
@@ -287,7 +287,7 @@ class TutorialViewController: UIViewController, UIPageViewControllerDataSource, 
         let tag = tags[(indexPath as NSIndexPath).row]
         cell.tagName.text = tag.name
         cell.tagName.textColor = tag.selected ? UIColor.white : UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
-        cell.backgroundColor = tag.selected ? UIColor.orange : UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+        cell.backgroundColor = tag.selected ? self.ONBPink : UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
     }
     
     

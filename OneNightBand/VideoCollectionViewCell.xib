@@ -51,7 +51,7 @@
                         <rect key="frame" x="11" y="46" width="98" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CyP-ek-Omh">
@@ -69,7 +69,7 @@
                 <outlet property="touchBlockingView" destination="CyP-ek-Omh" id="HrB-xA-SoQ"/>
                 <outlet property="youtubePlayerView" destination="ci3-JQ-565" id="Qbx-cc-m90"/>
             </connections>
-            <point key="canvasLocation" x="125" y="14"/>
+            <point key="canvasLocation" x="125" y="13.5"/>
         </collectionViewCell>
     </objects>
 </document>

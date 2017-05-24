@@ -10,6 +10,7 @@ import UIKit
 
 class InviteCell: UICollectionViewCell, AcceptDeclineData  {
 
+    @IBOutlet weak var noInvitesLabel: UILabel!
     @IBAction func acceptButtonPressed(_ sender: Any) {
         acceptDeclineDelegate?.acceptPressed(indexPathRow: self.indexPathRow, indexPath: self.indexPath,curCell: self)
     }

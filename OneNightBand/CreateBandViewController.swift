@@ -53,7 +53,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                         
                         let bandReferenceAnyObject = bandReference.key
                         values["bandID"] = bandReferenceAnyObject
-                        tempArray.append(bandReferenceAnyObject)
+                        //tempArray.append(bandReferenceAnyObject)
                         //print(sessReference.key)
                         //sessReference.childByAutoId()
                         bandReference.updateChildValues(values, withCompletionBlock: {(err, ref) in
@@ -74,7 +74,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                                     tempArray.append(snap.value as! String)
                                 }
                             }
-                            tempArray.append(bandReferenceAnyObject)
+                            //tempArray.append(bandReferenceAnyObject)
                             var tempDict = [String : Any]()
                             tempDict["artistsBands"] = tempArray
                             let userRef = self.ref.child("users").child(user!)

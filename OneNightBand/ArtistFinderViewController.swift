@@ -110,7 +110,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                     tempRef =  FIRDatabase.database().reference().child("bands").child(self.thisBandObject.bandID!).child("bandMembers")
                 }
                 else{
-                    tempRef =  FIRDatabase.database().reference().child("oneNightBands").child(self.thisONBObject.onbID).child("onbArtists")
+                    tempRef =  FIRDatabase.database().reference().child("oneNightBands").child(self.bandID).child("onbArtists")
                 }
                    tempRef.observeSingleEvent(of: .value, with: { (ssnapshot) in
                     if let ssnapshots = ssnapshot.children.allObjects as? [FIRDataSnapshot]{

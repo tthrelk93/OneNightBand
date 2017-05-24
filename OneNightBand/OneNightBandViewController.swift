@@ -150,6 +150,12 @@ class OneNightBandViewController: UIViewController, UINavigationControllerDelega
                 }
             }
         })
+        DispatchQueue.main.async{
+            if self.sender == "pfm"{
+                self.performSegue(withIdentifier: "ONBToArtistFinder", sender: self)
+            }
+        }
+
 
 
     }

@@ -183,7 +183,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                 }
             }*/
             DispatchQueue.main.async{
-                print(self.bandArray)
+                
                 for _ in self.onbArray{
                     self.currentCollect = "onb"
                     
@@ -255,7 +255,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
        // navigationItem.leftBarButtonItem = backButton
         
         //sessionCollectionView.allowsSelection = true
-        loadPastAndCurrentSessions()
+        //loadPastAndCurrentSessions()
         sessionCollectionView.visibleCells.first?.layer.borderWidth = 2
         sessionCollectionView.visibleCells.first?.layer.borderColor = UIColor.orange.cgColor
         
@@ -795,6 +795,14 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     @IBOutlet weak var yourBandsLabel: UILabel!
     func configureCell(_ cell: SessionCell,_ collectionView: UICollectionView, forIndexPath indexPath: NSIndexPath) {
         //print(self.currentCollect)
+        if collectionView == self.onbCollect{
+            cell.sessionCellImageView.loadImageUsingCacheWithUrlString(onbObjectArray[indexPath.row].onbPictureURL[0])
+            cell.sessionCellLabel.text = onbObjectArray[indexPath.row].onbName
+            cell.sessionCellLabel.textColor = UIColor.white
+            cell.layer.borderWidth = cell.cellSelected ? 2 : 0
+            cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+            cell.sessionId = onbArray[indexPath.row]
+        }
         if collectionView == self.yourBandsCollect{
             print(bandObjectArray[indexPath.row].bandPictureURL[0])
             //print(bandObjectArray)

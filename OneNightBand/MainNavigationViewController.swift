@@ -39,12 +39,14 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var addMediaButton: UIButton!
     @IBOutlet weak var instrumentTableView: UITableView!
 
+    @IBOutlet weak var picCollectShiftView: UIView!
     //func view
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ProfToAddMedia"{
             if let vc = segue.destination as? AddMediaToSession
             {
                 vc.senderView = "main"
+                vc.dismissalDelegate = self
             }
         }
 
@@ -95,13 +97,24 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
     var picArray = [UIImage]()
     let userID = FIRAuth.auth()?.currentUser?.uid
+    var shiftViewBounds = CGRect()
+    var vidCollectBounds = CGRect()
     var shiftViewOrigin = CGPoint()
+    var vidCollectOrigin = CGPoint()
     @IBOutlet weak var inviteCountAlert: UILabel!
     var inviteCount: Int?
-    
+    var createSessOrig = CGPoint()
+    var originalMenuBounds = CGRect()
+    var picCollectOrigin = CGPoint()
     override func viewDidLoad(){
         super.viewDidLoad()
          //loadVidFromPhone()
+        self.createSessOrig = createSessionButton.center
+        self.originalMenuBounds = createSessionButton.bounds
+        self.vidCollectBounds = youtubeCollectionView.bounds
+        self.picCollectOrigin = profilePicCollectionView.frame.origin
+        self.shiftViewBounds = shiftView.bounds
+        self.vidCollectOrigin = youtubeCollectionView.frame.origin
         self.shiftViewOrigin = shiftView.frame.origin
         self.createSessionButton.dismissalDelegate = self
         //createSessionButton.dismissalDelegate = self
@@ -220,7 +233,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
                     self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
                     self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                    self.youtubeCollectionView.backgroundColor = UIColor.clear
+                    //self.youtubeCollectionView.backgroundColor = UIColor.clear
                     self.youtubeCollectionView.dataSource = self
                     self.youtubeCollectionView.delegate = self
                     
@@ -235,7 +248,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                     let cellNib = UINib(nibName: "VideoCollectionViewCell", bundle: nil)
                     self.youtubeCollectionView.register(cellNib, forCellWithReuseIdentifier: "VideoCollectionViewCell")
                     self.sizingCell2 = ((cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! VideoCollectionViewCell?)!
-                    self.youtubeCollectionView.backgroundColor = UIColor.clear
+                    //self.youtubeCollectionView.backgroundColor = UIColor.clear
                     self.youtubeCollectionView.dataSource = self
                     self.youtubeCollectionView.delegate = self
                 }
@@ -333,12 +346,32 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     var currentCollect: String?
     
     
+    @IBOutlet weak var vidCollectShiftView: UIView!
     //@IBOutlet weak var shadeView: UIView!
     func noButtonTouched(){
         print("noButton")
          UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.bounds = self.shiftViewBounds
             self.shiftView.frame.origin = self.shiftViewOrigin
+            self.positionView.isHidden = true
+            
         })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+                self.profilePicCollectionView.frame.origin = self.picCollectOrigin
+            self.picCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.youtubeCollectionView.bounds = self.vidCollectBounds
+            self.youtubeCollectionView.frame.origin = self.vidCollectOrigin
+            self.vidCollectShiftView.isHidden = true
+            
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+        self.createSessionButton.bounds = self.originalMenuBounds
+        })
+
     }
     
     //doesntWork
@@ -414,8 +447,8 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
        
             if self.nsurlArray.count == 0{
-                cell.layer.borderColor = UIColor.white.cgColor
-                cell.layer.borderWidth = 2
+                cell.layer.borderColor = UIColor.darkGray.cgColor
+                cell.layer.borderWidth = 1
                 cell.removeVideoButton.isHidden = true
                 cell.videoURL = nil
                 cell.player?.view.isHidden = true
@@ -458,25 +491,6 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         
             cell.picImageView.image = self.picArray[indexPath.row]
         cell.deleteButton.isHidden = true
-       /* switch UIScreen.main.bounds.width{
-        case 320:
-            
-            cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width:320, height:267)
-            
-        case 375:
-            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:375,height:267)
-            
-            
-        case 414:
-            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
-            
-        default:
-            cell.frame = CGRect(x: cell.frame.origin.x,y: cell.frame.origin.y,width:414,height:267)
-            
-            
-            
-        }*/
- 
         }
     
     
@@ -509,15 +523,51 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     
     func createSessionButtonSelected() {
         UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.bounds = self.shiftViewBounds
             self.shiftView.frame.origin = self.shiftViewOrigin
+            self.positionView.isHidden = true
+            
         })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.profilePicCollectionView.frame.origin = self.picCollectOrigin
+            self.picCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.youtubeCollectionView.bounds = self.vidCollectBounds
+            self.youtubeCollectionView.frame.origin = self.vidCollectOrigin
+            self.vidCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.createSessionButton.bounds = self.originalMenuBounds
+        })
+
 
         performSegue(withIdentifier:"MainNavToFindBands", sender: self)
         
             }
     func currentSessionsButtonSelected(){
         UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.bounds = self.shiftViewBounds
             self.shiftView.frame.origin = self.shiftViewOrigin
+            self.positionView.isHidden = true
+
+           
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.profilePicCollectionView.frame.origin = self.picCollectOrigin
+            self.picCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.youtubeCollectionView.bounds = self.vidCollectBounds
+            self.youtubeCollectionView.frame.origin = self.vidCollectOrigin
+            self.vidCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.createSessionButton.bounds = self.originalMenuBounds
         })
 
         performSegue(withIdentifier: "MainToBands", sender: self)
@@ -525,25 +575,81 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     }
     func sessionInvitesButtonSelected(){
         UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.bounds = self.shiftViewBounds
             self.shiftView.frame.origin = self.shiftViewOrigin
+            self.positionView.isHidden = true
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.profilePicCollectionView.frame.origin = self.picCollectOrigin
+            self.picCollectShiftView.isHidden = true
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.youtubeCollectionView.bounds = self.vidCollectBounds
+            self.youtubeCollectionView.frame.origin = self.vidCollectOrigin
+            self.vidCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.createSessionButton.bounds = self.originalMenuBounds
         })
 
         performSegue(withIdentifier: "MainNavToSessionInvites", sender: self)
     }
+    func findArtistsButtonSelected(){
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.bounds = self.shiftViewBounds
+            self.shiftView.frame.origin = self.shiftViewOrigin
+            self.positionView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.profilePicCollectionView.frame.origin = self.picCollectOrigin
+            self.picCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.youtubeCollectionView.bounds = self.vidCollectBounds
+            self.youtubeCollectionView.frame.origin = self.vidCollectOrigin
+            self.vidCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.createSessionButton.bounds = self.originalMenuBounds
+        })
+
+        performSegue(withIdentifier: "FindArtistsFromProfilePressed", sender: self)
+    }
     func sessionFeedButtonSelected(){
         UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.shiftView.bounds = self.shiftViewBounds
             self.shiftView.frame.origin = self.shiftViewOrigin
+            self.positionView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.profilePicCollectionView.frame.origin = self.picCollectOrigin
+            self.picCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.youtubeCollectionView.bounds = self.vidCollectBounds
+            self.youtubeCollectionView.frame.origin = self.vidCollectOrigin
+            self.vidCollectShiftView.isHidden = true
+            
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.createSessionButton.bounds = self.originalMenuBounds
         })
 
         performSegue(withIdentifier: "ProfileToSessionFeed", sender: self)
     }
     var inviteButtonLocation: CGRect?
-    var menuText = ["Message/\n Invite", "My\n Bands", "Join\n Band", "Session\n Feed"]
+    var menuText = ["Invites", "My\n Bands", "Join\n Band","Find\n Artists","Session\n Feed"]
     func generateButtons() -> [ALRadialMenuButton] {
         
         var buttons = [ALRadialMenuButton]()
-        let colorArray = [[221.0, 117.0, 46.0],[225.0,160.0,47.0],[124.0,183.0,61.0],[67.0,181.0,105.0]]
-        for i in 0..<4 {
+        let colorArray = [[221.0, 117.0, 46.0],[225.0,160.0,47.0],[124.0,183.0,61.0],[67.0,181.0,105.0],[72.0,141.0,215.0]]
+        for i in 0..<5 {
             switch UIScreen.main.bounds.width{
             case 320:
                 let button = ALRadialMenuButton(frame: CGRect(x: 0, y: 0, width: 75, height: 75))
@@ -633,12 +739,34 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
     @IBOutlet weak var shiftView: UIView!
     func showMenu() {
         let buttons = generateButtons()
-        _ = createSessionButton
-            .setButtons(buttons)
-            .setDelay(0.05)
+        var button = createSessionButton
+        createSessionButton.center = createSessOrig
+        
+            button?.setButtons(buttons)
+            button?.setDelay(0.05)
+        switch UIScreen.main.bounds.width{
+        case 320:
+            print("screenSize: \(320)")
+            button?.setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y) - 100))
+
             
-            .setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y) - 170))
-            .presentInView(view)
+        case 375:
+            print("screenSize: \(375)")
+            button?.setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y) - 130))
+
+            
+        case 414:
+            print("screenSize: \(414)")
+            button?.setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y) - 170))
+
+            
+            
+        default:
+            print("screenSize: default")
+                button?.setAnimationOrigin(CGPoint(x: createSessionButton.center.x,y: (createSessionButton.center.y) - 140))
+        }
+    
+        button?.presentInView(view)
         for button in buttons{
             if button.name == "Session Invites"{
                 inviteCountAlert.frame = CGRect(x: button.center.x, y: button.center.y, width: inviteCountAlert.frame.width, height: inviteCountAlert.frame.width)
@@ -705,7 +833,20 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
         //createSessionButton.zoomIn()
         //self.bioTextView.alpha = 0.3
         UIView.animate(withDuration: 0.2, delay: 0.09, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
-        self.shiftView.frame.origin = self.positionView.frame.origin
+            self.shiftView.bounds = self.positionView.bounds
+            self.shiftView.frame.origin = self.positionView.frame.origin
+            self.positionView.isHidden = false
+           
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.09, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.profilePicCollectionView.frame.origin = self.picCollectShiftView.frame.origin
+            self.picCollectShiftView.isHidden = false
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+            self.youtubeCollectionView.bounds = self.vidCollectShiftView.bounds
+            self.youtubeCollectionView.frame.origin = self.vidCollectShiftView.frame.origin
+            self.vidCollectShiftView.isHidden = false
+            
         })
         createSessionButton.setTitle("", for: .normal)
         UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 20, options: [], animations: {
@@ -731,7 +872,7 @@ class MainNavigationViewController: UIViewController, UIImagePickerControllerDel
                 return UIEdgeInsetsMake(0, leftInset, 0, rightInset)
             }*/
         } else{
-            return UIEdgeInsetsMake(0, collectionView.contentInset.left, 0, collectionView.contentInset.right)
+            return UIEdgeInsetsMake(3, 3, 3, 3)
         }
     }
 

@@ -100,7 +100,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 vc.sessionID = self.selectedCell?.sessionId
                 vc.navigationController?.isNavigationBarHidden = false
                 vc.navigationItem.hidesBackButton = false
-                if self.sender != "feed"{
+                if self.sender != "feed" {
                     vc.sender = "bandPage"
                 } else {
                     vc.sender = "feed"
@@ -182,7 +182,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
         //AddMusiciansButton.titleLabel?.numberOfLines = 2
         //AddMusiciansButton.setTitleColor(UIColor.darkGray, for: .normal)
        // AddMusiciansButton.titleLabel?.font = UIFont.systemFont(ofSize: 23.0, weight: UIFontWeightLight)
-        if self.sender != "feed" || self.sender == "bandBoard"{
+        if self.sender != "feed" || self.sender == "bandBoard" || self.sender == "pfm"{
             self.becomeFanButton.isHidden = true
             AddMusiciansButton.titleLabel?.textAlignment = NSTextAlignment.center
             editSessionInfoButton.isHidden = false
@@ -243,6 +243,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                             self.sessionArtistsTableView.register(cellNib, forCellReuseIdentifier: "ArtistCell")
                             self.sessionArtistsTableView.delegate = self
                             self.sessionArtistsTableView.dataSource = self
+                            break
                         }
                 }
                    /* for _ in self.vidArray{
@@ -265,6 +266,9 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
                 self.sessionArtistsTableView.reloadData()
                 //self.sessionVidCollectionView.reloadData()
                 print("vidArray: \(self.vidArray)")
+                if self.sender == "pfm"{
+                    self.performSegue(withIdentifier: "SessionToArtistFinder", sender: self)
+                }
                 
             }
 
@@ -275,6 +279,7 @@ class SessionMakerViewController: UIViewController, UINavigationControllerDelega
     
     
     })
+        
         
 }
     

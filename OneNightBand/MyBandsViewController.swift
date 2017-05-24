@@ -12,8 +12,8 @@ import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
 
-class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, DismissalDelegate {
-    
+class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, DismissalDelegate, UINavigationControllerDelegate {
+    var sender = String()
     @IBOutlet weak var bandTypeView: UIView!
     @IBOutlet weak var myBandsCollectionView: UICollectionView!
 
@@ -21,35 +21,33 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     @IBOutlet weak var createNewBandButton: UIButton!
     @IBOutlet weak var bandTypePicker: UIPickerView!
     @IBAction func createNewBandPressed(_ sender: Any) {
+        self.noCurrentBandsLabel.isHidden = true
+        self.noCurrentONBLabel.isHidden = true
         dropDown.show()
         bandTypeView.isHidden = false
         dropDownDone = false
         createNewBandButton.isHidden = true
         
-        
 
     }
+    @IBOutlet weak var noCurrentONBLabel: UILabel!
+    @IBOutlet weak var noCurrentBandsLabel: UILabel!
     let ref = FIRDatabase.database().reference()
     let dropDown = DropDown()
     
        override func viewDidLoad() {
         super.viewDidLoad()
-        
-        /*let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
-        layout.minimumInteritemSpacing = 20
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0
-        myONBCollectionView.collectionViewLayout = layout
-        myBandsCollectionView.collectionViewLayout = layout*/
+       
+        //navigationController.is
+        navigationItem.hidesBackButton = false
+        navigationController?.isNavigationBarHidden = false
         
         dropDown.cancelAction = {[unowned self] () in
             self.bandTypeView.isHidden = true
             self.createNewBandButton.isHidden = false
         }
         bandTypeView.isHidden = true
-        loadCollectionViews()
+        
         bandTypePicker.delegate = self
         bandTypePicker.dataSource = self
         
@@ -97,6 +95,15 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
         //dropDown.selectRow(at: 1)
         dropDown.backgroundColor = UIColor.orange.withAlphaComponent(0.6)
         dropDown.textColor = UIColor.white.withAlphaComponent(0.8)
+        
+            /*print("sender: \(self.sender)")
+            if self.sender == "pfm"{
+                
+                self.createNewBandPressed(self)
+           
+            }*/
+        loadCollectionViews()
+        
         
         
 
@@ -161,6 +168,13 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                         
                         
                         DispatchQueue.main.async {
+                            if self.bandTypePicker.selectedRow(inComponent: 0) == 0 && self.bandIDArray.count == 0{
+                                self.noCurrentBandsLabel.isHidden = false
+                                self.noCurrentONBLabel.isHidden = true
+                            } else {
+                                self.noCurrentBandsLabel.isHidden = true
+                                self.noCurrentONBLabel.isHidden = true
+                            }
                             for _ in self.bandIDArray{
                                 
                                 let cellNib = UINib(nibName: "SessionCell", bundle: nil)
@@ -171,6 +185,13 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                                 self.myBandsCollectionView.delegate = self
                             }
                             DispatchQueue.main.async{
+                                if self.bandTypePicker.selectedRow(inComponent: 0) == 1 && self.onbIDArray.count == 0{
+                                    self.noCurrentBandsLabel.isHidden = true
+                                    self.noCurrentONBLabel.isHidden = false
+                                } else {
+                                    self.noCurrentBandsLabel.isHidden = true
+                                    self.noCurrentONBLabel.isHidden = true
+                                }
                                 for _ in self.onbIDArray{
                                     let cellNib = UINib(nibName: "SessionCell", bundle: nil)
                                     self.myONBCollectionView.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
@@ -179,12 +200,25 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
                                     self.myONBCollectionView.dataSource = self
                                     self.myONBCollectionView.delegate = self
                                 }
+                                if self.sender == "pfm"{
+                                    print("inSender")
+                                    self.dropDown.show()
+                                    self.bandTypeView.isHidden = false
+                                    self.dropDownDone = false
+                                    self.createNewBandButton.isHidden = true
+                                    
+                                }
                             }
                         }
                     })
                 })
             })
+            
         })
+        
+        
+
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -306,9 +340,24 @@ class MyBandsViewController: UIViewController, UIPickerViewDelegate, UIPickerVie
     }
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
         if row == 0{
+            if myBandsCollectionView.visibleCells.count == 0{
+                self.noCurrentBandsLabel.isHidden = false
+                self.noCurrentONBLabel.isHidden = true
+            } else {
+                self.noCurrentBandsLabel.isHidden = true
+                self.noCurrentONBLabel.isHidden = true
+            }
             self.myBandsCollectionView.isHidden = false
             self.myONBCollectionView.isHidden = true
         } else{
+            if myONBCollectionView.visibleCells.count == 0{
+                self.noCurrentBandsLabel.isHidden = true
+                self.noCurrentONBLabel.isHidden = false
+            } else {
+                self.noCurrentBandsLabel.isHidden = true
+                self.noCurrentONBLabel.isHidden = true
+            }
+
             self.myBandsCollectionView.isHidden = true
             self.myONBCollectionView.isHidden = false
 

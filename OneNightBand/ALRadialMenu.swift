@@ -74,10 +74,11 @@ open class ALRadialMenu: UIButton, Dismissable {
         self.buttons = buttons
         
         for i in 0..<buttons.count {
+            
             let button = buttons[i]
             let action = button.action
-            
             button.center = center
+           
             button.action = {
                 self._dismiss(i)
                 if let a = action {
@@ -191,6 +192,7 @@ open class ALRadialMenu: UIButton, Dismissable {
             presentAnimation(button, index: i)
         }
         
+        
         return self
     }
     
@@ -279,7 +281,11 @@ open class ALRadialMenu: UIButton, Dismissable {
                         if(i == 2){
                             buttons[selectedIndex].delegate.createSessionButtonSelected()
                         }
-                        if(i == 3){
+                        if (i == 3){
+                            buttons[selectedIndex].delegate.findArtistsButtonSelected()
+                            
+                        }
+                        if(i == 4){
                             buttons[selectedIndex].delegate.sessionFeedButtonSelected()
                         }
                     }else{
@@ -308,7 +314,7 @@ open class ALRadialMenu: UIButton, Dismissable {
                 radius = 95.0
                 animationOrigin = CGPoint(x: animationOrigin.x,y: animationOrigin.y)
             case 375:
-                radius = 133.0
+                radius = 125.0
                 animationOrigin = CGPoint(x: animationOrigin.x,y: animationOrigin.y)
             case 414:
                 radius = 147.0
@@ -321,7 +327,7 @@ open class ALRadialMenu: UIButton, Dismissable {
 
             newCenter = pointOnCircumference(animationOrigin, radius: radius + tempOffset, angle: Angle(degrees: degrees - 90))
             
-            circumference = Angle(degrees: 120)
+            circumference = Angle(degrees: 180)
             print(screenSize)
             
             //radius = Double(screenSize.width)/2.6
@@ -342,7 +348,19 @@ open class ALRadialMenu: UIButton, Dismissable {
             view.alpha = 1
             view.center = newCenter
             }, completion: nil)
+        
+        switch screenSize.width{
+        case 320:
+            tempOffset = tempOffset - 80
+        case 375:
+            tempOffset = tempOffset - 95
+        case 414:
             tempOffset = tempOffset - 100
+        default:
+            tempOffset = tempOffset - 100
+                    }
+
+        
         
     }
     
@@ -361,21 +379,40 @@ open class ALRadialMenu: UIButton, Dismissable {
         })
         UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 10, options: [], animations: {
             let tempBounds = self.bounds
-            self.bounds = CGRect(x: tempBounds.origin.x - 30, y: tempBounds.origin.y, width: tempBounds.size.width + 15, height: tempBounds.size.height + 15)
+            self.bounds = CGRect(x: tempBounds.origin.x, y: tempBounds.origin.y, width: tempBounds.size.width , height: tempBounds.size.height )
         }, completion: nil)
-        tempOffset = tempOffset + 100
+        switch screenSize.width{
+        case 320:
+            tempOffset = tempOffset + 80
+        case 375:
+            tempOffset = tempOffset + 95
+        case 414:
+            tempOffset = tempOffset + 100
+        default:
+            tempOffset = tempOffset + 100
+        }
     }
         fileprivate func selectedAnimation(_ view: ALRadialMenuButton) {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: animationOptions, animations: {
             view.alpha = 0
             view.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
             let tempBounds = self.bounds
-            self.bounds = CGRect(x: tempBounds.origin.x - 30, y: tempBounds.origin.y, width: tempBounds.size.width + 15, height: tempBounds.size.height + 15)
+            self.bounds = CGRect(x: tempBounds.origin.x, y: tempBounds.origin.y, width: tempBounds.size.width, height: tempBounds.size.height)
             }, completion: { finished in
                 view.transform = CGAffineTransform.identity
                 view.removeFromSuperview()
         })
-         tempOffset = tempOffset + 100
+            switch screenSize.width{
+            case 320:
+                tempOffset = tempOffset + 80
+            case 375:
+                tempOffset = tempOffset + 95
+            case 414:
+                tempOffset = tempOffset + 100
+            default:
+                tempOffset = tempOffset + 100
+            }
+
             //return view.titleLabel!.text!
         /*if(view.titleLabel?.text == "Create Session"){
             print("hello")

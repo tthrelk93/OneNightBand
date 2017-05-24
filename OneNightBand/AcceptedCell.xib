@@ -81,7 +81,7 @@
                 <outlet property="bandNameLabel" destination="s2J-Pb-TAA" id="VWx-Cw-DQg"/>
                 <outlet property="dismissButton" destination="ysx-yb-eNt" id="MIy-9J-0CW"/>
             </connections>
-            <point key="canvasLocation" x="65.5" y="130"/>
+            <point key="canvasLocation" x="105.5" y="111"/>
         </collectionViewCell>
     </objects>
 </document>

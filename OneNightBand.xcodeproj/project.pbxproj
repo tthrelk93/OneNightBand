@@ -16,6 +16,7 @@
 		3B0F1C7A1DB064B000B5F6D8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B0F1C791DB064B000B5F6D8 /* GoogleService-Info.plist */; };
 		3B1062921DAD7B5600D818ED /* ALRadialMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1062911DAD7B5600D818ED /* ALRadialMenu.swift */; };
 		3B1062941DAD7B9500D818ED /* ALRadialMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */; };
+		3B11CC581EAE86C300DB3772 /* ProfileFindMusiciansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B11CC571EAE86C300DB3772 /* ProfileFindMusiciansViewController.swift */; };
 		3B16D5C41DE624E000DC19AC /* ArtistCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */; };
 		3B16D5C61DE6267200DC19AC /* ArtistCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */; };
 		3B19CB491E64B61100390DDA /* InstrumentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */; };
@@ -31,6 +32,7 @@
 		3B486AF81DB9335600A243C5 /* ArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B486AF71DB9335600A243C5 /* ArtistCell.swift */; };
 		3B4927801E479DA400A8D0B3 /* InviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49277E1E479DA200A8D0B3 /* InviteCell.swift */; };
 		3B4927811E479DA400A8D0B3 /* InviteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B49277F1E479DA200A8D0B3 /* InviteCell.xib */; };
+		3B49BA351ED49E1A00196870 /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B49BA341ED49E1A00196870 /* LaunchScreenViewController.swift */; };
 		3B4DAD301E8064BA008FB825 /* songCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DAD2E1E8064BA008FB825 /* songCell.swift */; };
 		3B4DAD311E8064BA008FB825 /* songCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B4DAD2F1E8064BA008FB825 /* songCell.xib */; };
 		3B5B8A671E96D9AF00A2AABF /* JoinBandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A651E96D9AE00A2AABF /* JoinBandCollectionViewCell.swift */; };
@@ -39,11 +41,13 @@
 		3B5B8A6C1E96F77600A2AABF /* CreateOneNightBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */; };
 		3B5B8A6E1E970B3B00A2AABF /* OneNightBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5B8A6D1E970B3B00A2AABF /* OneNightBandViewController.swift */; };
 		3B6248DE1DD4F5CB00847676 /* UploadSessionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */; };
+		3B68DD661ED37129001EAFEF /* profileRedesignViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B68DD651ED37129001EAFEF /* profileRedesignViewController.swift */; };
 		3B69E7111DA3042C00D97BE2 /* MainNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */; };
 		3B72BCD61DF5E25A0084D4B5 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */; };
 		3B72BCD71DF5E25A0084D4B5 /* VideoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */; };
 		3B72F5371E8C29E8006013EC /* ONB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72F5361E8C29E8006013EC /* ONB.swift */; };
 		3B72F5391E8C5C0A006013EC /* FindBandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B72F5381E8C5C0A006013EC /* FindBandsViewController.swift */; };
+		3B81D1EC1ED4F4A900ECC947 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B81D1EB1ED4F4A900ECC947 /* Images.xcassets */; };
 		3B87964D1E786820009CA4C8 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B87964C1E786820009CA4C8 /* UserNotifications.framework */; };
 		3B87964F1E79B510009CA4C8 /* MyBandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */; };
 		3B8796511E79C224009CA4C8 /* CreateBandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */; };
@@ -129,6 +133,7 @@
 		3B0F1C791DB064B000B5F6D8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3B1062911DAD7B5600D818ED /* ALRadialMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALRadialMenu.swift; sourceTree = "<group>"; };
 		3B1062931DAD7B9500D818ED /* ALRadialMenuButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALRadialMenuButton.swift; sourceTree = "<group>"; };
+		3B11CC571EAE86C300DB3772 /* ProfileFindMusiciansViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileFindMusiciansViewController.swift; sourceTree = "<group>"; };
 		3B16D5C31DE624E000DC19AC /* ArtistCardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArtistCardCell.xib; sourceTree = "<group>"; };
 		3B16D5C51DE6267200DC19AC /* ArtistCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCardCell.swift; sourceTree = "<group>"; };
 		3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstrumentTableViewCell.swift; sourceTree = "<group>"; };
@@ -144,6 +149,7 @@
 		3B486AF71DB9335600A243C5 /* ArtistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCell.swift; sourceTree = "<group>"; };
 		3B49277E1E479DA200A8D0B3 /* InviteCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteCell.swift; sourceTree = "<group>"; };
 		3B49277F1E479DA200A8D0B3 /* InviteCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InviteCell.xib; sourceTree = "<group>"; };
+		3B49BA341ED49E1A00196870 /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		3B4DAD2E1E8064BA008FB825 /* songCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = songCell.swift; sourceTree = "<group>"; };
 		3B4DAD2F1E8064BA008FB825 /* songCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = songCell.xib; sourceTree = "<group>"; };
 		3B5B8A651E96D9AE00A2AABF /* JoinBandCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinBandCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -152,11 +158,13 @@
 		3B5B8A6B1E96F77600A2AABF /* CreateOneNightBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateOneNightBandViewController.swift; sourceTree = "<group>"; };
 		3B5B8A6D1E970B3B00A2AABF /* OneNightBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneNightBandViewController.swift; sourceTree = "<group>"; };
 		3B6248DD1DD4F5CB00847676 /* UploadSessionPopup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadSessionPopup.swift; sourceTree = "<group>"; };
+		3B68DD651ED37129001EAFEF /* profileRedesignViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = profileRedesignViewController.swift; sourceTree = "<group>"; };
 		3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigationViewController.swift; sourceTree = "<group>"; };
 		3B72BCD41DF5E25A0084D4B5 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		3B72BCD51DF5E25A0084D4B5 /* VideoCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoCollectionViewCell.xib; sourceTree = "<group>"; };
 		3B72F5361E8C29E8006013EC /* ONB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ONB.swift; sourceTree = "<group>"; };
 		3B72F5381E8C5C0A006013EC /* FindBandsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindBandsViewController.swift; sourceTree = "<group>"; };
+		3B81D1EB1ED4F4A900ECC947 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		3B87964C1E786820009CA4C8 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyBandsViewController.swift; sourceTree = "<group>"; };
 		3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBandViewController.swift; sourceTree = "<group>"; };
@@ -290,6 +298,14 @@
 			name = Collection/TableViewCells;
 			sourceTree = "<group>";
 		};
+		3B11CC561EAE867700DB3772 /* FindMusiciansSelected */ = {
+			isa = PBXGroup;
+			children = (
+				3B11CC571EAE86C300DB3772 /* ProfileFindMusiciansViewController.swift */,
+			);
+			name = FindMusiciansSelected;
+			sourceTree = "<group>";
+		};
 		3B47F92D1DC28F8F00FD1E94 /* InviteButtonTouched */ = {
 			isa = PBXGroup;
 			children = (
@@ -325,6 +341,7 @@
 		3B9641A71DB544AF00E35480 /* ProfileNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				3B11CC561EAE867700DB3772 /* FindMusiciansSelected */,
 				3B69E7101DA3042C00D97BE2 /* MainNavigationViewController.swift */,
 				3BDFEE301DCBC8D6004B4FA1 /* SessionFeedTouched */,
 				3BDFEE2F1DCBC888004B4FA1 /* CurrentSessionsTouched */,
@@ -405,6 +422,7 @@
 				3BE29F1A1D9B256A007A326B /* Assets.xcassets */,
 				3B0CA9E51E4E5AE700D871B6 /* Main.storyboard */,
 				3BE29F1C1D9B256A007A326B /* LaunchScreen.storyboard */,
+				3B49BA341ED49E1A00196870 /* LaunchScreenViewController.swift */,
 				3BE29F1F1D9B256A007A326B /* Info.plist */,
 				3B0F1C791DB064B000B5F6D8 /* GoogleService-Info.plist */,
 				3B1062911DAD7B5600D818ED /* ALRadialMenu.swift */,
@@ -412,6 +430,8 @@
 				3B0CA9E31E4E4FDF00D871B6 /* LoadViewController.swift */,
 				3B87964E1E79B510009CA4C8 /* MyBandsViewController.swift */,
 				3B8796501E79C224009CA4C8 /* CreateBandViewController.swift */,
+				3B68DD651ED37129001EAFEF /* profileRedesignViewController.swift */,
+				3B81D1EB1ED4F4A900ECC947 /* Images.xcassets */,
 			);
 			path = OneNightBand;
 			sourceTree = "<group>";
@@ -657,6 +677,7 @@
 				3BEFDB921E7F400C0076E2BC /* Moonlight Bay.mp3 in Resources */,
 				3B0F1C7A1DB064B000B5F6D8 /* GoogleService-Info.plist in Resources */,
 				3B4927811E479DA400A8D0B3 /* InviteCell.xib in Resources */,
+				3B81D1EC1ED4F4A900ECC947 /* Images.xcassets in Resources */,
 				3B16D5C41DE624E000DC19AC /* ArtistCardCell.xib in Resources */,
 				3BAD690F1DA4638300C2CFC0 /* TagCell.xib in Resources */,
 				3BEFDB8C1E7F3CDD0076E2BC /* Play.png in Resources */,
@@ -850,6 +871,7 @@
 				3BB8D3561D9F2DC00005ED72 /* AboutONBViewController.swift in Sources */,
 				3BB0FE661DF7888E0028D544 /* PictureCollectionViewCell.swift in Sources */,
 				3BAD690E1DA4638300C2CFC0 /* TagCell.swift in Sources */,
+				3B11CC581EAE86C300DB3772 /* ProfileFindMusiciansViewController.swift in Sources */,
 				3B01255C1E9D443C00D07D0C /* CreateWantedAdViewController.swift in Sources */,
 				3BF1F0961DA1A7B90074BCA2 /* TutorialViewController.swift in Sources */,
 				3B02D6CB1DDE67300076860A /* Player.swift in Sources */,
@@ -862,6 +884,7 @@
 				3B2AFB5D1EA6A30E005B8D15 /* AcceptedCell.swift in Sources */,
 				3B0AB7071D9DED340012AE56 /* CreateAccountViewController.swift in Sources */,
 				3BEFDB761E7F311F0076E2BC /* SessionViewer.swift in Sources */,
+				3B68DD661ED37129001EAFEF /* profileRedesignViewController.swift in Sources */,
 				3BDFEE321DCBC96B004B4FA1 /* SessionFeedViewController.swift in Sources */,
 				3BFF119B1DC0389A000E574D /* Invite.swift in Sources */,
 				3BE29F471D9C4469007A326B /* KaedeTextField.swift in Sources */,
@@ -883,6 +906,7 @@
 				3B4DAD301E8064BA008FB825 /* songCell.swift in Sources */,
 				3B2AFB631EA6C6AA005B8D15 /* WantedReceivedCell.swift in Sources */,
 				3BAD690A1DA4636500C2CFC0 /* Tag.swift in Sources */,
+				3B49BA351ED49E1A00196870 /* LaunchScreenViewController.swift in Sources */,
 				3B93D4DD1DC006F4009FAC53 /* SessionInvitesViewController.swift in Sources */,
 				3BA97CE11E85B2AF001167FC /* SessionFeedSess.swift in Sources */,
 				3BD3236B1DAED8F1003ECA54 /* UIViewExtension.swift in Sources */,
@@ -1048,7 +1072,6 @@
 			baseConfigurationReference = 83AEDA21797BE500634FF2EA /* Pods-OneNightBand.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OneNightBand/OneNightBand.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -1070,7 +1093,6 @@
 			baseConfigurationReference = 8B6DBEC41657ABD3A157CFFF /* Pods-OneNightBand.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OneNightBand/OneNightBand.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";

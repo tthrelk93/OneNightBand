@@ -19,19 +19,44 @@ import SwiftOverlays
 class CreateAccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate,CLLocationManagerDelegate{
     
     @IBOutlet weak var CreateAccountBackground: UIImageView!
+    var rotateCount = 0
+    private func rotateView(targetView: UIView, duration: Double = 2.7) {
+        if rotateCount == 4 {
+            //performSegue(withIdentifier: "LaunchToScreen1", sender: self)
+            ONBLabel.isHidden = true
+            //artistAllInfoView.isHidden = false
+            inputsContainerView.isHidden = false
+            profileImageView.isHidden = false
+            profileImageViewButton.isHidden = false
+            loginRegisterSegmentedControl.isHidden = false
+            loginRegisterButton.isHidden = false
+            createAccountLabel.isHidden = false
+            createAccountLabelForLoginSegment.isHidden = true
+            
+        } else {
+            UIView.animate(withDuration: duration, delay: 0.0, options: .curveLinear, animations: {
+                targetView.transform = targetView.transform.rotated(by: CGFloat(M_PI))
+            }) { finished in
+                self.rotateCount = self.rotateCount + 1
+                self.rotateView(targetView: targetView, duration: duration)
+            }
+        }
+    }
+
 
     
 
     //add skip UIbutton to skip past account login and creation
+    let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
     let createAccountLabel: UILabel = {
-        
+        let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
         switch UIScreen.main.bounds.width{
         case 320:
             var tempLabel = UILabel()
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 45.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
+            tempLabel.textColor = ONBPink
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
             return tempLabel
@@ -41,7 +66,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 50.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
+            tempLabel.textColor = ONBPink
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
              return tempLabel
@@ -51,7 +76,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 55.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
+            tempLabel.textColor = ONBPink
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
              return tempLabel
@@ -62,7 +87,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
             tempLabel.text = "OneNightBand"
             tempLabel.font = UIFont.systemFont(ofSize: 55.0, weight: UIFontWeightThin)
             tempLabel.textAlignment = NSTextAlignment.center
-            tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
+            tempLabel.textColor = ONBPink
             tempLabel.numberOfLines = 1
             tempLabel.translatesAutoresizingMaskIntoConstraints = false
             return tempLabel
@@ -83,11 +108,12 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         //createAccountLabel.heightAnchor.constraint(equalToConstant: 130).isActive = true
     }
     let createAccountLabelForLoginSegment: UILabel = {
+        let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
         var tempLabel = UILabel()
         tempLabel.text = "OneNightBand"
         tempLabel.font = UIFont.systemFont(ofSize: 46.0, weight: UIFontWeightThin)
         tempLabel.textAlignment = NSTextAlignment.center
-        tempLabel.textColor = UIColor.orange.withAlphaComponent(0.6)
+        tempLabel.textColor = ONBPink
         tempLabel.numberOfLines = 2
         tempLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -274,7 +300,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         button.backgroundColor = UIColor.clear
         button.setTitle("Register", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(UIColor.orange, for: .normal)
+        button.setTitleColor(self.ONBPink, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
         button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
@@ -298,7 +324,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     }()
     func setupLoginRegisterSegmentedControl(){
         //need x, y, width, height constraints
-        loginRegisterSegmentedControl.tintColor = UIColor.orange.withAlphaComponent(0.6)
+        loginRegisterSegmentedControl.tintColor = self.ONBPink
         loginRegisterSegmentedControl.alpha = 0.7
         loginRegisterSegmentedControl.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: UIControlState.normal)
         loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -517,12 +543,14 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         print("canceled picker")
         dismiss(animated: true, completion: nil)
     }
+    @IBOutlet weak var ONBLabel: UILabel!
     let locationManager = CLLocationManager()
     override func viewDidLoad() {
                 super.viewDidLoad()
         picker.delegate = self
         self.locationManager.requestAlwaysAuthorization()
-        
+        rotateView(targetView: CreateAccountBackground)
+        ONBLabel.isHidden = false
         // For use in foreground
         self.locationManager.requestWhenInUseAuthorization()
         
@@ -539,6 +567,13 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         view.addSubview(loginRegisterButton)
         view.addSubview(createAccountLabel)
         view.addSubview(createAccountLabelForLoginSegment)
+        inputsContainerView.isHidden = true
+        loginRegisterSegmentedControl.isHidden = true
+        loginRegisterButton.isHidden = true
+        createAccountLabel.isHidden = true
+        createAccountLabelForLoginSegment.isHidden = true
+       
+        profileImageViewButton.isHidden = true
         
         setupProfileImageViewButton()
         setupCreateAccountLabel()

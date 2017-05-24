@@ -37,6 +37,9 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
     func goToBand(bandID: String){
         
     }
+    @IBOutlet weak var noAuditionsReceivedLabel: UILabel!
+    @IBOutlet weak var noNewAcceptedLAbel: UILabel!
+    @IBOutlet weak var noInviteReceived: UILabel!
     func dismissAccepted(indexPath: IndexPath){
         
         //self.cellArray.remove(at: indexPath.row)
@@ -126,6 +129,15 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                     self.invitesCollect.isHidden = false
                     self.auditionsAcceptedCollect.isHidden = true
                     self.wantedCollect.isHidden = true
+                    if self.inviteArray.count == 0{
+                        self.noInviteReceived.isHidden = false
+                        self.noNewAcceptedLAbel.isHidden = true
+                        self.noAuditionsReceivedLabel.isHidden = true
+                    } else {
+                        self.noInviteReceived.isHidden = true
+                        self.noNewAcceptedLAbel.isHidden = true
+                        self.noAuditionsReceivedLabel.isHidden = true
+                    }
                     DispatchQueue.main.async {
                         for _ in self.inviteArray{
                             let cellNib = UINib(nibName: "InviteCell", bundle: nil)
@@ -144,6 +156,7 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                     self.invitesCollect.isHidden = true
                     self.auditionsAcceptedCollect.isHidden = true
                     self.wantedCollect.isHidden = false
+                    
                             var auditReceivedDict = [String:Any]()
                             for snap in snapshots{
                                 let tempWant = WantedAd()
@@ -178,6 +191,15 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                             }
                     
                         DispatchQueue.main.async{
+                            if self.auditReceivedArray.count == 0{
+                                self.noInviteReceived.isHidden = true
+                                self.noNewAcceptedLAbel.isHidden = true
+                                self.noAuditionsReceivedLabel.isHidden = false
+                            } else {
+                                self.noInviteReceived.isHidden = true
+                                self.noNewAcceptedLAbel.isHidden = true
+                                self.noAuditionsReceivedLabel.isHidden = true
+                            }
                             for _ in self.auditReceivedArray{
                                 let cellNib = UINib(nibName: "WantedReceivedCell", bundle: nil)
                                 self.wantedCollect.register(cellNib, forCellWithReuseIdentifier: "WantedReceivedCell")
@@ -196,6 +218,15 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                     self.auditionsAcceptedCollect.isHidden = false
                     self.wantedCollect.isHidden = true
                     DispatchQueue.main.async{
+                        if self.auditAcceptedArray.count == 0{
+                            self.noInviteReceived.isHidden = true
+                            self.noNewAcceptedLAbel.isHidden = false
+                            self.noAuditionsReceivedLabel.isHidden = true
+                        } else {
+                            self.noInviteReceived.isHidden = true
+                            self.noNewAcceptedLAbel.isHidden = true
+                            self.noAuditionsReceivedLabel.isHidden = true
+                        }
                         print(self.auditAcceptedArray.count)
                         for _ in self.auditAcceptedArray{
                             let cellNib = UINib(nibName: "AcceptedCell", bundle: nil)
