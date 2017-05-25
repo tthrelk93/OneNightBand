@@ -13,6 +13,7 @@ import FirebaseStorage
 
 class profileRedesignViewController: UIViewController, UITabBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, UITableViewDataSource {
     
+    var sender = String()
     var picArray = [UIImage]()
     let userID = FIRAuth.auth()?.currentUser?.uid
     var yearsArray = [String]()
@@ -36,6 +37,14 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
     var skillArray = [String]()
     var currentCollect = String()
     var nsurlDict = [NSURL: String]()
+    var bandArray = [Band]()
+    var bandIDArray = [String]()
+    var ONBArray = [Band]()
+    var bandsDict = [String: Any]()
+    var sizingCell5: SessionCell?
+    var onbArray = [ONB]()
+    var onbDict = [String: Any]()
+    var onbIDArray = [String]()
 
     
     @IBOutlet weak var artistName: UILabel!
@@ -44,18 +53,16 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
     @IBOutlet weak var bandCollect: UICollectionView!
     @IBOutlet weak var instrumentTableView: UITableView!
     @IBOutlet weak var videoCollectionView: UICollectionView!
-
+    @IBOutlet weak var bandONBSegment: UISegmentedControl!
     @IBOutlet weak var tabBar: UITabBar!
     @IBOutlet weak var infoShiftLocation: UIView!
     @IBAction func bandCountPressed(_ sender: Any) {
         if infoExpanded == true{
             UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
+                
                 self.artistInfoView.bounds = self.infoViewBounds
                 self.artistInfoView.frame.origin = self.infoViewOrigin
-                self.onbCollect.isHidden = false
-                self.bandCollect.isHidden = true
-                self.instrumentTableView.isHidden = true
-                self.videoCollectionView.isHidden = true
+                
                 //self.positionView.isHidden = true
                 
             })
@@ -64,6 +71,18 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
             UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
                 self.artistInfoView.bounds = self.infoShiftViewBounds
                 self.artistInfoView.frame.origin = self.infoShiftViewOrigin
+                
+                if self.bandONBSegment.selectedSegmentIndex == 0 {
+                    self.onbCollect.isHidden = true
+                    self.bandCollect.isHidden = false
+                } else {
+                    self.onbCollect.isHidden = false
+                    self.bandCollect.isHidden = true
+                }
+                
+                self.bandONBSegment.isHidden = false
+                self.instrumentTableView.isHidden = true
+                self.videoCollectionView.isHidden = true
                 //self.positionView.isHidden = true
                 
             })
@@ -88,6 +107,13 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
                 self.artistInfoView.frame.origin = self.infoShiftViewOrigin
                 //self.positionView.isHidden = true
                 
+                self.onbCollect.isHidden = true
+                self.bandCollect.isHidden = true
+                self.bandONBSegment.isHidden = true
+                self.instrumentTableView.isHidden = true
+                self.videoCollectionView.isHidden = false
+
+                
             })
             
         }
@@ -107,6 +133,12 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
                 self.artistInfoView.bounds = self.infoShiftViewBounds
                 self.artistInfoView.frame.origin = self.infoShiftViewOrigin
                 //self.positionView.isHidden = true
+                
+                self.onbCollect.isHidden = true
+                self.bandCollect.isHidden = true
+                self.bandONBSegment.isHidden = true
+                self.instrumentTableView.isHidden = false
+                self.videoCollectionView.isHidden = true
                 
             })
             
@@ -155,6 +187,14 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
         self.infoShiftViewOrigin = infoShiftLocation.frame.origin
         self.infoViewBounds = artistInfoView.bounds
         self.infoViewOrigin = artistInfoView.frame.origin
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+        layout.minimumInteritemSpacing = 20
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        picCollect.collectionViewLayout = layout
         
 
         
@@ -274,6 +314,74 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
                         self.picCollect.delegate = self
                         
                     }
+                    self.ref.child("bands").observeSingleEvent(of: .value, with: {(snapshot) in
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            for snap in snapshots{
+                                let dictionary = snap.value as? [String: Any]
+                                let tempBand = Band()
+                                tempBand.setValuesForKeys(dictionary!)
+                                self.bandArray.append(tempBand)
+                                self.bandsDict[tempBand.bandID!] = tempBand
+                            }
+                        }
+                        
+                        self.ref.child("users").child(self.userID!).child("artistsBands").observeSingleEvent(of: .value, with: { (snapshot) in
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                for snap in snapshots{
+                                    self.bandIDArray.append((snap.value! as! String))
+                                }
+                            }
+                            
+                            self.ref.child("oneNightBands").observeSingleEvent(of: .value, with: {(snapshot) in
+                                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                    for snap in snapshots{
+                                        let dictionary = snap.value as? [String: Any]
+                                        let tempONB = ONB()
+                                        tempONB.setValuesForKeys(dictionary!)
+                                        self.onbArray.append(tempONB)
+                                        self.onbDict[tempONB.onbID] = tempONB
+                                    }
+                                }
+                                self.ref.child("users").child(self.userID!).child("artistsONBs").observeSingleEvent(of: .value, with: {(snapshot) in
+                                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                        for snap in snapshots{
+                                            self.onbIDArray.append((snap.value! as! String))
+                                        }
+                                    }
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    DispatchQueue.main.async {
+                                        for _ in self.bandIDArray{
+                                            
+                                            let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                                            self.bandCollect.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                                            self.sizingCell5 = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                                            self.bandCollect.backgroundColor = UIColor.clear
+                                            self.bandCollect.dataSource = self
+                                            self.bandCollect.delegate = self
+                                        }
+                                        DispatchQueue.main.async{
+                                            for _ in self.onbIDArray{
+                                                let cellNib = UINib(nibName: "SessionCell", bundle: nil)
+                                                self.onbCollect.register(cellNib, forCellWithReuseIdentifier: "SessionCell")
+                                                self.sizingCell5 = (cellNib.instantiate(withOwner: nil, options: nil) as NSArray).firstObject as! SessionCell?
+                                                self.onbCollect.backgroundColor = UIColor.clear
+                                                self.onbCollect.dataSource = self
+                                                self.onbCollect.delegate = self
+                                            }
+                                            
+                                        }
+                                    }
+                                })
+                            })
+                        })
+                        
+                    })
+
                     
                     
                 })
@@ -406,28 +514,27 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        if self.currentCollect == "pic"{
+        if collectionView == picCollect{
             return self.picArray.count
-        }else{
+        }else if collectionView == videoCollectionView{
             if self.nsurlArray.count == 0{
                 return 1
             }else{
                 return self.nsurlArray.count
             }
+        } else if collectionView == onbCollect{
+           return onbIDArray.count
+        } else if collectionView == bandCollect{
+            return bandIDArray.count
+        } else {
+            return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("cell4Item: \(self.currentCollect)")
-        if currentCollect != "pic"{
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
-            self.configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
-            cell.indexPath = indexPath
-            
-            //self.curIndexPath.append(indexPath)
-            
-            return cell
-        }else{
+        
+        
+        if collectionView == picCollect{
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PictureCollectionViewCell", for: indexPath as IndexPath) as! PictureCollectionViewCell
             self.configureCell(cell, forIndexPath: indexPath as NSIndexPath)
             
@@ -435,7 +542,41 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
             //self.curIndexPath.append(indexPath)
             
             return cell
+
+        }else if collectionView == videoCollectionView{
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCollectionViewCell", for: indexPath as IndexPath) as! VideoCollectionViewCell
+            self.configureVidCell(cell, forIndexPath: indexPath as NSIndexPath)
+            cell.indexPath = indexPath
+            
+            //self.curIndexPath.append(indexPath)
+            
+            return cell
+
+        } else if collectionView == onbCollect || collectionView == bandCollect {
+            var tempCell = collectionView.dequeueReusableCell(withReuseIdentifier: "SessionCell", for: indexPath) as! SessionCell
+            if collectionView == bandCollect{
+                tempCell.sessionCellImageView.loadImageUsingCacheWithUrlString((bandsDict[bandIDArray[indexPath.row]] as! Band).bandPictureURL[0])
+                //print(self.upcomingSessionArray[indexPath.row].sessionUID as Any)
+                tempCell.sessionCellLabel.text = (bandsDict[bandIDArray[indexPath.row]] as! Band).bandName
+                tempCell.sessionCellLabel.textColor = UIColor.white
+                tempCell.sessionId = (bandsDict[bandIDArray[indexPath.row]] as! Band).bandID
+            }
+            else {
+                tempCell.sessionCellImageView.loadImageUsingCacheWithUrlString((onbDict[onbIDArray[indexPath.row]] as! ONB).onbPictureURL[0])
+                //print(self.upcomingSessionArray[indexPath.row].sessionUID as Any)
+                tempCell.sessionCellLabel.text = (onbDict[onbIDArray[indexPath.row]] as! ONB).onbName
+                tempCell.sessionCellLabel.textColor = UIColor.white
+                tempCell.sessionId = (onbDict[onbIDArray[indexPath.row]] as! ONB).onbID
+            }
+            
+            return tempCell
+
+
+        } else {
+            let cell = UICollectionViewCell()
+            return cell
         }
+
     }
     
     
@@ -456,6 +597,9 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
         
         
     }
+    
+    
+    
     func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
         
         

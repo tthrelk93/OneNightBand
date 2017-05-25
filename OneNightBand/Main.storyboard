@@ -3425,7 +3425,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PBV-2U-xFd">
-                                                <rect key="frame" x="0.0" y="0.0" width="190" height="239"/>
+                                                <rect key="frame" x="0.0" y="41" width="190" height="198"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="uWg-vp-wyK">
@@ -3446,7 +3446,7 @@
                                                 </cells>
                                             </collectionView>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZW2-D7-Cfd">
-                                                <rect key="frame" x="1" y="0.0" width="189" height="239"/>
+                                                <rect key="frame" x="1" y="30" width="189" height="209"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <prototypes>
@@ -3454,14 +3454,14 @@
                                                         <rect key="frame" x="0.0" y="28" width="189" height="44"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hOA-cd-UPL" id="g3Y-LG-YW9">
-                                                            <rect key="frame" x="0.0" y="0.0" width="189" height="43"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="189" height="44"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </tableViewCellContentView>
                                                     </tableViewCell>
                                                 </prototypes>
                                             </tableView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="M35-mN-qLT">
-                                                <rect key="frame" x="0.0" y="22" width="190" height="217"/>
+                                                <rect key="frame" x="0.0" y="63" width="190" height="176"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="kTc-Dy-vn1">
@@ -3482,7 +3482,7 @@
                                                 </cells>
                                             </collectionView>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UEe-dy-fN5">
-                                                <rect key="frame" x="0.0" y="22" width="190" height="217"/>
+                                                <rect key="frame" x="0.0" y="63" width="190" height="176"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="0Bx-w3-IlJ">
@@ -3502,25 +3502,34 @@
                                                     </collectionViewCell>
                                                 </cells>
                                             </collectionView>
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hbe-ml-MjD">
+                                                <rect key="frame" x="0.0" y="34" width="190" height="29"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                                <segments>
+                                                    <segment title="Band"/>
+                                                    <segment title="OneNightBand"/>
+                                                </segments>
+                                                <color key="tintColor" red="0.78823529410000004" green="0.14901960780000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
+                                            </segmentedControl>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zVW-zc-Fws">
-                                        <rect key="frame" x="67" y="73" width="240" height="243"/>
+                                        <rect key="frame" x="60" y="73" width="254" height="242"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="qwz-40-oqU">
-                                            <size key="itemSize" width="235" height="243"/>
+                                            <size key="itemSize" width="255" height="242"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PictureCollectionViewCell" id="IGd-sN-iN3" customClass="PictureCollectionViewCell" customModule="OneNightBand" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="235" height="243"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="255" height="242"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="235" height="243"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="255" height="242"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </view>
                                             </collectionViewCell>
@@ -3541,6 +3550,7 @@
                         <outlet property="artistName" destination="36s-rq-Gmq" id="Hbo-5S-eRr"/>
                         <outlet property="backgroundImageView" destination="49Q-WX-5bC" id="FF3-9s-Tc5"/>
                         <outlet property="bandCollect" destination="M35-mN-qLT" id="tdw-8M-Yhl"/>
+                        <outlet property="bandONBSegment" destination="hbe-ml-MjD" id="ziJ-Bn-b1D"/>
                         <outlet property="infoShiftLocation" destination="JcE-UB-nwn" id="2Tl-Qq-Z9h"/>
                         <outlet property="instrumentTableView" destination="ZW2-D7-Cfd" id="ryb-1Z-bPV"/>
                         <outlet property="invitesMessagesButton" destination="8gn-7o-E50" id="agu-I5-HT2"/>
