@@ -15,8 +15,8 @@ import FirebaseStorage
 
 import JSQMessagesViewController
 
-final class ChatViewController: JSQMessagesViewController, SessionIDDest  {
-    
+
+final class ChatViewController: JSQMessagesViewController, SessionIDDest {
     // MARK: Properties
     var getSessionID: GetSessionIDDelegate?
     var senderName = String()

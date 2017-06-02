@@ -10,6 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
+import SwiftOverlays
 
 class profileRedesignViewController: UIViewController, UITabBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, UITableViewDataSource {
     
@@ -119,6 +120,10 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
         }
         infoExpanded = !self.infoExpanded
     }
+    @IBAction func createWantedContinuePressed(_ sender: Any) {
+        self.createWantedSuccess.isHidden = true
+    }
+    @IBOutlet weak var createWantedSuccess: UIView!
     @IBAction func instrumentButtonTouched(_ sender: Any) {
         if infoExpanded == true{
             UIView.animate(withDuration: 0.2, delay: 0.1, usingSpringWithDamping: 0.7, initialSpringVelocity: 2.0, options: animationOptions, animations: {
@@ -165,9 +170,48 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
     @IBOutlet weak var artistAllInfoView: UIView!
     @IBOutlet weak var backgroundImageView: UIImageView!
     
+    
+   /* override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ProfToAddMedia"{
+            if let vc = segue.destination as? AddMediaToSession {
+                vc.senderView = "main"
+            }
+            
+        }
+        else if segue.identifier == "MyBandsToSessionMaker" {
+            if let viewController = segue.destination as? SessionMakerViewController {
+                viewController.sessionID = self.bandIDArray[tempIndex]
+               print("bandID = \(self.bandIDArray[tempIndex])")
+                print("tempIndex= \(self.tempIndex)")
+                viewController.sender = "myBands"
+                
+            }
+        } else {
+            if let viewController = segue.destination as? OneNightBandViewController {
+                viewController.onbID = self.onbIDArray[tempIndex]
+            }
+        }
+        
+        
+    }
+    */
+    let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
+    
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //SwiftOverlays.showBlockingTextOverlay("Loading Profile")
+        if self.sender == "wantedAdCreated"{
+            self.createWantedSuccess.isHidden = false
+        }
+        tabBar.tintColor = ONBPink
+        tabBar.selectedItem = tabBar.items?[2]
+        picCollect.isHidden = true
+        self.menuView.isHidden = true
+        self.artistInfoView.isHidden = true
+        self.artistBio.isHidden = true
+        self.artistName.isHidden = true
         tabBar.delegate = self
         //ONBLabel.isHidden = false
         //artistAllInfoView.isHidden = true
@@ -373,6 +417,14 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
                                                 self.onbCollect.dataSource = self
                                                 self.onbCollect.delegate = self
                                             }
+                                            self.menuView.isHidden = false
+                                            self.artistInfoView.isHidden = false
+                                            self.picCollect.isHidden = false
+                                            self.artistBio.isHidden = false
+                                            self.artistName.isHidden = false
+                                            
+                                            SwiftOverlays.removeAllBlockingOverlays()
+                                            
                                             
                                         }
                                     }
@@ -419,15 +471,34 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
 
 
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "ProfToAddMedia"{
+            if let vc = segue.destination as? AddMediaToSession {
+                vc.senderView = "main"
+            }
+            
+        }
+        else if segue.identifier == "ProfileToSessionMaker" {
+            if let viewController = segue.destination as? SessionMakerViewController {
+                viewController.sessionID = self.bandIDArray[tempIndex]
+                //print("bandID = \(self.bandIDArray[tempIndex])")
+                //
+                print("tempIndex= \(self.tempIndex)")
+                viewController.sender = "myBands"
+                
+            }
+        } else {
+            if let viewController = segue.destination as? OneNightBandViewController {
+                viewController.onbID = self.onbIDArray[tempIndex]
+            }
+        }
+
     }
-    */
+    
     fileprivate var animationOptions: UIViewAnimationOptions = [.curveEaseInOut, .beginFromCurrentState]
     
     func
@@ -482,18 +553,23 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
     @IBOutlet weak var updateInfoButton: UIButton!
     @IBOutlet weak var picCollect: UICollectionView!
     @IBOutlet weak var ONBLabel: UILabel!
-    private func rotateView(targetView: UIView, duration: Double = 2.7) {
+    private func rotateView(targetView: UIView, duration: Double = 5) {
         if rotateCount == 4 {
             //performSegue(withIdentifier: "LaunchToScreen1", sender: self)
             ONBLabel.isHidden = true
             artistAllInfoView.isHidden = false
             
         } else {
+            
+            
+            
             UIView.animate(withDuration: duration, delay: 0.0, options: .curveLinear, animations: {
-            targetView.transform = targetView.transform.rotated(by: CGFloat(M_PI))
+            targetView.transform = targetView.transform.rotated(by: CGFloat(M_PI_4))
             }) { finished in
-                self.rotateCount = self.rotateCount + 1
-                self.rotateView(targetView: targetView, duration: duration)
+                //self.rotateCount = self.rotateCount + 1
+                //self.rotateView(targetView: targetView, duration: duration)
+                self.ONBLabel.isHidden = true
+                self.artistAllInfoView.isHidden = false
             }
         }
     }
@@ -502,7 +578,7 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
     @available(iOS 2.0, *)
     public func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem){
         if item == tabBar.items?[0]{
-            performSegue(withIdentifier: "ProfToFindMusicians", sender: self)
+            performSegue(withIdentifier: "ProfileToFindMusicians", sender: self)
         } else if item == tabBar.items?[1]{
             performSegue(withIdentifier: "ProfToJoinBand", sender: self)
             
@@ -582,7 +658,7 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView != self.picCollect{
+        if collectionView == self.videoCollectionView{
             if (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtube") == false && (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).videoURL?.absoluteString?.contains("youtu.be") == false {
                 if (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.playbackState == .playing {
                     (self.videoCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell).player?.stop()
@@ -592,12 +668,19 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
                 }
                 
             }
+        } else if(collectionView == bandCollect){
+            self.tempIndex = indexPath.row
+            performSegue(withIdentifier: "ProfileToSessionMaker", sender: self)
+        } else if collectionView == onbCollect{
+            self.tempIndex = indexPath.row
+            performSegue(withIdentifier: "ProfileToONB", sender: self)
         }
+
         
         
         
     }
-    
+    var tempIndex = Int()
     
     
     func configureVidCell(_ cell: VideoCollectionViewCell, forIndexPath indexPath: NSIndexPath){
@@ -667,7 +750,7 @@ class profileRedesignViewController: UIViewController, UITabBarDelegate, UIColle
         let cell = tableView.dequeueReusableCell(withIdentifier: "InstrumentCell", for: indexPath as IndexPath) as! InstrumentTableViewCell
         cell.instrumentLabel.text = self.instrumentArray[indexPath.row]
         cell.skillLabel.text =  self.skillArray[indexPath.row]
-        cell.yearsLabel.text = self.yearsArray[indexPath.row]
+        cell.yearsLabel.text =  "\(self.yearsArray[indexPath.row]) years"
         
         
         return cell

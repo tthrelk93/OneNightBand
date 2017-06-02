@@ -8,22 +8,100 @@
 
 import UIKit
 import FirebaseDatabase
+import FirebaseStorage
 import FirebaseAuth
 
 class ProfileFindMusiciansViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UINavigationControllerDelegate {
     
+    @IBOutlet weak var orLabel: UILabel!
+    @IBOutlet weak var createNewButton: UIButton!
+    @IBOutlet weak var useExistingBandButton: UIButton!
+    @IBAction func cancelButtonPressed(_ sender: Any) {
+        createNewButton.isHidden = false
+        useExistingBandButton.isHidden = false
+        orLabel.isHidden = false
+        collectViewHolder.isHidden = true
+    }
+    @IBOutlet weak var collectViewHolder: UIView!
     @IBOutlet weak var bandsCollect: UICollectionView!
 
+    @IBAction func useExistingBandPressed(_ sender: Any) {
+        createNewButton.isHidden = true
+        useExistingBandButton.isHidden = true
+        orLabel.isHidden = true
+        collectViewHolder.isHidden = false
+    }
     @IBAction func createNewBandOrOnb(_ sender: Any) {
-        //performSegue(withIdentifier: "CreateBandToFindMusicians", sender: self)
+        
+        //performSegue(withIdentifier: "PFMToMyBandsVC", sender: self)
     }
     @IBOutlet weak var onbCollect: UICollectionView!
+    var bandType = String()
+    var bandID = String()
+    var imageString = String()
+    var bandName = String()
+    var onbDate = String()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCollectionViews()
+        createNewButton.isHidden = false
+        useExistingBandButton.isHidden = false
+        orLabel.isHidden = false
+        collectViewHolder.isHidden = true
+        
+        wantedAd.bandID = self.bandID
+        wantedAd.bandType = self.bandType
+        //wantedAd.wantedImage = self.imageString
+        wantedAd.bandName = self.bandName
+        if self.bandType == "onb"{
+            wantedAd.date = self.onbDate
+        }
+        
+        if self.bandType == "band"{
+            ref.child("bands").child(selectedBandID).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    for snap in snapshots{
+                        if snap.key == "bandPictureURL"{
+                            var tempArray = snap.value as! [String]
+                            //self.bandImageView.loadImageUsingCacheWithUrlString(tempArray.first!)
+                            self.imageString = tempArray.first!
+                        }
+                        if snap.key == "bandName"{
+                            self.bandName = snap.value as! String
+                        }
+                        
+                    }
+                }
+            })
+        } else if self.bandType == "onb" {
+            ref.child("oneNightBands").child(selectedBandID).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                    for snap in snapshots{
+                        if snap.key == "onbPictureURL"{
+                            var tempArray = snap.value as! [String]
+                            //self.bandImageView.loadImageUsingCacheWithUrlString(tempArray.first!)
+                            self.imageString = tempArray.first!
+                        }
+                        if snap.key == "onbName"{
+                            self.bandName = snap.value as! String
+                        }
+                        if snap.key == "onbDate"{
+                            self.onbDate = snap.value as! String
+                        }
+                        
+                    }
+                }
+            })
+            
+            
+        }
+
+        
 
         // Do any additional setup after loading the view.
     }
+    var wantedAd = WantedAd()
     var picArray = [UIImage]()
     let userID = FIRAuth.auth()?.currentUser?.uid
     var bandArray = [Band]()
@@ -143,6 +221,7 @@ class ProfileFindMusiciansViewController: UIViewController, UICollectionViewDele
         return tempCell
     }
     var tempIndex = Int()
+    var selectedBandID = String()
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
         /*if(collectionView == bandsCollect){
             if self.bandIDArray.count != 1{
@@ -174,9 +253,41 @@ class ProfileFindMusiciansViewController: UIViewController, UICollectionViewDele
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if(collectionView == self.bandsCollect){
             tempIndex = indexPath.row
+            self.wantedAd.bandType = "band"
+            self.wantedAd.bandID = bandArray[indexPath.row].bandID!
+            self.wantedAd.bandName = bandArray[indexPath.row].bandName!
+            self.wantedAd.city = self.locationText
+            self.wantedAd.date = self.date
+            self.wantedAd.experience = self.expText
+            self.wantedAd.instrumentNeeded = [self.instrumentNeeded]
+            self.wantedAd.moreInfo = self.moreInfoText
+            self.wantedAd.responses = [String:Any]()
+            self.wantedAd.senderID = self.currentUser!
+            self.wantedAd.wantedImage = bandArray[indexPath.row].bandPictureURL.first!
+            self.selectedBandID = bandArray[indexPath.row].bandID!
+            
+            
             performSegue(withIdentifier: "PFMToBand", sender: self)
         } else{
             tempIndex = indexPath.row
+            self.wantedAd.bandType = "onb"
+            self.wantedAd.bandID = onbArray[indexPath.row].onbID
+            self.wantedAd.bandName = onbArray[indexPath.row].onbName
+            tempIndex = indexPath.row
+            
+            self.wantedAd.city = self.locationText
+            self.wantedAd.date = self.date
+            self.wantedAd.experience = self.expText
+            self.wantedAd.instrumentNeeded = [self.instrumentNeeded]
+            self.wantedAd.moreInfo = self.moreInfoText
+            self.wantedAd.responses = [String:Any]()
+            self.wantedAd.senderID = self.currentUser!
+            self.wantedAd.wantedImage = onbArray[indexPath.row].onbPictureURL.first!
+            self.selectedBandID = onbArray[indexPath.row].onbID
+            
+            
+
+            
             performSegue(withIdentifier: "PFMToONB", sender: self)
         }
         
@@ -195,24 +306,123 @@ class ProfileFindMusiciansViewController: UIViewController, UICollectionViewDele
 
     
     // MARK: - Navigation
-
+    var date = String()
+    var instrumentNeeded = String()
+    var moreInfoText = String()
+    var locationText = String()
+    var expText = String()
+    
+    var currentUser = FIRAuth.auth()?.currentUser?.uid
+    var wantedIDArray = [String]()
+    var destination = String()
+    
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "PFMToONB"{
-            if let vc = segue.destination as? OneNightBandViewController{
+        if segue.identifier == "CreateBandToMyBands"{
+            if let vc = segue.destination as? MyBandsViewController{
                 vc.sender = "pfm"
-                vc.onbID = self.onbIDArray[tempIndex]
-            }
+                vc.destination = self.destination
+                
+                self.wantedAd.bandType = ""
+                self.wantedAd.bandID = ""
+                self.wantedAd.bandName = ""
+                self.wantedAd.city = self.locationText
+                self.wantedAd.date = self.date
+                self.wantedAd.experience = self.expText
+                self.wantedAd.instrumentNeeded = [self.instrumentNeeded]
+                self.wantedAd.moreInfo = self.moreInfoText
+                self.wantedAd.responses = [String:Any]()
+                self.wantedAd.senderID = self.currentUser!
+                self.wantedAd.wantedImage = ""
+               // self.selectedBandID = ""
+
+                
+                vc.wantedAd = self.wantedAd
+                //vc.onbID = self.onbIDArray[tempIndex]
+                
+                
+                }
         }
         if segue.identifier == "PFMToBand"{
             if let vc = segue.destination as? SessionMakerViewController{
                 vc.sender = "pfm"
                 vc.sessionID = self.bandIDArray[tempIndex]
+                
+                
+                
+                let ref = FIRDatabase.database().reference()
+                let wantedReference = ref.child("wantedAds").childByAutoId()
+                let wantedReferenceAnyObject = wantedReference.key
+                var values = [String:Any]()
+                values["bandType"] = self.wantedAd.bandType
+                values["bandID"] = self.wantedAd.bandID
+                values["bandName"] = self.wantedAd.bandName
+                values["city"] = self.wantedAd.city
+                values["date"] = self.wantedAd.date
+                values["experience"] = self.wantedAd.experience
+                
+                values["experience"] = self.wantedAd.instrumentNeeded
+                values["moreInfo"] = self.wantedAd.moreInfo
+                values["responses"] = self.wantedAd.responses
+                values["senderID"] = self.wantedAd.senderID
+                values["wantedImage"] = self.wantedAd.wantedImage
+                
+                values["wantedID"] = self.wantedAd.wantedID
+                
+                wantedReference.updateChildValues(values, withCompletionBlock: {(err, ref) in
+                    if err != nil {
+                        print(err as Any)
+                        return
+                    }
+                })
+                var userValues = [String:Any]()
+                var userWantedAdArray = [String]()
+                ref.child("users").child(currentUser!).child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                        for snap in snapshots{
+                            if let snapDict = snap.value as? [String:Any] {
+                                let wantedID = snapDict["wantedID"]
+                                userWantedAdArray.append(wantedID as! String)
+                            }
+                        }
+                        userWantedAdArray.append(wantedReferenceAnyObject)
+                    }
+                    userValues["wantedAds"] = userWantedAdArray
+                    ref.child("users").child(self.currentUser!).updateChildValues(userValues)
+                    
+                })
+                
+                self.ref.child("bands").child(selectedBandID).child("wantedAds").observeSingleEvent(of: .value, with: { (snapshot) in
+                        if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                            for snap in snapshots{
+                                self.wantedIDArray.append(snap.value as! String)
+                            }
+                        }
+                        
+                        var tempDict = [String:Any]()
+                        tempDict["wantedAds"] = self.wantedIDArray
+                        let bandRef = self.ref.child("bands").child(self.selectedBandID)
+                        bandRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
+                            if err != nil {
+                                print(err as Any)
+                                return
+                            }
+                        })
+                        //self.dismissalDelegate?.finishedShowing()
+                       // self.removeAnimate()
+                        
+                        //var sessionVals = Dictionary
+                        //let userSessRef = ref.child("users").child(user).child("activeSessions")
+                    })
+                
+                
             }
         }
         if segue.identifier == "CreateBandToFindMusicians"{
             if let vc = segue.destination as? MyBandsViewController{
                 vc.sender = "pfm"
+                //vc.destination = self.selectedButton
             
             }
         }

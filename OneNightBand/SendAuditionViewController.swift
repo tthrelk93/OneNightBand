@@ -90,7 +90,7 @@ class SendAuditionViewController: UIViewController, UITextViewDelegate, Dismissa
     
     var responsesArray = [String]()
     @IBAction func cancelPressed(_ sender: Any) {
-        dismissalDelegate?.finishedShowing()
+        //dismissalDelegate?.finishedShowing()
         removeAnimate()
     }
     override func viewDidLoad() {

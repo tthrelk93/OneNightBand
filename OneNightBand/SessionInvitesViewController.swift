@@ -39,6 +39,7 @@ protocol AcceptDeclineData : class
 
 class SessionInvitesViewController: UIViewController{
     
+    
     var ref = FIRDatabase.database().reference()
     var sender = String()
     

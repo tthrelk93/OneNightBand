@@ -433,7 +433,7 @@ class AddMediaToSession: UIViewController, UITextViewDelegate, UINavigationContr
         }else{
             performSegue(withIdentifier: "SaveMediaToSession", sender: self)
         }*/
-        self.removeAnimate()
+        self.performSegue(withIdentifier: "AddMediaToMain", sender: self)
 
     }
     

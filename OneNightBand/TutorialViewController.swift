@@ -15,7 +15,7 @@ import DropDown
 
 
 class TutorialViewController: UIViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITextViewDelegate{
-    public var ONBPink = UIColor(colorLiteralRed: 201.0, green: 38.0, blue: 92.0, alpha: 1.0)
+    let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
     let TAGS = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp", "rapper", "DJ"]
     var sizingCell: TagCell?
     var tags = [Tag]()

@@ -93,6 +93,7 @@
 		3BEFDB931E7F400C0076E2BC /* Opera Wheels.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3BEFDB901E7F400C0076E2BC /* Opera Wheels.mp3 */; };
 		3BF0B8B51DAC4A05005DB1C9 /* ImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0B8B41DAC4A05005DB1C9 /* ImageViewExtension.swift */; };
 		3BF1F0961DA1A7B90074BCA2 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF1F0951DA1A7B90074BCA2 /* TutorialViewController.swift */; };
+		3BF4CBA31EDB72DF00F5B523 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF4CBA21EDB72DF00F5B523 /* TableViewCell.swift */; };
 		3BF995181DA976CA00ABF5CF /* SessionMakerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF995171DA976CA00ABF5CF /* SessionMakerViewController.swift */; };
 		3BF9951A1DA9AB6F00ABF5CF /* ArtistFinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF995191DA9AB6F00ABF5CF /* ArtistFinderViewController.swift */; };
 		3BF9951C1DA9ADAE00ABF5CF /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF9951B1DA9ADAE00ABF5CF /* Artist.swift */; };
@@ -218,6 +219,7 @@
 		3BEFDB901E7F400C0076E2BC /* Opera Wheels.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Opera Wheels.mp3"; path = "../../../../Downloads/iOS-AVFoundation-StarterProject-master/MP3Player/Opera Wheels.mp3"; sourceTree = "<group>"; };
 		3BF0B8B41DAC4A05005DB1C9 /* ImageViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewExtension.swift; sourceTree = "<group>"; };
 		3BF1F0951DA1A7B90074BCA2 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
+		3BF4CBA21EDB72DF00F5B523 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		3BF995171DA976CA00ABF5CF /* SessionMakerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionMakerViewController.swift; sourceTree = "<group>"; };
 		3BF995191DA9AB6F00ABF5CF /* ArtistFinderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistFinderViewController.swift; sourceTree = "<group>"; };
 		3BF9951B1DA9ADAE00ABF5CF /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 				3BB0FE651DF7888E0028D544 /* PictureCollectionViewCell.xib */,
 				3B19CB471E64B61100390DDA /* InstrumentTableViewCell.swift */,
 				3B19CB481E64B61100390DDA /* InstrumentTableViewCell.xib */,
+				3BF4CBA21EDB72DF00F5B523 /* TableViewCell.swift */,
 				3B4DAD2E1E8064BA008FB825 /* songCell.swift */,
 				3B4DAD2F1E8064BA008FB825 /* songCell.xib */,
 				3B9641AA1DB54B6000E35480 /* SessionCell.swift */,
@@ -910,6 +913,7 @@
 				3B93D4DD1DC006F4009FAC53 /* SessionInvitesViewController.swift in Sources */,
 				3BA97CE11E85B2AF001167FC /* SessionFeedSess.swift in Sources */,
 				3BD3236B1DAED8F1003ECA54 /* UIViewExtension.swift in Sources */,
+				3BF4CBA31EDB72DF00F5B523 /* TableViewCell.swift in Sources */,
 				3BFD58FD1DF0DC3300C85225 /* AddMediaToProfile.swift in Sources */,
 				3B1062921DAD7B5600D818ED /* ALRadialMenu.swift in Sources */,
 				3B72BCD61DF5E25A0084D4B5 /* VideoCollectionViewCell.swift in Sources */,

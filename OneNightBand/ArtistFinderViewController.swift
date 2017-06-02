@@ -13,27 +13,59 @@ import FirebaseDatabase
 import CoreLocation
 import FirebaseAuth
 
+protocol WantedAdDelegate : class
+{
+    func wantedAdCreated(wantedAd: WantedAd)
+}
 
-class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, SessionIDDest, PerformSegueInArtistFinderController, UIPickerViewDelegate,UIPickerViewDataSource{
+
+
+protocol WantedAdDelegator : class
+{
+    weak var wantedAdDelegate : WantedAdDelegate? { get set }
+}
+
+
+
+class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, SessionIDDest, PerformSegueInArtistFinderController, UIPickerViewDelegate,UIPickerViewDataSource, WantedAdDelegate, UITabBarDelegate{
  
     @IBOutlet weak var searchByInstrumentButton: UIButton!
     @IBOutlet weak var searchNarrowView: UIView!
     @IBOutlet weak var postToBoardButton: UIButton!
     var thisONBObject = ONB()
     var thisBandObject = Band()
+    
+    func wantedAdCreated(wantedAd: WantedAd) {
+        self.wantedAd = wantedAd
+        print("WantedAd: \(self.wantedAd)")
+        performSegue(withIdentifier: "ArtistFinderToPFM", sender: self)
+    }
+    @IBOutlet weak var tabBar: UITabBar!
+    
     @IBAction func postToBoardButtonPressed(_ sender: Any) {
+        self.destination = "bb"
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CreateWantedAdViewController") as! CreateWantedAdViewController
         self.addChildViewController(popOverVC)
-        popOverVC.bandID = self.bandID
-        popOverVC.bandType = self.bandType
-        popOverVC.view.frame = self.view.frame
+        if self.bandID.isEmpty || self.bandID == ""{
+            popOverVC.bandID = ""
+            popOverVC.bandType = ""
+        } else {
+            popOverVC.bandID = self.bandID
+            popOverVC.bandType = self.bandType
+        }
+        popOverVC.wantedAdDelegate = self
+        
+        popOverVC.view.frame = UIScreen.main.bounds
         self.view.addSubview(popOverVC.view)
         popOverVC.didMove(toParentViewController: self)
-        //searchNarrowView.isHidden = true
+            //searchNarrowView.isHidden = true
+        
         
     }
+    
     @IBAction func searchByInstrumentPressed(_ sender: Any) {
         searchNarrowView.isHidden = true
+        self.destination = "af"
     }
     @IBOutlet weak var InstrumentPicker: UIPickerView!
     
@@ -54,12 +86,21 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
     var instrumentPicked: String!
     var distancePicked: String!
     var profileArtistUID: String?
+    var wantedAd = WantedAd()
+    var destination = String()
     var distanceMenuText = ["25", "50", "75", "100", "125","150", "175","500", "2000"]
     var menuText = ["Guitar", "Bass Guitar", "Piano", "Saxophone", "Trumpet", "Stand-up Bass", "violin", "Drums", "Cello", "Trombone", "Vocals", "Mandolin", "Banjo", "Harp"]
        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let vc = segue.destination as? ArtistProfileViewController
-        {
-            vc.artistUID = profileArtistUID
+        if segue.identifier == "ArtistFinderToPFM"{
+            if let vc = segue.destination as? ProfileFindMusiciansViewController{
+                vc.wantedAd = self.wantedAd
+                vc.destination = self.destination
+            }
+        } else {
+            if let vc = segue.destination as? ArtistProfileViewController
+            {
+                vc.artistUID = profileArtistUID
+            }
         }
         
     }
@@ -110,7 +151,7 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
                     tempRef =  FIRDatabase.database().reference().child("bands").child(self.thisBandObject.bandID!).child("bandMembers")
                 }
                 else{
-                    tempRef =  FIRDatabase.database().reference().child("oneNightBands").child(self.bandID).child("onbArtists")
+                    tempRef =  FIRDatabase.database().reference().child("oneNightBands").child(self.thisONBObject.onbID).child("onbArtists")
                 }
                    tempRef.observeSingleEvent(of: .value, with: { (ssnapshot) in
                     if let ssnapshots = ssnapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -202,11 +243,15 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
 
         
     }
+     let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
    override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
-    self.postToBoardButton.layer.cornerRadius = self.postToBoardButton.frame.width/2
-    self.searchByInstrumentButton.layer.cornerRadius = self.searchByInstrumentButton.frame.width/2
+    tabBar.delegate = self
+    self.postToBoardButton.layer.borderColor = ONBPink.cgColor
+    self.postToBoardButton.layer.borderWidth = 2
+    self.searchByInstrumentButton.layer.borderColor = ONBPink.cgColor
+    self.searchByInstrumentButton.layer.borderWidth = 2
         noArtistsFoundLabel.isHidden = false
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
@@ -344,6 +389,22 @@ class ArtistFinderViewController: UIViewController, UICollectionViewDelegate, UI
             }
         })
     }
+    
+    @available(iOS 2.0, *)
+    public func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem){
+        if item == tabBar.items?[0]{
+            
+        } else if item == tabBar.items?[1]{
+            performSegue(withIdentifier: "ArtistFinderToFindBand", sender: self)
+            
+        } else if item == tabBar.items?[2]{
+            performSegue(withIdentifier: "ArtistFinderToProfile", sender: self)
+        } else {
+            performSegue(withIdentifier: "ArtistFinderToSessionFeed", sender: self)
+        }
+    }
+
+    
     var artistCount = Int()
     var yearsArray = [String]()
     var playingYearsArray = ["1","2","3","4","5+","10+"]

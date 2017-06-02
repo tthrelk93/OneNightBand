@@ -22,8 +22,13 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
     @IBOutlet weak var createONBButton: UIButton!
 
     @IBOutlet weak var popupView: UIView!
+    let user = FIRAuth.auth()?.currentUser?.uid
+    var destination = String()
     var bandPics = [String]()
     var tempArray = [String]()
+    var onbID = String()
+    var wantedAd = WantedAd()
+    var wantedIDArray = [String]()
     @IBAction func createONBPressed(_ sender: Any) {
         if(sessionImageView.image != nil && bandNameTextField.text != "" && onbInfoTextView.text != "tap to add a little info about the OneNightBand you are creating (songs to learn, location, etc...)."){
             SwiftOverlays.showBlockingWaitOverlayWithText("Loading Your Bands")
@@ -62,18 +67,96 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
                         let bandReference = ref.child("oneNightBands").childByAutoId()
                         let sessReferenceAnyObject = bandReference.key
                         values["onbID"] = sessReferenceAnyObject
+                        self.onbID = sessReferenceAnyObject
                         self.tempArray.append(sessReferenceAnyObject)
                         //print(sessReference.key)
                         //sessReference.childByAutoId()
+                        
+                        
+                        
+                        //let ref = FIRDatabase.database().reference()
+                        let wantedReference = ref.child("wantedAds").childByAutoId()
+                        let wantedReferenceAnyObject = wantedReference.key
+                        var values2 = [String:Any]()
+                        values2["bandType"] = "onb"
+                        values2["bandID"] = sessReferenceAnyObject
+                        values2["bandName"] = self.bandNameTextField.text
+                        values2["city"] = self.wantedAd.city
+                        values2["date"] = self.wantedAd.date
+                        values2["experience"] = self.wantedAd.experience
+                        
+                        values2["instrumentNeeded"] = self.wantedAd.instrumentNeeded
+                        values2["moreInfo"] = self.wantedAd.moreInfo
+                        values2["responses"] = self.wantedAd.responses
+                        values2["senderID"] = self.wantedAd.senderID
+                        values2["wantedImage"] = self.bandPics
+                        
+                        values2["wantedID"] = wantedReferenceAnyObject
+                        
+                        wantedReference.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                            if err != nil {
+                                print(err as Any)
+                                return
+                            }
+                        })
+                        var userValues = [String:Any]()
+                        var userWantedAdArray = [String]()
+                        ref.child("users").child(self.user!).child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                for snap in snapshots{
+                                    if let snapDict = snap.value as? [String:Any] {
+                                        let wantedID = snapDict["wantedID"]
+                                        userWantedAdArray.append(wantedID as! String)
+                                    }
+                                }
+                                userWantedAdArray.append(wantedReferenceAnyObject)
+                            }
+                            userValues["wantedAds"] = userWantedAdArray
+                            ref.child("users").child(self.user!).updateChildValues(userValues)
+                            
+                        })
+                        
+                        self.ref.child("oneNightBands").child(sessReferenceAnyObject).child("wantedAds").observeSingleEvent(of: .value, with: { (snapshot) in
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                for snap in snapshots{
+                                    
+                                    self.wantedIDArray.append(snap.value as! String)
+                                }
+                            }
+                            
+                            
+                            var tempDict = [String:Any]()
+                            tempDict["wantedAds"] = self.wantedIDArray
+                            let onbRef = self.ref.child("oneNightBands").child(sessReferenceAnyObject)
+                            onbRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
+                                if err != nil {
+                                    print(err as Any)
+                                    return
+                                }
+                            })
+                            //DispatchQueue.main.async{
+                            //    wantedAdDelegate.wantedAdCreated(self.tempWanted)
+                            //self.performSegue(withIdentifier: "CreateWantedToBandBoard", sender: self)
+                            //  }
+                            //self.dismissalDelegate?.finishedShowing()
+                            //self.removeAnimate()
+                            
+                            //var sessionVals = Dictionary
+                            //let userSessRef = ref.child("users").child(user).child("activeSessions")
+                        })
+
+                        
+                        
+                        
                         bandReference.updateChildValues(values, withCompletionBlock: {(err, ref) in
                             if err != nil {
                                 print(err as Any)
                                 return
                             }
                         })
-                        let user = FIRAuth.auth()?.currentUser?.uid
+                        
                         var tempDict = [String : Any]()
-                        self.ref.child("users").child(user!).child("artistsONBs").observeSingleEvent(of: .value, with: { (snapshot) in
+                        self.ref.child("users").child(self.user!).child("artistsONBs").observeSingleEvent(of: .value, with: { (snapshot) in
                             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                                 for snap in snapshots{
                                     
@@ -84,15 +167,22 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
 
                         
                         tempDict["artistsONBs"] = self.tempArray
-                        let userRef = self.ref.child("users").child(user!)
+                        let userRef = self.ref.child("users").child(self.user!)
                         userRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
                             if err != nil {
                                 print(err as Any)
                                 return
                             }
+                            DispatchQueue.main.async{
+                                if self.destination == "bb"{
+                                    self.performSegue(withIdentifier: "CreateONBToProfile", sender: self)
+                                } else {
+                                    self.performSegue(withIdentifier: "CreateONBToArtistFinder", sender: self)
+                                }
+
+                            }
                         })
-                        self.dismissalDelegate?.finishedShowing()
-                        self.removeAnimate()
+                        
 
                         //var sessionVals = Dictionary
                         //let userSessRef = ref.child("users").child(user).child("activeSessions")
@@ -244,11 +334,12 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
     
     
     
-    
+    let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
     public func textViewDidBeginEditing(_ textView: UITextView) {
         if onbInfoTextView.textColor == UIColor.white {
             onbInfoTextView.text = nil
-            onbInfoTextView.textColor = UIColor.orange
+            onbInfoTextView.textColor = ONBPink
+            
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
@@ -325,14 +416,32 @@ class CreateOneNightBandViewController: UIViewController, UIImagePickerControlle
 
     
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+       /* if let vc = segue.destination as? OneNightBandViewController{
+            vc.onbID = self.onbID
+        }*/
+        
+        if segue.identifier == "CreateONBToProfile"{
+            if let vc = segue.destination as? profileRedesignViewController{
+                vc.sender = "wantedAdCreated"
+            }
+            
+        } else {
+            if let vc = segue.destination as? ArtistFinderViewController{
+                vc.bandType = "onb"
+                vc.bandID = self.onbID
+                
+                
+            }
+        }
+
     }
-    */
+    
 
 }

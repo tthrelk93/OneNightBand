@@ -173,8 +173,8 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                         auditReceivedDict["bandPicURL"] = ad["wantedImage"]
                                         auditReceivedDict["wantedID"] = ad["wantedID"]
                                         auditReceivedDict["bandType"] = ad["bandType"]
-                                        let adResponses = ad["responses"] as? [String:Any]
-                                        for (key, value) in adResponses!{
+                                        if let adResponses = ad["responses"] as? [String:Any]{
+                                        for (key, value) in adResponses{
                                             auditReceivedDict["responseID"] = key
                                             auditReceivedDict["userID"] = (value as! [String:Any])["respondingArtist"] as! String
                                             auditReceivedDict["additInfo1"] = (value as! [String:Any])["infoText1"]
@@ -185,7 +185,9 @@ class InviteViewerViewController: UIViewController, UICollectionViewDelegate, UI
                                     var tempAuditReceived = AuditReceived()
                                     tempAuditReceived.setValuesForKeys(auditReceivedDict)
                                     self.auditReceivedArray.append(tempAuditReceived)
+                                        }
                                     }
+                                    
                                     
                                 }
                             }

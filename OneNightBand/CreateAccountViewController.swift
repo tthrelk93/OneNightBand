@@ -20,27 +20,26 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     
     @IBOutlet weak var CreateAccountBackground: UIImageView!
     var rotateCount = 0
-    private func rotateView(targetView: UIView, duration: Double = 2.7) {
-        if rotateCount == 4 {
-            //performSegue(withIdentifier: "LaunchToScreen1", sender: self)
-            ONBLabel.isHidden = true
-            //artistAllInfoView.isHidden = false
-            inputsContainerView.isHidden = false
-            profileImageView.isHidden = false
-            profileImageViewButton.isHidden = false
-            loginRegisterSegmentedControl.isHidden = false
-            loginRegisterButton.isHidden = false
-            createAccountLabel.isHidden = false
-            createAccountLabelForLoginSegment.isHidden = true
-            
-        } else {
-            UIView.animate(withDuration: duration, delay: 0.0, options: .curveLinear, animations: {
+    private func rotateView(targetView: UIView, duration: Double = 3.5) {
+       // if rotateCount == 4 {
+        
+       // } else {
+            UIView.animate(withDuration: duration, delay: 0.0, options: .curveEaseInOut, animations: {
                 targetView.transform = targetView.transform.rotated(by: CGFloat(M_PI))
             }) { finished in
-                self.rotateCount = self.rotateCount + 1
-                self.rotateView(targetView: targetView, duration: duration)
+                //performSegue(withIdentifier: "LaunchToScreen1", sender: self)
+                self.ONBLabel.isHidden = true
+                //artistAllInfoView.isHidden = false
+                self.inputsContainerView.isHidden = false
+                self.profileImageView.isHidden = false
+                self.profileImageViewButton.isHidden = false
+                self.loginRegisterSegmentedControl.isHidden = false
+                self.loginRegisterButton.isHidden = false
+                self.createAccountLabel.isHidden = false
+                self.createAccountLabelForLoginSegment.isHidden = true
+
             }
-        }
+        
     }
 
 
@@ -102,7 +101,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
     }()
         func setupCreateAccountLabel(){
         createAccountLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        createAccountLabel.bottomAnchor.constraint(equalTo: profileImageViewButton.topAnchor, constant: -20).isActive = true
+        createAccountLabel.bottomAnchor.constraint(equalTo: profileImageViewButton.topAnchor, constant: -30).isActive = true
         //createAccountLabel.leadingAnchor.constraint(equalTo: view.rightAnchor, constant: 25)
         //createAccountLabel.widthAnchor.constraint(equalToConstant: 300).isActive = true
         //createAccountLabel.heightAnchor.constraint(equalToConstant: 130).isActive = true
@@ -111,7 +110,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
         var tempLabel = UILabel()
         tempLabel.text = "OneNightBand"
-        tempLabel.font = UIFont.systemFont(ofSize: 46.0, weight: UIFontWeightThin)
+        tempLabel.font = UIFont.systemFont(ofSize: 50.0, weight: UIFontWeightThin)
         tempLabel.textAlignment = NSTextAlignment.center
         tempLabel.textColor = ONBPink
         tempLabel.numberOfLines = 2
@@ -122,8 +121,8 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
 
     func setupCreateAccountLabelForLoginSegment(){
         createAccountLabelForLoginSegment.centerXAnchor.constraint(equalTo: profileImageViewButton.centerXAnchor).isActive = true
-        createAccountLabelForLoginSegment.bottomAnchor.constraint(equalTo: profileImageViewButton.bottomAnchor, constant: -80).isActive = true
-        createAccountLabelForLoginSegment.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        createAccountLabelForLoginSegment.bottomAnchor.constraint(equalTo: profileImageViewButton.bottomAnchor, constant: -70).isActive = true
+        createAccountLabelForLoginSegment.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width).isActive = true
         createAccountLabelForLoginSegment.heightAnchor.constraint(equalToConstant: 130).isActive = true
     }
 
@@ -411,8 +410,9 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                 return
             }
             else{
-                SwiftOverlays.showBlockingWaitOverlayWithText("Loading Session Feed")
+                
                 print("Successful Login")
+                SwiftOverlays.showBlockingTextOverlay("Loading Profile...")
                 self.performSegue(withIdentifier: "LoginSegue", sender: self)
             }
 
@@ -420,7 +420,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         
     }
     override func viewWillDisappear(_ animated: Bool) {
-        SwiftOverlays.removeAllBlockingOverlays()
+        //SwiftOverlays.removeAllBlockingOverlays()
     }
     
     
@@ -433,7 +433,7 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
                 
                 return
         }
-       SwiftOverlays.showBlockingWaitOverlayWithText("Loading Session Feed")
+      // SwiftOverlays.showBlockingWaitOverlayWithText("Loading Session Feed")
         let name = nameTextField.text
         
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user: FIRUser?, error) in
@@ -543,6 +543,9 @@ class CreateAccountViewController: UIViewController, UIImagePickerControllerDele
         print("canceled picker")
         dismiss(animated: true, completion: nil)
     }
+    
+     //let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
+    
     @IBOutlet weak var ONBLabel: UILabel!
     let locationManager = CLLocationManager()
     override func viewDidLoad() {

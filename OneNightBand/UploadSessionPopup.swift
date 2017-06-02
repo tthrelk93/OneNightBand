@@ -102,7 +102,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     var selectedSoloVidArray = [NSURL]()
     var selectedSoloPicArray = [UIImage]()
     var selectedSoloPicURL = [NSURL]()
-    
+    let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
     override func viewDidLoad() {
         super.viewDidLoad()
         self.originalMediaBounds = selectVideoFromSessionCollect.frame
@@ -117,7 +117,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         
         //self.soloSessTextView
         self.soloSessTextView.text = "Give a little background on the session you are uploading."
-        self.soloSessTextView.textColor = UIColor.orange
+        self.soloSessTextView.textColor = ONBPink
         
         ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
             if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
@@ -257,7 +257,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         //sessionCollectionView.allowsSelection = true
         //loadPastAndCurrentSessions()
         sessionCollectionView.visibleCells.first?.layer.borderWidth = 2
-        sessionCollectionView.visibleCells.first?.layer.borderColor = UIColor.orange.cgColor
+        sessionCollectionView.visibleCells.first?.layer.borderColor = ONBPink.cgColor
         
         let cancelButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(UploadSessionPopup.backToFeed))
         navigationItem.leftBarButtonItem = cancelButton
@@ -420,7 +420,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                         }
                     }
                     bandCell.layer.borderWidth = 2.0
-                    bandCell.layer.borderColor = UIColor.orange.cgColor
+                    bandCell.layer.borderColor = self.ONBPink.cgColor
                     //self.selectedSessionMediaArray.append(self.mostRecentSessionSelected)
                     bandCell.isSelected = true
                     
@@ -482,7 +482,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                         }
                     }
                         bandCell.layer.borderWidth = 2.0
-                        bandCell.layer.borderColor = UIColor.orange.cgColor
+                        bandCell.layer.borderColor = self.ONBPink.cgColor
                         //self.selectedSessionMediaArray.append(self.mostRecentSessionSelected)
                         bandCell.isSelected = true
 
@@ -555,7 +555,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
                 self.bandMedia.removeAll()
     
             sessCell.layer.borderWidth = 2.0
-            sessCell.layer.borderColor = UIColor.orange.cgColor
+            sessCell.layer.borderColor = self.ONBPink.cgColor
             //self.selectedSessionMediaArray.append(self.mostRecentSessionSelected)
             sessCell.isSelected = true
             
@@ -630,7 +630,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             if cell.cellSelected == false{
                 cell.cellSelected = true
                 cell.layer.borderWidth = 2.0
-                cell.layer.borderColor = UIColor.orange.cgColor
+                cell.layer.borderColor = self.ONBPink.cgColor
                 self.selectedSessionMediaArray.append(self.bandMedia[indexPath.row])
                 cell.isSelected = true
                 cell.playPauseButton.isEnabled = false
@@ -653,7 +653,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             if cell.cellSelected == false{
                 cell.cellSelected = true
                 cell.layer.borderWidth = 2.0
-                cell.layer.borderColor = UIColor.orange.cgColor
+                cell.layer.borderColor = ONBPink.cgColor
                 self.selectedSoloPicArray.append(self.soloPicURLArray[indexPath.row])
                 selectedSoloPicURL.append(self.soloPicArray2[indexPath.row])
                 cell.isSelected = true
@@ -673,7 +673,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             if cell.cellSelected == false{
                 cell.cellSelected = true
                 cell.layer.borderWidth = 2.0
-                cell.layer.borderColor = UIColor.orange.cgColor
+                cell.layer.borderColor = ONBPink.cgColor
                 self.selectedSoloVidArray.append(self.soloVidURLArray[indexPath.row])
                 cell.isSelected = true
             } else{
@@ -758,6 +758,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         self.soloPicker.isHidden = false
         self.soloPickerUsed = true
         self.yourBandsCollect.isHidden = true
+        self.onbCollect.isHidden = true
         self.sessionCollectionView.isHidden = true
         self.selectVideoFromSessionCollect.isHidden = true
         self.uploadBandToFeed.isHidden = true
@@ -784,7 +785,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         self.onbCollect.isHidden = false
         self.yourBandsCollect.isHidden = true
         
-        self.bandType = "band"
+        self.bandType = "onb"
         self.sessionCollectionView.isHidden = true
         self.selectVideoFromSessionCollect.isHidden = true
         self.uploadBandToFeed.isHidden = false
@@ -800,7 +801,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             cell.sessionCellLabel.text = onbObjectArray[indexPath.row].onbName
             cell.sessionCellLabel.textColor = UIColor.white
             cell.layer.borderWidth = cell.cellSelected ? 2 : 0
-            cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+            cell.layer.borderColor = cell.cellSelected ? ONBPink.cgColor : UIColor.clear.cgColor
             cell.sessionId = onbArray[indexPath.row]
         }
         if collectionView == self.yourBandsCollect{
@@ -810,7 +811,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             cell.sessionCellLabel.text = bandObjectArray[indexPath.row].bandName
             cell.sessionCellLabel.textColor = UIColor.white
             cell.layer.borderWidth = cell.cellSelected ? 2 : 0
-            cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+            cell.layer.borderColor = cell.cellSelected ? ONBPink.cgColor : UIColor.clear.cgColor
             
             cell.sessionId = bandArray[indexPath.row]
 
@@ -820,7 +821,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
         cell.sessionCellLabel.text = bandSessionObjectArray[indexPath.row].sessionName
         cell.sessionCellLabel.textColor = UIColor.white
         cell.layer.borderWidth = cell.cellSelected ? 2 : 0
-        cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+        cell.layer.borderColor = cell.cellSelected ? ONBPink.cgColor : UIColor.clear.cgColor
 
         cell.sessionId = bandSessionIDArray[indexPath.row]
         }
@@ -829,7 +830,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
             cell.sessionCellLabel.text = bandSessionObjectArray[indexPath.row].sessionName
             cell.sessionCellLabel.textColor = UIColor.white
             cell.layer.borderWidth = cell.cellSelected ? 2 : 0
-            cell.layer.borderColor = cell.cellSelected ? UIColor.orange.cgColor : UIColor.clear.cgColor
+            cell.layer.borderColor = cell.cellSelected ? ONBPink.cgColor : UIColor.clear.cgColor
             
             cell.sessionId = bandSessionIDArray[indexPath.row]
         }
@@ -854,7 +855,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     }
  
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if soloSessTextView.textColor == UIColor.orange {
+        if soloSessTextView.textColor == ONBPink {
             soloSessTextView.text = nil
             soloSessTextView.textColor = UIColor.white
         }
@@ -862,7 +863,7 @@ class UploadSessionPopup: UIViewController, UICollectionViewDelegate, UICollecti
     func textViewDidEndEditing(_ textView: UITextView) {
         if soloSessTextView.text.isEmpty {
             soloSessTextView.text = "Give a little background on the session you are uploading."
-            soloSessTextView.textColor = UIColor.orange
+            soloSessTextView.textColor = ONBPink
         }
     }
     

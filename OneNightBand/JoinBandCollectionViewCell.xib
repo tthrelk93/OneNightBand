@@ -85,7 +85,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="6oL-wK-0Ol">
                                 <rect key="frame" x="8" y="293" width="60" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.68860237729999996" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.78823529410000004" green="0.14901960780000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
                                 <state key="normal" title="Join Band">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -97,7 +97,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XwW-PM-H7n">
                                 <rect key="frame" x="73" y="323" width="313" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.68860237729999996" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.78823529410000004" green="0.14901960780000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -123,7 +123,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="fUL-X4-URc">
                                 <rect key="frame" x="8" y="228" width="60" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.68860237729999996" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.78823529410000004" green="0.14901960780000001" blue="0.36078431370000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                 <state key="normal" title="View Band Page">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

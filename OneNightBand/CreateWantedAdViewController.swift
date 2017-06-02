@@ -13,133 +13,32 @@ import FirebaseAuth
 import SwiftOverlays
 
 
-class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextViewDelegate, UINavigationControllerDelegate, Dismissable {
+class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextViewDelegate, UINavigationControllerDelegate, WantedAdDelegator {
     
     @IBOutlet weak var bandImageView: UIImageView!
     //@IBOutlet weak var bandName: UILabel!
     @IBOutlet weak var instrumentPicker: UIPickerView!
     
-    weak var dismissalDelegate: DismissalDelegate?
+    weak var wantedAdDelegate: WantedAdDelegate?
     
     var ref = FIRDatabase.database().reference()
     var user = FIRAuth.auth()?.currentUser?.uid
     var bandType = String()
     var bandID = String()
     var wantedIDArray = [String]()
-
+    var tempWanted = WantedAd()
     @IBAction func postAdPressed(_ sender: Any) {
         if(moreInfoTextView.text != "tap to add info about the type of musician you are looking for. This may include playing style, musical influences, etc... "){
             SwiftOverlays.showBlockingWaitOverlayWithText("Loading Your Bands")
-            
+            performSegue(withIdentifier: "CreateWantedToPFM", sender: self)
             
            
             
-            var tempArray2 = [String]()
-            var values = Dictionary<String, Any>()
-            tempArray2.append((FIRAuth.auth()?.currentUser?.uid)! as String)
-            values["bandType"] =  self.bandType
-            values["bandName"] = self.bandName
-            values["bandID"] = self.bandID
-            values["instrumentNeeded"] = [self.instrumentText[self.instrumentPicker.selectedRow(inComponent: 0)]]
-            values["moreInfo"] = self.moreInfoTextView.text
-            values["city"] = self.locationText[self.cityPicker.selectedRow(inComponent: 0)]
-            if self.bandType == "band"{
-                values["date"] = ""
-            } else{
-                values["date"] = self.onbDate
-            }
-            values["wantedImage"] = self.imageString
-            values["experience"] = self.expText[self.expPicker.selectedRow(inComponent: 0)]
-            values["senderID"] = self.user
-            values["responses"] = [String:Any]()
-                        
-            let ref = FIRDatabase.database().reference()
-            let wantedReference = ref.child("wantedAds").childByAutoId()
-            let wantedReferenceAnyObject = wantedReference.key
-            values["wantedID"] = wantedReferenceAnyObject
-                        self.wantedIDArray.append(wantedReferenceAnyObject)
-                        //print(sessReference.key)
-                        //sessReference.childByAutoId()
-                        wantedReference.updateChildValues(values, withCompletionBlock: {(err, ref) in
-                            if err != nil {
-                                print(err as Any)
-                                return
-                            }
-                        })
-            var userValues = [String:Any]()
-            var userWantedAdArray = [String]()
-            ref.child("users").child(user!).child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
-                if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                    for snap in snapshots{
-                        if let snapDict = snap.value as? [String:Any] {
-                            let wantedID = snapDict["wantedID"]
-                            userWantedAdArray.append(wantedID as! String)
-                        }
-                    }
-                    userWantedAdArray.append(wantedReferenceAnyObject)
-                }
-                userValues["wantedAds"] = userWantedAdArray
-                ref.child("users").child(self.user!).updateChildValues(userValues)
-                
-            })
-            
-            if self.bandType == "band"{
-                self.ref.child("bands").child(bandID).child("wantedAds").observeSingleEvent(of: .value, with: { (snapshot) in
-                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                        for snap in snapshots{
-                            self.wantedIDArray.append(snap.value as! String)
-                        }
-                    }
-                    
-                    var tempDict = [String:Any]()
-                    tempDict["wantedAds"] = self.wantedIDArray
-                    let bandRef = self.ref.child("bands").child(self.bandID)
-                    bandRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
-                        if err != nil {
-                            print(err as Any)
-                            return
-                        }
-                    })
-                    self.dismissalDelegate?.finishedShowing()
-                    self.removeAnimate()
-                
-                    //var sessionVals = Dictionary
-                    //let userSessRef = ref.child("users").child(user).child("activeSessions")
-                })
-            } else {
-                self.ref.child("oneNightBands").child(bandID).child("wantedAds").observeSingleEvent(of: .value, with: { (snapshot) in
-                    if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
-                        for snap in snapshots{
-                            
-                            self.wantedIDArray.append(snap.value as! String)
-                        }
-                    }
-                    
-                    
-                    var tempDict = [String:Any]()
-                    tempDict["wantedAds"] = self.wantedIDArray
-                    let onbRef = self.ref.child("oneNightBands").child(self.bandID)
-                    onbRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
-                        if err != nil {
-                            print(err as Any)
-                            return
-                        }
-                    })
-                    DispatchQueue.main.async{
-                        self.performSegue(withIdentifier: "CreateWantedToBandBoard", sender: self)
-                    }
-                    //self.dismissalDelegate?.finishedShowing()
-                    //self.removeAnimate()
-                    
-                    //var sessionVals = Dictionary
-                    //let userSessRef = ref.child("users").child(user).child("activeSessions")
-                })
-
-            }
-
         }
                        // let user = FIRAuth.auth()?.curren
     }
+  let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
+    
     var coordinateText = [String]()
     @IBOutlet weak var moreInfoTextView: UITextView!
     @IBOutlet weak var cityPicker: UIPickerView!
@@ -179,7 +78,7 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
                     }
                 }
             })
-        } else {
+        } else if self.bandType == "onb" {
             ref.child("oneNightBands").child(bandID).observeSingleEvent(of: .value, with: { (snapshot) in
                 if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
                     for snap in snapshots{
@@ -216,7 +115,7 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
     public func textViewDidBeginEditing(_ textView: UITextView) {
         if moreInfoTextView.textColor == UIColor.white {
             moreInfoTextView.text = nil
-            moreInfoTextView.textColor = UIColor.orange
+            moreInfoTextView.textColor = ONBPink
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
@@ -254,7 +153,7 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
     }
     
     @IBAction func cancelPressed(_ sender: Any) {
-        dismissalDelegate?.finishedShowing()
+        //dismissalDelegate?.finishedShowing()
         removeAnimate()
     }
     
@@ -319,19 +218,34 @@ class CreateWantedAdViewController: UIViewController, UIPickerViewDelegate, UIPi
     }
 
     
-
+//where is segue
     
     // MARK: - Navigation
+    
+    
+    
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //if segue.identifier == "PfmToBandBoard"
+        if segue.identifier == "CreateWantedToPFM"{
+            if let vc = segue.destination as? ProfileFindMusiciansViewController{
+                print("heyyyg")
+                vc.instrumentNeeded = instrumentText[instrumentPicker.selectedRow(inComponent: 0)]
+                vc.locationText = locationText[cityPicker.selectedRow(inComponent: 0)]
+                vc.expText = expText[expPicker.selectedRow(inComponent: 0)]
+                vc.moreInfoText = moreInfoTextView.text
+                vc.destination = "bb"
+                SwiftOverlays.removeAllBlockingOverlays()
+            }
+        } /*else{
         if let vc = segue.destination as? BandBoardViewController{
             if self.bandType == "band"{
                 vc.searchType = "Bands"
             } else {
                 vc.searchType = "OneNightBands"
             }
-        }
+        }*/
     }
     
 

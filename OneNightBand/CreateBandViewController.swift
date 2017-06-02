@@ -14,12 +14,17 @@ import FirebaseAuth
 
 class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, Dismissable{
     var myBands = [String]()
+    var wantedAd = WantedAd()
 
     let ref = FIRDatabase.database().reference()
+    var currentUser = FIRAuth.auth()?.currentUser?.uid
+    var wantedIDArray = [String]()
+    
     @IBOutlet weak var popupView: UIView!
     @IBAction func createPressed(_ sender: Any) {
-        if(sessionImageView.image != nil && bandNameTextField.text != "" && bandBioTextView.text != "tap to add a little info about the type of session you are trying to create."){
-            SwiftOverlays.showBlockingWaitOverlayWithText("Loading Your Bands")
+            if(sessionImageView.image != nil && bandNameTextField.text != "" && bandBioTextView.text != "tap to add a little info about the type of session you are trying to create."){
+                SwiftOverlays.showBlockingTextOverlay("Creating Musicians Wanted Ad")
+
             let imageName = NSUUID().uuidString
             let storageRef = FIRStorage.storage().reference().child("session_images").child("\(imageName).jpg")
             
@@ -53,6 +58,87 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                         
                         let bandReferenceAnyObject = bandReference.key
                         values["bandID"] = bandReferenceAnyObject
+                        self.bandID = bandReferenceAnyObject
+                        
+                        
+                        let ref = FIRDatabase.database().reference()
+                        let wantedReference = ref.child("wantedAds").childByAutoId()
+                        let wantedReferenceAnyObject = wantedReference.key
+                        var values2 = [String:Any]()
+                        values2["bandType"] = "band"
+                        values2["bandID"] = bandReferenceAnyObject
+                        values2["bandName"] = self.bandNameTextField.text
+                        values2["city"] = self.wantedAd.city
+                        values2["date"] = ""
+                        values2["experience"] = self.wantedAd.experience
+                        
+                        values2["instrumentNeeded"] = self.wantedAd.instrumentNeeded
+                        values2["moreInfo"] = self.wantedAd.moreInfo
+                        values2["responses"] = self.wantedAd.responses
+                        values2["senderID"] = self.wantedAd.senderID
+                        values2["wantedImage"] = [bandImageUrl]
+                        
+                        values2["wantedID"] = wantedReferenceAnyObject
+                        
+                        wantedReference.updateChildValues(values2, withCompletionBlock: {(err, ref) in
+                            if err != nil {
+                                print(err as Any)
+                                return
+                            }
+                        })
+                        var userValues = [String:Any]()
+                        var userWantedAdArray = [String]()
+                        ref.child("users").child(self.currentUser!).child("wantedAds").observeSingleEvent(of: .value, with: {(snapshot) in
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                for snap in snapshots{
+                                    if let snapDict = snap.value as? [String:Any] {
+                                        let wantedID = snapDict["wantedID"]
+                                        userWantedAdArray.append(wantedID as! String)
+                                    }
+                                }
+                                userWantedAdArray.append(wantedReferenceAnyObject)
+                            }
+                            userValues["wantedAds"] = userWantedAdArray
+                            ref.child("users").child(self.currentUser!).updateChildValues(userValues)
+                            
+                        })
+                        
+                        self.ref.child("oneNightBands").child(bandReferenceAnyObject).child("wantedAds").observeSingleEvent(of: .value, with: { (snapshot) in
+                            if let snapshots = snapshot.children.allObjects as? [FIRDataSnapshot]{
+                                for snap in snapshots{
+                                    
+                                    self.wantedIDArray.append(snap.value as! String)
+                                }
+                            }
+                            
+                            
+                            var tempDict = [String:Any]()
+                            tempDict["wantedAds"] = self.wantedIDArray
+                            let onbRef = self.ref.child("oneNightBands").child(bandReferenceAnyObject)
+                            onbRef.updateChildValues(tempDict, withCompletionBlock: {(err, ref) in
+                                if err != nil {
+                                    print(err as Any)
+                                    return
+                                }
+                            })
+                            //DispatchQueue.main.async{
+                            //    wantedAdDelegate.wantedAdCreated(self.tempWanted)
+                            //self.performSegue(withIdentifier: "CreateWantedToBandBoard", sender: self)
+                            //  }
+                            //self.dismissalDelegate?.finishedShowing()
+                            //self.removeAnimate()
+                            
+                            //var sessionVals = Dictionary
+                            //let userSessRef = ref.child("users").child(user).child("activeSessions")
+                        })
+                        
+                        
+                        
+                    
+
+                        
+                        
+                        
                         //tempArray.append(bandReferenceAnyObject)
                         //print(sessReference.key)
                         //sessReference.childByAutoId()
@@ -83,10 +169,11 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
                                     print(err as Any)
                                     return
                                 }
+                                
+                                    self.segueFunc()
                             })
                             //self.finalizeSessionButton.isEnabled = true
-                            self.dismissalDelegate?.finishedShowing()
-                            self.removeAnimate()
+                            //self.performSegue(withIdentifier: "CreateBandToBandVC", sender: self)
                             //this is ridiculously stupid way to reload currentSession data. find someway to fix
                             //self.performSegue(withIdentifier: "FinalizeSessionToProfile", sender: self)
                            // self.performSegue(withIdentifier: "FinalizeToMyBands", sender: self)
@@ -104,8 +191,16 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
         }
     }
     weak var dismissalDelegate: DismissalDelegate?
+    func segueFunc(){
+        if self.destination == "bb"{
+            performSegue(withIdentifier: "CreateBandToProfile", sender: self)
+        } else {
+            performSegue(withIdentifier: "CreateBandToArtistFinder", sender: self)
+        }
 
+    }
 
+    var destination = String()
     @IBOutlet weak var bandBioTextView: UITextView!
     @IBOutlet weak var bandNameTextField: UITextField!
     lazy var sessionImageViewButton: UIButton = {
@@ -299,7 +394,7 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
     public func textViewDidBeginEditing(_ textView: UITextView) {
         if bandBioTextView.textColor == UIColor.lightGray {
             bandBioTextView.text = nil
-            bandBioTextView.textColor = UIColor.orange
+            bandBioTextView.textColor = ONBPink
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
@@ -310,14 +405,32 @@ class CreateBandViewController: UIViewController, UITextViewDelegate, UINavigati
     }
 
 
-    /*
+    
     // MARK: - Navigation
+    let ONBPink = UIColor(colorLiteralRed: 201.0/255.0, green: 38.0/255.0, blue: 92.0/255.0, alpha: 1.0)
+    var bandID = String()
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+       /* if let vc = segue.destination as? SessionMakerViewController{
+            vc.sessionID = self.bandID
+        }*/
+        if segue.identifier == "CreateBandToProfile"{
+            if let vc = segue.destination as? profileRedesignViewController{
+                vc.sender = "wantedAdCreated"
+               
+            }
+            
+        } else {
+            if let vc = segue.destination as? ArtistFinderViewController{
+                vc.bandType = "band"
+                vc.bandID = self.bandID
+                
+            }
+        }
     }
-    */
+    
 
 }
